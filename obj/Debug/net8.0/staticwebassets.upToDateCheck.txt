@@ -1,5 +1,6 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\img\taza.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
@@ -58,9 +59,9 @@ wwwroot\lib\jquery-validation\LICENSE.md
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
 wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
-wwwroot\mp4\tasa1.mp4
-wwwroot\mp4\tasa2.mp4
-wwwroot\mp4\tasa3.mp4
-wwwroot\mp4\tasa4.mp4
-wwwroot\mp4\tasa5.mp4
-wwwroot\mp4\tasa6.mp4
+wwwroot\mp4\taza1.mp4
+wwwroot\mp4\taza2.mp4
+wwwroot\mp4\taza3.mp4
+wwwroot\mp4\taza4.mp4
+wwwroot\mp4\taza5.mp4
+wwwroot\mp4\taza6.mp4

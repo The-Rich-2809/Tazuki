@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r0NGc+hMIQ7Sfl5d6R94vY9oNK7dfTYdV4QCmHLBJbc=",
+  "Hash": "B8J+FT0flVGCdfaxZt/kx6KBlw6mSAtn4dYYGgSji3s=",
   "Source": "Tazuki",
   "BasePath": "_content/Tazuki",
   "Mode": "Default",
@@ -99,6 +99,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\taza.jpg",
+      "SourceId": "Tazuki",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
+      "BasePath": "_content/Tazuki",
+      "RelativePath": "img/taza#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "r1l1e02c8i",
+      "Integrity": "MfHuhnA83lic03BydKw/RCPKeVDxYwlxaqrpsQTXtUE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\taza.jpg"
     },
     {
       "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\js\\site.js",
@@ -1319,12 +1340,12 @@
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa1.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza1.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa1#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza1#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1337,15 +1358,15 @@
       "Integrity": "1hNhZG5oSrw2z7hYuX4p2dTymlTvsRtBX8UBfM0lD9Y=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa1.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza1.mp4"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa2.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza2.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa2#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza2#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1358,15 +1379,15 @@
       "Integrity": "FWhn8VPncn/kZ5I4rXGAGUVmLWsfxQx5NzK3brp65aM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa2.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza2.mp4"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa3.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza3.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa3#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza3#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1379,15 +1400,15 @@
       "Integrity": "HiH7myzaTLhnm6sQZHN9hA52zxDa4JG6/CkDlF1hEQM=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa3.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza3.mp4"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa4.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza4.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa4#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza4#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1400,15 +1421,15 @@
       "Integrity": "sD+kCsfzntlLr46GfhEGJwQmcUcBY4fA6Hehleew4kg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa4.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza4.mp4"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa5.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza5.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa5#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza5#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1421,15 +1442,15 @@
       "Integrity": "/YimXelHzvkgYHQj0to1C8uGJ9krtfYUygaIyEl73Pc=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa5.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza5.mp4"
     },
     {
-      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa6.mp4",
+      "Identity": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza6.mp4",
       "SourceId": "Tazuki",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\",
       "BasePath": "_content/Tazuki",
-      "RelativePath": "mp4/tasa6#[.{fingerprint}]?.mp4",
+      "RelativePath": "mp4/taza6#[.{fingerprint}]?.mp4",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -1442,7 +1463,7 @@
       "Integrity": "XLWQTcbi1YdijUh15m41yPRmwZuPm81+n3zDxF4nAbk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\mp4\\tasa6.mp4"
+      "OriginalItemSpec": "wwwroot\\mp4\\taza6.mp4"
     }
   ],
   "Endpoints": [
@@ -1607,6 +1628,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-Jtxf9L+5ITKRc1gIRl4VbUpGkRNfOBXjYTdhJD4facM="
+        }
+      ]
+    },
+    {
+      "Route": "img/taza.jpg",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\taza.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "316159"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"MfHuhnA83lic03BydKw/RCPKeVDxYwlxaqrpsQTXtUE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 08 Sep 2025 07:42:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-MfHuhnA83lic03BydKw/RCPKeVDxYwlxaqrpsQTXtUE="
+        }
+      ]
+    },
+    {
+      "Route": "img/taza.r1l1e02c8i.jpg",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\taza.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "316159"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"MfHuhnA83lic03BydKw/RCPKeVDxYwlxaqrpsQTXtUE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 08 Sep 2025 07:42:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "r1l1e02c8i"
+        },
+        {
+          "Name": "label",
+          "Value": "img/taza.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-MfHuhnA83lic03BydKw/RCPKeVDxYwlxaqrpsQTXtUE="
         }
       ]
     },
@@ -6367,8 +6470,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa1.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa1.mp4",
+      "Route": "mp4/taza1.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza1.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6404,8 +6507,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa1.umieqpm89z.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa1.mp4",
+      "Route": "mp4/taza1.umieqpm89z.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza1.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6440,7 +6543,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa1.mp4"
+          "Value": "mp4/taza1.mp4"
         },
         {
           "Name": "integrity",
@@ -6449,8 +6552,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa2.f3jp3ay4u2.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa2.mp4",
+      "Route": "mp4/taza2.f3jp3ay4u2.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza2.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6485,7 +6588,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa2.mp4"
+          "Value": "mp4/taza2.mp4"
         },
         {
           "Name": "integrity",
@@ -6494,8 +6597,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa2.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa2.mp4",
+      "Route": "mp4/taza2.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza2.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6531,8 +6634,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa3.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa3.mp4",
+      "Route": "mp4/taza3.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza3.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6568,8 +6671,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa3.q5tm4g6fef.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa3.mp4",
+      "Route": "mp4/taza3.q5tm4g6fef.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza3.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6604,7 +6707,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa3.mp4"
+          "Value": "mp4/taza3.mp4"
         },
         {
           "Name": "integrity",
@@ -6613,8 +6716,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa4.00ffar3iw7.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa4.mp4",
+      "Route": "mp4/taza4.00ffar3iw7.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza4.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6649,7 +6752,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa4.mp4"
+          "Value": "mp4/taza4.mp4"
         },
         {
           "Name": "integrity",
@@ -6658,8 +6761,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa4.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa4.mp4",
+      "Route": "mp4/taza4.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza4.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6695,8 +6798,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa5.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa5.mp4",
+      "Route": "mp4/taza5.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza5.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6732,8 +6835,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa5.tkdd3k5k3s.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa5.mp4",
+      "Route": "mp4/taza5.tkdd3k5k3s.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza5.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6768,7 +6871,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa5.mp4"
+          "Value": "mp4/taza5.mp4"
         },
         {
           "Name": "integrity",
@@ -6777,8 +6880,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa6.8xbwp2fr5b.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa6.mp4",
+      "Route": "mp4/taza6.8xbwp2fr5b.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza6.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -6813,7 +6916,7 @@
         },
         {
           "Name": "label",
-          "Value": "mp4/tasa6.mp4"
+          "Value": "mp4/taza6.mp4"
         },
         {
           "Name": "integrity",
@@ -6822,8 +6925,8 @@
       ]
     },
     {
-      "Route": "mp4/tasa6.mp4",
-      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\tasa6.mp4",
+      "Route": "mp4/taza6.mp4",
+      "AssetFile": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza6.mp4",
       "Selectors": [],
       "ResponseHeaders": [
         {

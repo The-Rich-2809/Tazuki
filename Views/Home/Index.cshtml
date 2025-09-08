@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="ratio ratio-16x9 shadow-soft rounded-4 overflow-hidden border border-secondary-subtle">
-                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1600&auto=format&fit=crop" class="object-fit-cover" alt="Mockup tazas sublimadas">
+                        <img src="img/taza.jpg" class="object-fit-cover" alt="Mockup tazas sublimadas">
                     </div>
                 </div>
             </div>
@@ -86,10 +86,10 @@
                 <!-- Video Producto -->
                 @for (int i = 1; i < 7; i++)
                 {
-                    string tasa = "mp4/tasa" + i + ".mp4";
+                    string taza = "mp4/taza" + i + ".mp4";
                     <div class="col-12 col-sm-6 col-lg-4 producto" data-tags="video demostracion">
                         <div class="card h-100">
-                            <video src=@tasa class="card-img-top" controls></video>
+                            <video src=@taza class="card-img-top" autoplay muted loop playsinline></video>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">Taza con foto</h5>
                                 <p class="card-text text-secondary flex-grow-1">Tu foto favorita en alta definición. Perfecta para regalos.</p>
