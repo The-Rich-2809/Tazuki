@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ricar\\Documents\\Programacion\\C#\\Tazuki\\Tazuki.csproj": {}
+    "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ricar\\Documents\\Programacion\\C#\\Tazuki\\Tazuki.csproj": {
+    "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ricar\\Documents\\Programacion\\C#\\Tazuki\\Tazuki.csproj",
+        "projectUniqueName": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
         "projectName": "Tazuki",
-        "projectPath": "C:\\Users\\ricar\\Documents\\Programacion\\C#\\Tazuki\\Tazuki.csproj",
+        "projectPath": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
         "packagesPath": "C:\\Users\\ricar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ricar\\Documents\\Programacion\\C#\\Tazuki\\obj\\",
+        "outputPath": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

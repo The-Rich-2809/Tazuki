@@ -1,8 +1,274 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!doctype html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tazuki Remix · Tienda</title>
+    <meta name="description" content="Tazas sublimadas personalizadas. Pide por WhatsApp y recibe en todo México." />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        :root{
+          --brand: #6ea8fe; /* primary soft */
+          --brand-2: #c29ffa; /* accent */
+        }
+        body{background:linear-gradient(180deg,#0b0f16 0%, #0f1723 100%);}
+        .navbar-brand{letter-spacing:.3px}
+        .hero{
+          background: radial-gradient(80% 80% at 10% 10%, rgba(110,168,254,.12), transparent 60%),
+                      radial-gradient(60% 60% at 90% 20%, rgba(194,159,250,.15), transparent 60%);
+          border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+        .badge-price{background:rgba(110,168,254,.15); border:1px solid rgba(110,168,254,.35);}
+        .card{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);}
+        .card img{border-bottom:1px solid rgba(255,255,255,.06);}
+        .shadow-soft{box-shadow: 0 10px 30px rgba(0,0,0,.35);}
+        .whatsapp-btn{background:#25d366;border:0}
+        .whatsapp-btn:hover{filter:brightness(1.05)}
+        .footer a{color:#adb5bd}
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg border-bottom border-secondary-subtle sticky-top" style="backdrop-filter: blur(8px); background: rgba(13,17,23,.7);">
+        <div class="container">
+            <a class="navbar-brand fw-semibold" href="#inicio">☕ Tazuki Remix</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#catalogo">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#personaliza">Personaliza</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                    <li class="nav-item ms-lg-2"><a class="btn btn-primary" href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20tazas%20sublimadas">Pedir por WhatsApp</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <!-- HERO -->
+    <section id="inicio" class="hero py-5 py-lg-6">
+        <div class="container py-4">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <h1 class="display-5 fw-bold mb-3">Tazas sublimadas <span class="text-primary">personalizadas</span></h1>
+                    <p class="lead text-secondary">Convierte tu foto, logo o frase en una taza única. Producción rápida, calidad premium y envíos a todo México.</p>
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="#catalogo" class="btn btn-primary btn-lg">Ver catálogo</a>
+                        <a class="btn btn-outline-light btn-lg" href="#personaliza">Cómo funciona</a>
+                    </div>
+                    <div class="mt-4 small text-secondary">Pagos por transferencia, contraentrega local o pasarelas (PayPal/Mercado Pago opcional).</div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ratio ratio-16x9 shadow-soft rounded-4 overflow-hidden border border-secondary-subtle">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1600&auto=format&fit=crop" class="object-fit-cover" alt="Mockup tazas sublimadas">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATALOGO -->
+    <section id="catalogo" class="py-5">
+        <div class="container">
+            <div class="d-flex align-items-end justify-content-between mb-3">
+                <div>
+                    <h2 class="fw-semibold">Catálogo</h2>
+                    <p class="text-secondary mb-0">Precios orientativos. Personaliza y cotiza al instante por WhatsApp.</p>
+                </div>
+                <div class="input-group" style="max-width: 320px;">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input id="buscador" type="search" class="form-control" placeholder="Buscar: foto, mágica, pareja…">
+                </div>
+            </div>
+
+            <div id="gridProductos" class="row g-4">
+                <!-- Video Producto -->
+                @for (int i = 1; i < 7; i++)
+                {
+                    string tasa = "mp4/tasa" + i + ".mp4";
+                    <div class="col-12 col-sm-6 col-lg-4 producto" data-tags="video demostracion">
+                        <div class="card h-100">
+                            <video src=@tasa class="card-img-top" controls></video>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">Taza con foto</h5>
+                                <p class="card-text text-secondary flex-grow-1">Tu foto favorita en alta definición. Perfecta para regalos.</p>
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span class="badge badge-price">$150 MXN</span>
+                                    <small class="text-secondary">unidad</small>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <a class="btn whatsapp-btn" target="_blank" href="https://wa.me/5215578868430?text=Quiero%20la%20Taza%20con%20foto%20($150).%20Te%20mando%20mi%20imagen.">Pedir por WhatsApp</a>
+                                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalPersonaliza" data-producto="Taza con foto" data-precio="150">Personalizar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- PERSONALIZA -->
+    <section id="personaliza" class="py-5 bg-body-tertiary border-top border-bottom border-secondary-subtle">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="fw-semibold">Cómo personalizar</h2>
+                    <ol class="text-secondary">
+                        <li>Elige un producto del catálogo y da clic en <strong>Personalizar</strong>.</li>
+                        <li>Describe tu idea (foto, logo, nombres, fecha, colores).</li>
+                        <li>Te confirmamos el diseño por WhatsApp antes de producir.</li>
+                        <li>Pagas y ¡listo! Producimos y enviamos.</li>
+                    </ol>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-primary btn-lg" href="https://wa.me/5215578868430?text=Quiero%20personalizar%20una%20taza">Empezar ahora</a>
+                        <a class="btn btn-outline-light btn-lg" href="#faq">Dudas frecuentes</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ratio ratio-4x3 rounded-4 overflow-hidden border border-secondary-subtle">
+                        <img src="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?q=80&w=1200&auto=format&fit=crop" class="object-fit-cover" alt="Proceso de personalización">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-5">
+        <div class="container">
+            <h2 class="fw-semibold mb-3">Preguntas frecuentes</h2>
+            <div class="accordion" id="faqAcc">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="q1"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1">¿Cuánto tarda la producción?</button></h2>
+                    <div id="c1" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+                        <div class="accordion-body text-secondary">De 1 a 2 días hábiles para pedidos individuales. Mayoreo: 3–7 días según volumen.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="q2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">¿Hacen envíos?</button></h2>
+                    <div id="c2" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+                        <div class="accordion-body text-secondary">Sí, a todo México por paquetería. Envío local en el mismo día sujeto a zona.</div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="q3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">¿Qué métodos de pago aceptan?</button></h2>
+                    <div id="c3" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
+                        <div class="accordion-body text-secondary">Transferencia, efectivo, contraentrega local y pasarelas como PayPal/Mercado Pago.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="py-5 border-top border-secondary-subtle footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-semibold">Contáctanos</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li>WhatsApp: <a href="https://wa.me/5215578868430">+52 5578868430</a></li>
+                        <li>Correo: <a href="mailto:contacto@tazasmx.com">contacto@tazasmx.com</a></li>
+                        <li>Instagram: <a href="#">tazasmx</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="fw-semibold">Información</h5>
+                    <p class="text-secondary">Facturamos compras. Pide tu factura dentro del mes de compra. Precios sujetos a cambio sin previo aviso.</p>
+                </div>
+            </div>
+            <div class="border-top border-secondary-subtle mt-4 pt-3 d-flex justify-content-between small text-secondary">
+                <span>© <span id="year"></span> Tazuki Remix</span>
+                <a href="#inicio">Volver arriba</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL PERSONALIZA -->
+    <div class="modal fade" id="modalPersonaliza" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Personalizar producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPersonaliza">
+                        <div class="mb-3">
+                            <label class="form-label">Producto</label>
+                            <input id="pNombre" type="text" class="form-control" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Detalles del diseño</label>
+                            <textarea id="pDetalles" class="form-control" rows="3" placeholder="Ej: nombres, colores, frase, logo, foto…"></textarea>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Cantidad</label>
+                                <input id="pCantidad" type="number" class="form-control" min="1" value="1">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Precio aprox.</label>
+                                <input id="pPrecio" type="text" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="waLink" class="btn whatsapp-btn" target="_blank" href="#">Enviar por WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Año dinámico
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Buscador simple por tags
+        const input = document.getElementById('buscador');
+        const productos = [...document.querySelectorAll('.producto')];
+        input?.addEventListener('input', (e)=>{
+          const q = e.target.value.toLowerCase();
+          productos.forEach(p=>{
+            const tags = (p.dataset.tags||'').toLowerCase();
+            const title = p.querySelector('.card-title')?.textContent.toLowerCase()||'';
+            p.style.display = (tags.includes(q) || title.includes(q)) ? '' : 'none';
+          })
+        })
+
+        // Modal Personaliza → rellena datos y compone link de WhatsApp
+        const modal = document.getElementById('modalPersonaliza');
+        modal?.addEventListener('show.bs.modal', (ev)=>{
+          const btn = ev.relatedTarget;
+          const nombre = btn?.getAttribute('data-producto')||'Producto';
+          const precio = btn?.getAttribute('data-precio')||'';
+          document.getElementById('pNombre').value = nombre;
+          document.getElementById('pPrecio').value = precio ? `$${precio} MXN` : 'A cotizar';
+          document.getElementById('pCantidad').value = 1;
+          document.getElementById('pDetalles').value = '';
+          actualizarWA();
+        });
+
+        ['pDetalles','pCantidad'].forEach(id=>{
+          document.getElementById(id)?.addEventListener('input', actualizarWA)
+        });
+
+        function actualizarWA(){
+          const nombre = document.getElementById('pNombre').value;
+          const det = document.getElementById('pDetalles').value.trim();
+          const qty = document.getElementById('pCantidad').value;
+          const mensaje = `Hola, quiero personalizar: ${nombre}%0A`+
+                          `Cantidad: ${qty}%0A`+
+                          (det?`Detalles: ${encodeURIComponent(det)}%0A`:``)+
+                          `¿Me ayudas con el diseño y total?`;
+          const telefono = '5215578868430'; // ← CAMBIA A TU NÚMERO
+          document.getElementById('waLink').href = `https://wa.me/${telefono}?text=${mensaje}`;
+        }
+    </script>
+</body>
+</html>
