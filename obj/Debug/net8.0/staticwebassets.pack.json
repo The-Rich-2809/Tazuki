@@ -13,8 +13,16 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\Tazuki.jpg",
+      "PackagePath": "staticwebassets\\img\\Tazuki.jpg"
+    },
+    {
       "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\taza.jpg",
       "PackagePath": "staticwebassets\\img\\taza.jpg"
+    },
+    {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\taza1.jpg",
+      "PackagePath": "staticwebassets\\img\\taza1.jpg"
     },
     {
       "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\js\\site.js",
@@ -249,28 +257,28 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\Amor.mp4",
+      "PackagePath": "staticwebassets\\mp4\\Amor.mp4"
+    },
+    {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\Caballeros.mp4",
+      "PackagePath": "staticwebassets\\mp4\\Caballeros.mp4"
+    },
+    {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\Dragon_Ball.mp4",
+      "PackagePath": "staticwebassets\\mp4\\Dragon_Ball.mp4"
+    },
+    {
+      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\Toluca.mp4",
+      "PackagePath": "staticwebassets\\mp4\\Toluca.mp4"
+    },
+    {
       "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza1.mp4",
       "PackagePath": "staticwebassets\\mp4\\taza1.mp4"
     },
     {
-      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza2.mp4",
-      "PackagePath": "staticwebassets\\mp4\\taza2.mp4"
-    },
-    {
-      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza3.mp4",
-      "PackagePath": "staticwebassets\\mp4\\taza3.mp4"
-    },
-    {
       "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza4.mp4",
       "PackagePath": "staticwebassets\\mp4\\taza4.mp4"
-    },
-    {
-      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza5.mp4",
-      "PackagePath": "staticwebassets\\mp4\\taza5.mp4"
-    },
-    {
-      "Id": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\wwwroot\\mp4\\taza6.mp4",
-      "PackagePath": "staticwebassets\\mp4\\taza6.mp4"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Tazuki.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
