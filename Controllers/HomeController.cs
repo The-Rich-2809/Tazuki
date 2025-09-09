@@ -15,6 +15,8 @@ namespace Tazuki.Controllers
 
         public IActionResult Index()
         {
+            string[] tazas = { "mp4/Dragon_Ball.mp4", "mp4/taza1.mp4", "mp4/Amor.mp4", "mp4/taza4.mp4", "mp4/Caballeros.mp4", "mp4/Toluca.mp4" };
+            ViewBag.Tazas = tazas;
             return View();
         }
         public IActionResult Catalogo()
