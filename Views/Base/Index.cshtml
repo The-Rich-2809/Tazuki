@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_LayoutBase";
+}
+
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Formulario con Carga de Archivos</h1>
+
+    <!-- El atributo enctype="multipart/form-data" es crucial para la subida de archivos -->
+    <form action="/upload" method="post" enctype="multipart/form-data">
+
+        <!-- Campo de Texto (Textbox) -->
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+        </div>
+
+        <!-- Área de Texto (Textarea) -->
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Añade una descripción"></textarea>
+        </div>
+
+        <!-- Menú Desplegable (Combobox/Select) -->
+        <div class="mb-3">
+            <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
+            <select class="form-select" id="tipoDocumento" name="tipoDocumento" aria-label="Selecciona un tipo de documento">
+                <option selected disabled>Elige una opción...</option>
+                <option value="factura">Factura</option>
+                <option value="reporte">Reporte</option>
+                <option value="contrato">Contrato</option>
+                <option value="otro">Otro</option>
+            </select>
+        </div>
+
+        <!-- Campo para Subir Múltiples Archivos -->
+        <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Subir Archivos</label>
+            <!-- El atributo "multiple" permite seleccionar más de un archivo -->
+            <input class="form-control" type="file" id="formFileMultiple" name="archivos[]" multiple>
+        </div>
+
+        <!-- Botón de Envío -->
+        <button type="submit" class="btn btn-primary">Enviar</button>
+
+    </form>
+</div>
