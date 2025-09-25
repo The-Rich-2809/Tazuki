@@ -1,6 +1,8 @@
 ﻿@{
-    Layout = "_LayoutBase";
+    Layout = "_LayoutAdmin";
 }
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,13 +39,20 @@
     <div class="container my-5">
         <h1 class="mb-4 text-center">Galería de Videos</h1>
 
+        <!-- Contenedor de Filtros -->
+        <div id="filters" class="text-center mb-4">
+            <button class="btn btn-primary active" data-filter="all">Todos</button>
+            <button class="btn btn-outline-primary" data-filter="naturaleza">Naturaleza</button>
+            <button class="btn btn-outline-primary" data-filter="tecnologia">Tecnología</button>
+            <button class="btn btn-outline-primary" data-filter="animacion">Animación</button>
+            <button class="btn btn-outline-primary" data-filter="viajes">Viajes</button>
+        </div>
+
         <div class="row">
             <!-- Video 1 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza 4k">
                 <div class="video-card">
-                    <!-- El atributo muted es clave para que autoplay funcione en la mayoría de navegadores -->
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+1" playsinline autoplay muted loop>
-                        <!-- Reemplaza esta URL con la de tu video -->
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
                         Tu navegador no soporta la etiqueta de video.
                     </video>
@@ -51,11 +60,15 @@
                         <span class="badge bg-primary">Naturaleza</span>
                         <span class="badge bg-secondary">4K</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Video 2 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="tecnologia">
                 <div class="video-card">
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+2" playsinline autoplay muted loop>
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
@@ -64,11 +77,15 @@
                     <div class="categories mt-2">
                         <span class="badge bg-success">Tecnología</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Video 3 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="animacion comedia">
                 <div class="video-card">
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+3" playsinline autoplay muted loop>
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
@@ -78,11 +95,15 @@
                         <span class="badge bg-danger">Animación</span>
                         <span class="badge bg-info text-dark">Comedia</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Video 4 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="viajes">
                 <div class="video-card">
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+4" playsinline autoplay muted loop>
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
@@ -91,11 +112,15 @@
                     <div class="categories mt-2">
                         <span class="badge bg-warning text-dark">Viajes</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Video 5 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza nocturno">
                 <div class="video-card">
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+5" playsinline autoplay muted loop>
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
@@ -105,11 +130,15 @@
                         <span class="badge bg-primary">Naturaleza</span>
                         <span class="badge bg-dark">Nocturno</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
 
             <!-- Video 6 -->
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="tecnologia review">
                 <div class="video-card">
                     <video poster="https://via.placeholder.com/400x225.png?text=Video+6" playsinline autoplay muted loop>
                         <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
@@ -119,6 +148,10 @@
                         <span class="badge bg-success">Tecnología</span>
                         <span class="badge bg-secondary">Review</span>
                     </div>
+                    <div class="actions mt-3 text-end">
+                        <button class="btn btn-success btn-sm me-2">Publicar</button>
+                        <button class="btn btn-danger btn-sm">Quitar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -126,4 +159,32 @@
 
     <!-- JS de Bootstrap (Bundle) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para la funcionalidad de filtros -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('#filters .btn');
+            const videoItems = document.querySelectorAll('.video-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Marcar el botón activo
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filter = button.getAttribute('data-filter');
+
+                    videoItems.forEach(item => {
+                        const categories = item.getAttribute('data-categories');
+                        if (filter === 'all' || categories.includes(filter)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
+</html>

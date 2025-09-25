@@ -2,13 +2,13 @@
 
 namespace Tazuki.Controllers
 {
-    public class BaseController : Controller
+    public class AdminController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Videos()
+        public IActionResult AgregarDiseno()
         {
             return View();
         }
