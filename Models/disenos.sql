@@ -15,7 +15,7 @@ CREATE TABLE `disenos` (
   `fecha_creacion` DATE NOT NULL,
   
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB;z
+) ENGINE = InnoDB;
 
 CREATE TABLE `tags` (
   `id` INT NOT NULL AUTO_INCREMENT,

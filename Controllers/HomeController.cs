@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Diagnostics;
 using Tazuki.Models;
 
 namespace Tazuki.Controllers
@@ -21,6 +22,8 @@ namespace Tazuki.Controllers
         }
         public IActionResult Catalogo()
         {
+            DataTable dt = Admin_SQL.Mostrar_Tazas();
+            ViewBag.Videos = dt;
             return View();
         }
         public IActionResult Contacto()

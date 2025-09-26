@@ -1,4 +1,5 @@
-﻿<!-- CATÁLOGO SOLO TAZAS -->
+﻿@using System.Data
+<!-- CATÁLOGO SOLO TAZAS -->
 <section id="catalogo" class="py-5">
     <div class="container">
         <div class="row">
@@ -89,39 +90,43 @@
                         </div>
                     </div>
 
+                    @foreach (DataRow row_video in ViewBag.Videos.Rows)
+                    {
+                        <div class="col-12 col-sm-6 col-md-4 producto"
+                             data-cat="anime"
+                             data-precio="189"
+                             data-tags="taza anime goku naruto luffy one piece dragon ball">
+                            <div class="card h-100">
+                                <video src="@row_video[4]" class="card-img-top" alt="Taza de anime" autoplay muted loop playsinline></video>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title mb-1">Taza Anime</h5>
+                                    <span class="badge badge-price mb-2">Desde $189</span>
+                                    <p class="card-text text-secondary small mb-3">Perfecta para fans de Dragon Ball, Naruto, One Piece y más.</p>
 
-                    <!-- Taza Anime -->
-                    <div class="col-12 col-sm-6 col-md-4 producto"
-                         data-cat="anime"
-                         data-precio="189"
-                         data-tags="taza anime goku naruto luffy one piece dragon ball">
-                        <div class="card h-100">
-                            <video src="~/mp4/Caballeros.mp4" class="card-img-top" alt="Taza de anime" autoplay muted loop playsinline></video>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title mb-1">Taza Anime</h5>
-                                <span class="badge badge-price mb-2">Desde $189</span>
-                                <p class="card-text text-secondary small mb-3">Perfecta para fans de Dragon Ball, Naruto, One Piece y más.</p>
-                                
-                                <div class="mt-auto d-flex flex-column gap-2">
-                                    <!-- Botón agregar a carrito -->
-                                    <button class="btn btn-outline-secondary w-100 btn-carrito"
-                                            data-producto="Taza Superhéroe"
-                                            data-precio="199">
-                                        <i class="bi bi-cart-plus"></i> Agregar al carrito
-                                    </button>
+                                    <div class="mt-auto d-flex flex-column gap-2">
+                                        <!-- Botón agregar a carrito -->
+                                        <button class="btn btn-outline-secondary w-100 btn-carrito"
+                                                data-producto="Taza Superhéroe"
+                                                data-precio="199">
+                                            <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                        </button>
 
-                                    <!-- Botón comprar ahora -->
-                                    <button class="btn btn-primary w-100"
-                                            data-producto="Taza Superhéroe"
-                                            data-precio="199"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalPersonaliza">
-                                        <i class="bi bi-bag-check"></i> Comprar ahora
-                                    </button>
+                                        <!-- Botón comprar ahora -->
+                                        <button class="btn btn-primary w-100"
+                                                data-producto="Taza Superhéroe"
+                                                data-precio="199"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalPersonaliza">
+                                            <i class="bi bi-bag-check"></i> Comprar ahora
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
+                    <!-- Taza Anime -->
+                    
 
                     <!-- Taza Liga MX -->
                     <div class="col-12 col-sm-6 col-md-4 producto"

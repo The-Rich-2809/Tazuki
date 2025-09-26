@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "_LayoutAdmin";
 }
+@using System.Data;
 
 <style>
     /* Estilos generales */
@@ -110,7 +111,7 @@
     <h1 class="mb-4 text-center">Formulario con Carga de Archivos</h1>
 
     <!-- El atributo enctype="multipart/form-data" es crucial para la subida de archivos -->
-    <form asp-controller="Admin" asp-action="CrearSite" method="post">
+    <form asp-controller="Admin" asp-action="AgregarDiseno" method="post" enctype="multipart/form-data">
 
         <!-- Campo de Texto (Textbox) -->
         <div class="mb-3">
@@ -126,19 +127,8 @@
 
         <!-- Menú Desplegable (Combobox/Select) -->
         <div class="mb-3">
-            <label for="tipoDocumento" class="form-label">Tamaño de taza</label>
-            <select class="form-select" id="tipoDocumento" name="tamano_taza" aria-label="Selecciona un tipo de documento">
-                <option selected disabled>Elige una opción...</option>
-                <option value="factura">Factura</option>
-                <option value="reporte">Reporte</option>
-                <option value="contrato">Contrato</option>
-                <option value="otro">Otro</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="tipoDocumento" class="form-label">Etiquetas</label>
-            <select class="form-select" id="tipoDocumento" name="tipoDocumento" aria-label="Selecciona un tipo de documento">
+            <label for="tipoTaza" class="form-label">Tamaño de taza</label>
+            <select class="form-select" id="tipoDocumento" name="tipoTaza" aria-label="Selecciona un tipo de documento">
                 <option selected disabled>Elige una opción...</option>
                 <option value="factura">Factura</option>
                 <option value="reporte">Reporte</option>
@@ -158,86 +148,13 @@
                     <label for="opciones">Selecciona tus opciones</label>
                     <div id="opciones" class="checkbox-group">
                         <!-- Las opciones se cargarán aquí -->
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion1" value="Opción 1">
-                            <label class="custom-control-label" for="opcion1">Opción 1</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion2" value="Opción 2">
-                            <label class="custom-control-label" for="opcion2">Opción 2</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion3" value="Opción 3">
-                            <label class="custom-control-label" for="opcion3">Opción 3</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion4" value="Opción 4">
-                            <label class="custom-control-label" for="opcion4">Opción 4</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion5" value="Opción 5">
-                            <label class="custom-control-label" for="opcion5">Opción 5</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion6" value="Opción 6">
-                            <label class="custom-control-label" for="opcion6">Opción 6</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion7" value="Opción 7">
-                            <label class="custom-control-label" for="opcion7">Opción 7</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion8" value="Opción 8">
-                            <label class="custom-control-label" for="opcion8">Opción 8</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion9" value="Opción 9">
-                            <label class="custom-control-label" for="opcion9">Opción 9</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion10" value="Opción 10">
-                            <label class="custom-control-label" for="opcion10">Opción 10</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion11" value="Opción 11">
-                            <label class="custom-control-label" for="opcion11">Opción 11</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion12" value="Opción 12">
-                            <label class="custom-control-label" for="opcion12">Opción 12</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion13" value="Opción 13">
-                            <label class="custom-control-label" for="opcion13">Opción 13</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion14" value="Opción 14">
-                            <label class="custom-control-label" for="opcion14">Opción 14</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion15" value="Opción 15">
-                            <label class="custom-control-label" for="opcion15">Opción 15</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion16" value="Opción 16">
-                            <label class="custom-control-label" for="opcion16">Opción 16</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion17" value="Opción 17">
-                            <label class="custom-control-label" for="opcion17">Opción 17</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion18" value="Opción 18">
-                            <label class="custom-control-label" for="opcion18">Opción 18</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion19" value="Opción 19">
-                            <label class="custom-control-label" for="opcion19">Opción 19</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="opcion20" value="Opción 20">
-                            <label class="custom-control-label" for="opcion20">Opción 20</label>
-                        </div>
+                        @foreach(DataRow row_tag in ViewBag.Tags.Rows)
+                        {
+                            <div class="custom-control custom-checkbox">
+                            <input name="tags" type="checkbox" class="custom-control-input" id="opcion1" value="@row_tag[0]">
+                                <label class="custom-control-label" for="opcion1">@row_tag[1]</label>
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -251,11 +168,11 @@
         <div class="mb-3">
             <label for="formFileMultiple" class="form-label">Subir Archivos</label>
             <!-- El atributo "multiple" permite seleccionar más de un archivo -->
-            <input class="form-control" type="file" id="formFileMultiple" name="archivos[]" multiple>
+            <input class="form-control" type="file" name="archivo">
         </div>
 
         <!-- Botón de Envío -->
-        <a asp-controller="Admin" asp-action="Sites" class="btn btn-primary">Enviar</a>
+        <button type="submit" class="btn btn-primary">Enviar</button>
 
     </form>
 </div>

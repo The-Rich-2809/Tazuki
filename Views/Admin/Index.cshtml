@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Data
+@{
     Layout = "_LayoutAdmin";
 }
 <!DOCTYPE html>
@@ -50,110 +51,27 @@
 
         <div class="row">
             <!-- Video 1 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza 4k">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+1" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-primary">Naturaleza</span>
-                        <span class="badge bg-secondary">4K</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
+            @foreach (DataRow row_video in ViewBag.Videos.Rows)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza 4k">
+                    <div class="video-card">
+                        <video poster="https://via.placeholder.com/400x225.png?text=Video+1" playsinline autoplay muted loop>
+                            <source src=@row_video[4] type="video/mp4">
+                            Tu navegador no soporta la etiqueta de video.
+                        </video>
+                        <div class="categories mt-2">
+                            <span class="badge bg-primary">Naturaleza</span>
+                            <span class="badge bg-secondary">4K</span>
+                        </div>
+                        <div class="actions mt-3 text-end">
+                            <button class="btn btn-success btn-sm me-2">Publicar</button>
+                            <button class="btn btn-danger btn-sm">Quitar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
-            <!-- Video 2 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="tecnologia">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+2" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-success">Tecnología</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 3 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="animacion comedia">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+3" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-danger">Animación</span>
-                        <span class="badge bg-info text-dark">Comedia</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 4 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="viajes">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+4" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-warning text-dark">Viajes</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 5 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza nocturno">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+5" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-primary">Naturaleza</span>
-                        <span class="badge bg-dark">Nocturno</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 6 -->
-            <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="tecnologia review">
-                <div class="video-card">
-                    <video poster="https://via.placeholder.com/400x225.png?text=Video+6" playsinline autoplay muted loop>
-                        <source src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" type="video/mp4">
-                        Tu navegador no soporta la etiqueta de video.
-                    </video>
-                    <div class="categories mt-2">
-                        <span class="badge bg-success">Tecnología</span>
-                        <span class="badge bg-secondary">Review</span>
-                    </div>
-                    <div class="actions mt-3 text-end">
-                        <button class="btn btn-success btn-sm me-2">Publicar</button>
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 
