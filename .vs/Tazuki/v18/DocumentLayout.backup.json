@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\",
+  "WorkspaceRootPath": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\ricar\\documents\\github\\tazuki\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\ricar\\documents\\github\\tazuki\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\ricar\\documents\\github\\tazuki\\views\\admin\\agregardiseno.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\agregardiseno.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\admin\\agregardiseno.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\ricar\\documents\\github\\tazuki\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
@@ -26,15 +26,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "AgregarDiseno.cshtml",
-              "DocumentMoniker": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\AgregarDiseno.cshtml",
-              "ToolTip": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
               "RelativeToolTip": "Views\\Admin\\AgregarDiseno.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -44,11 +48,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
-              "ToolTip": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
               "RelativeToolTip": "Views\\Admin\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-23T04:37:17.726Z",
               "EditorCaption": ""
@@ -57,9 +61,9 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeToolTip": "Controllers\\AdminController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -69,9 +73,9 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "_LayoutAdmin.cshtml",
-              "DocumentMoniker": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_LayoutAdmin.cshtml",
-              "ToolTip": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
               "RelativeToolTip": "Views\\Shared\\_LayoutAdmin.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
