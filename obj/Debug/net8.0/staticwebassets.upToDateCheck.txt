@@ -61,4 +61,9 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\mp4\Amor.mp4
+wwwroot\mp4\Caballeros.mp4
+wwwroot\mp4\Dragon_Ball.mp4
+wwwroot\mp4\taza1.mp4
+wwwroot\mp4\taza4.mp4
 wwwroot\mp4\Toluca.mp4

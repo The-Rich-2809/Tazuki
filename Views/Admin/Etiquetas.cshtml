@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+}
+@using System.Data;
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestión de Etiquetas</h1>
+
+    @if (ViewBag.ErrorMessage != "")
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+        <!-- Formulario para añadir nueva etiqueta (Opcional, pero útil) -->
+        <form asp-action="AgregarEtiquetas" asp-controller="Admin" method="post">
+            <div class="input-group mb-3">
+                <input name="nombre" type="text" class="form-control" placeholder="Nombre de la nueva etiqueta">
+                <button class="btn btn-primary" type="submit">Crear Etiqueta</button>
+            </div>
+        </form>
+    
+
+        <!-- Tabla para mostrar las etiquetas -->
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Nombre de la Etiqueta</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Fila de ejemplo en modo normal -->
+                @foreach (DataRow row_tag in ViewBag.Tags.Rows)
+                {
+                    <tr>
+                        <td>@row_tag[1]</td>
+                        <td class="text-center">
+                            <button class="btn btn-warning btn-sm me-2">Editar</button>
+                            <a type="submit" href="@Url.Action("EliminarEtiquetas", "Admin", new { Id = row_tag[0] })" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+<!-- JS de Bootstrap 5 (Bundle) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- Script para la funcionalidad de la tabla -->
+<script>
+    const createBtn = document.querySelector('.btn-primary');
+    const createInput = document.querySelector('.form-control[placeholder="Nombre de la nueva etiqueta"]');
+    const tableBody = document.querySelector('.table tbody');
+
+
+    // --- FUNCIONALIDAD DE EDITAR, GUARDAR Y ELIMINAR ---
+    tableBody.addEventListener('click', (event) => {
+        const target = event.target;
+        const row = target.closest('tr');
+        if (!row) return;
+
+        const cell = row.firstElementChild;
+
+        // Botón de Editar
+        if (target.classList.contains('btn-warning')) {
+            const currentName = cell.textContent;
+            cell.innerHTML = `<input type="text" class="form-control" value="${currentName}">`;
+            target.textContent = 'Guardar';
+            target.classList.remove('btn-warning');
+            target.classList.add('btn-success');
+        }
+        // Botón de Guardar
+        else if (target.classList.contains('btn-success')) {
+            const newName = cell.querySelector('input').value;
+            cell.innerHTML = newName;
+            target.textContent = 'Editar';
+            target.classList.remove('btn-success');
+            target.classList.add('btn-warning');
+        }
+    });
+</script>

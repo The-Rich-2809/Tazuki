@@ -81,5 +81,28 @@ namespace Tazuki.Controllers
 
             return RedirectToAction("Index", "Admin");
         }
+
+        public IActionResult Etiquetas()
+        {
+            ViewBag.ErrorMessage = Datos.Mensaje;
+            DataTable dt = Admin_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt;
+            return View();
+        }
+        
+        [HttpPost]
+        public IActionResult AgregarEtiquetas(string nombre)
+        {
+            Datos.Nombre = nombre;
+            Admin_SQL.Agregar_Tags();
+            return RedirectToAction("Etiquetas", "Admin");
+        }
+        [HttpGet]
+        public IActionResult EliminarEtiquetas(int Id)
+        {
+            Datos.Id = Id;
+            Admin_SQL.Eliminar_Tags();
+            return RedirectToAction("Etiquetas", "Admin");
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Tazuki.Models
     {
         public static DataTable Mostrar_Tazas()
         {
+            Datos.Mensaje = "";
             DataTable dt = new DataTable();
             string sql;
 
@@ -34,6 +35,7 @@ namespace Tazuki.Models
         }
         public static DataTable Mostrar_Tags()
         {
+            Datos.Mensaje = "";
             DataTable dt = new DataTable();
             string sql;
 
@@ -60,6 +62,7 @@ namespace Tazuki.Models
 
         public static DataTable Agregar_Diseno()
         {
+            Datos.Mensaje = "";
             DataTable dt = new DataTable();
             string sql;
 
@@ -76,6 +79,62 @@ namespace Tazuki.Models
                 comando.Parameters.AddWithValue("descripcion", Datos.descripcion);
                 comando.Parameters.AddWithValue("ruta_diseno", Datos.rutaDiseno);
                 comando.Parameters.AddWithValue("fecha_creacion", DateTime.Now);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Agregar_Tags()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "INSERT INTO tags (nombre) VALUES (@nombre);";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("nombre", Datos.Nombre);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                if(ex.Number == 1062)
+                    Datos.Mensaje = "La etiqueta ya existe.";
+                else
+                    Datos.Mensaje = "Error al buscar " + ex.Message;
+
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Eliminar_Tags()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "DELETE FROM tags WHERE id = @id";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("id", Datos.Id);
                 dt.Load(comando.ExecuteReader());
                 conexionBD.Close();
 
