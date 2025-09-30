@@ -3,6 +3,34 @@
   "WorkspaceRootPath": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\home\\biografia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\home\\biografia.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\shared\\_layouthome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\shared\\_layouthome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\etiquetas.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\admin\\etiquetas.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\agregardiseno.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -31,16 +55,8 @@
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:models\\inicializar_db.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\models\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:models\\conexion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\models\\inicializar_db.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
-      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:models\\inicializar_db.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,24 +66,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-30T17:46:07.204Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_LayoutHome.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutHome.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_LayoutHome.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutHome.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_LayoutHome.cshtml",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAAACMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-30T17:37:22.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_LayoutAdmin.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_LayoutAdmin.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_LayoutAdmin.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACAAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-30T17:37:20.893Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAMMAAAAAAAAAAAAAANUAAAC1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-30T17:37:17.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Biografia.cshtml",
+              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Biografia.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Biografia.cshtml",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Biografia.cshtml",
+              "RelativeToolTip": "Views\\Home\\Biografia.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAADEAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-30T17:36:39.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
               "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
               "RelativeToolTip": "Views\\Admin\\Index.cshtml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAADYAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-26T23:12:43.348Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
               "Title": "Etiquetas.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Etiquetas.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Etiquetas.cshtml",
@@ -75,38 +156,37 @@
               "RelativeToolTip": "Views\\Admin\\Etiquetas.cshtml",
               "ViewState": "AgIAABgAAAAAAAAAAAAAACwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-26T23:12:08.134Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T23:12:08.134Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
               "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAAAGUAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-26T23:04:58.059Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
               "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\HomeController.cs",
               "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAYwCAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-26T23:04:56.129Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "AgregarDiseno.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\AgregarDiseno.cshtml",
@@ -114,12 +194,11 @@
               "RelativeToolTip": "Views\\Admin\\AgregarDiseno.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-26T00:51:06.896Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T00:51:06.896Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 11,
               "Title": "Datos.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Datos.cs",
               "RelativeDocumentMoniker": "Models\\Datos.cs",
@@ -127,12 +206,11 @@
               "RelativeToolTip": "Models\\Datos.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T00:46:48.183Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T00:46:48.183Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 8,
               "Title": "Admin_SQL.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Admin_SQL.cs",
               "RelativeDocumentMoniker": "Models\\Admin_SQL.cs",
@@ -140,24 +218,22 @@
               "RelativeToolTip": "Models\\Admin_SQL.cs",
               "ViewState": "AgIAAFwAAAAAAAAAAAAQwJMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-26T00:15:35.338Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T00:15:35.338Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "inicializar_db.sql ",
+              "DocumentIndex": 12,
+              "Title": "inicializar_db.sql",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\inicializar_db.sql",
               "RelativeDocumentMoniker": "Models\\inicializar_db.sql",
               "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\inicializar_db.sql",
               "RelativeToolTip": "Models\\inicializar_db.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-09-26T23:15:41.158Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-26T23:15:41.158Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "Conexion.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Conexion.cs",
               "RelativeDocumentMoniker": "Models\\Conexion.cs",

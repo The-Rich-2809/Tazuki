@@ -1,7 +1,7 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
-wwwroot\img\taza.jpg
 wwwroot\img\taza1.jpg
+wwwroot\img\taza2.jpg
 wwwroot\img\Tazuki.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

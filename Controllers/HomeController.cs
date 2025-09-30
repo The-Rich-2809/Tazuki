@@ -30,6 +30,10 @@ namespace Tazuki.Controllers
         {
             return View();
         }
+        public IActionResult Biografia()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
