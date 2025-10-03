@@ -11,10 +11,6 @@
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\wwwroot\\img\\tazuki.jpg||{177559E0-D141-11D0-92DF-00A0C9138C45}",
-      "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:wwwroot\\img\\tazuki.jpg||{177559E0-D141-11D0-92DF-00A0C9138C45}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|c:\\users\\rich\\documents\\github\\tazuki\\views\\shared\\_layouthome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{2D1014AD-CFAF-43AF-B20F-37458C684F22}|Tazuki.csproj|solutionrelative:views\\shared\\_layouthome.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -66,20 +62,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Tazuki.jpg - Bitmap [1080x615, 24 bits, JPG]",
-              "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\Tazuki.jpg",
-              "RelativeDocumentMoniker": "wwwroot\\img\\Tazuki.jpg",
-              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\wwwroot\\img\\Tazuki.jpg - Bitmap [1080x615, 24 bits, JPG]",
-              "RelativeToolTip": "wwwroot\\img\\Tazuki.jpg - Bitmap [1080x615, 24 bits, JPG]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
-              "WhenOpened": "2025-10-03T01:34:08.444Z",
-              "EditorCaption": " - Bitmap [1080x615, 24 bits, JPG]"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -90,11 +74,12 @@
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-30T17:46:07.204Z"
+              "WhenOpened": "2025-09-30T17:46:07.204Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "_LayoutHome.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutHome.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_LayoutHome.cshtml",
@@ -106,7 +91,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "_LayoutAdmin.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Shared\\_LayoutAdmin.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_LayoutAdmin.cshtml",
@@ -122,16 +107,16 @@
               "Title": "Biografia.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Biografia.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Biografia.cshtml",
-              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Biografia.cshtml*",
-              "RelativeToolTip": "Views\\Home\\Biografia.cshtml*",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAgwIUAAAAHAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Home\\Biografia.cshtml",
+              "RelativeToolTip": "Views\\Home\\Biografia.cshtml",
+              "ViewState": "AgIAACIAAAAAAAAAAAAAACoAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-30T17:36:39.041Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
@@ -143,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "Etiquetas.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\Etiquetas.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Etiquetas.cshtml",
@@ -155,7 +140,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
@@ -167,7 +152,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 5,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
@@ -179,7 +164,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 9,
               "Title": "AgregarDiseno.cshtml",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Views\\Admin\\AgregarDiseno.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\AgregarDiseno.cshtml",
@@ -191,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "Datos.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Datos.cs",
               "RelativeDocumentMoniker": "Models\\Datos.cs",
@@ -203,7 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "Admin_SQL.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Admin_SQL.cs",
               "RelativeDocumentMoniker": "Models\\Admin_SQL.cs",
@@ -215,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "inicializar_db.sql",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\inicializar_db.sql",
               "RelativeDocumentMoniker": "Models\\inicializar_db.sql",
@@ -226,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "Conexion.cs",
               "DocumentMoniker": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Models\\Conexion.cs",
               "RelativeDocumentMoniker": "Models\\Conexion.cs",
