@@ -55,10 +55,15 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4 video-item" data-categories="naturaleza 4k">
                     <div class="video-card">
-                        <video poster="https://via.placeholder.com/400x225.png?text=Video+1" playsinline autoplay muted loop>
+                        <video poster="https://via.placeholder.com/400x225.png?text=Video+1" playsinline autoplay muted
+                               loop>
                             <source src=@row_video[4] type="video/mp4">
                             Tu navegador no soporta la etiqueta de video.
                         </video>
+                        <div class="video-card-body">
+                            <h5 class="video-title mt-3">@row_video[1]</h5>
+                            <p class="video-description">@row_video[3]</p>
+                        </div>
                         <div class="categories mt-2">
                             <span class="badge bg-primary">Naturaleza</span>
                             <span class="badge bg-secondary">4K</span>
@@ -70,8 +75,6 @@
                     </div>
                 </div>
             }
-
-            
         </div>
     </div>
 

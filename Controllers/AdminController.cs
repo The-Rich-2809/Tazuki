@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 using Tazuki.Models;
 
 namespace Tazuki.Controllers
@@ -30,56 +33,106 @@ namespace Tazuki.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarDiseno(string nombre, string descripcion, string tipoTaza, string[] tags, IFormFile archivo)
+        public async Task<IActionResult> AgregarDiseno(
+    string nombre,
+    string descripcion,
+    string tipoTaza,
+    string[] tags,
+    IFormFile archivo)
         {
-            Datos.rutaDiseno = @"mp4/" + archivo.FileName;
-
-            //var uploadsFolder = @"/home/rich/compartido/Tazuki/wwwroot/mp4";
+            // Carpeta física donde se guardará el archivo
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
-            Datos.Nombre = nombre;
-            Datos.descripcion = descripcion;
-            Datos.tamanoTaza = tipoTaza;
-
-            Admin_SQL.Agregar_Diseno();
-
-            // 1. Validar que se ha enviado un archivo
+            // 1) Validaciones básicas
             if (archivo == null || archivo.Length == 0)
             {
-                ViewBag.Message = "Error: No se ha seleccionado ningún archivo.";
-                return View();
+                TempData["Message"] = "Error: No se ha seleccionado ningún archivo.";
+                return RedirectToAction("Index", "Admin");
             }
 
-            // 2. Crear una ruta segura para guardar el archivo
-            // Es una buena práctica crear una carpeta "uploads" dentro de wwwroot
+            // Validar extensión/MIME (ajusta la lista según tu caso)
+            var extension = Path.GetExtension(archivo.FileName);
+            var allowedExt = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    { ".mp4", ".mov", ".m4v", ".webm" };
 
-            if (!Directory.Exists(uploadsFolder))
+            if (!allowedExt.Contains(extension))
             {
-                Directory.CreateDirectory(uploadsFolder);
+                TempData["Message"] = $"Error: Extensión no permitida ({extension}).";
+                return RedirectToAction("Index", "Admin");
             }
 
-            // 3. Generar un nombre de archivo único para evitar sobreescrituras y problemas de seguridad
-            var uniqueFileName = Path.GetFileName(archivo.FileName);
+            // (Opcional) validar MIME
+            if (archivo.ContentType?.StartsWith("video/", StringComparison.OrdinalIgnoreCase) != true)
+            {
+                TempData["Message"] = $"Error: El archivo no parece ser de video (MIME: {archivo.ContentType}).";
+                return RedirectToAction("Index", "Admin");
+            }
+
+            // 2) Asegurar carpeta
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            // 3) Crear nombre basado en "nombre" (slug) + timestamp + extensión
+            //    - Evita caracteres problemáticos
+            //    - Evita colisiones
+            var baseName = string.IsNullOrWhiteSpace(nombre) ? "diseno" : nombre;
+
+            string Slugify(string s)
+            {
+                var sinExt = Path.GetFileNameWithoutExtension(s);
+                // Reemplaza espacios por guiones, elimina caracteres no válidos
+                var normalized = sinExt.Normalize(NormalizationForm.FormD);
+                var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
+                var clean = new string(chars.ToArray());
+                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\-_]+", "-");
+                clean = Regex.Replace(clean, @"-+", "-").Trim('-');
+                if (string.IsNullOrEmpty(clean)) clean = "diseno";
+                // Limitar largo para evitar nombres gigantes
+                return clean.Length > 50 ? clean[..50] : clean;
+            }
+
+            var safeName = Slugify(baseName).ToLowerInvariant();
+            var uniqueFileName = $"{safeName}{extension}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // 4. Guardar el archivo en el sistema de ficheros
+            // 4) Guardar físicamente
             try
             {
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     await archivo.CopyToAsync(stream);
                 }
-
-                // 5. Devolver un mensaje de éxito al usuario
-                ViewBag.Message = $"Archivo guardado exitosamente en: {filePath}";
             }
             catch (Exception ex)
             {
-                ViewBag.Message = $"Error al guardar el archivo: {ex.Message}";
+                TempData["Message"] = $"Error al guardar el archivo: {ex.Message}";
+                return RedirectToAction("Index", "Admin");
             }
 
+            // 5) Guardar en BD *después* de conocer el nombre final
+            //    (asegúrate de que Admin_SQL.Agregar_Diseno() use estos campos)
+            Datos.Nombre = nombre;
+            Datos.descripcion = descripcion;
+            Datos.tamanoTaza = tipoTaza;
+            Datos.rutaDiseno = $"MP4/{uniqueFileName}"; // usa misma mayúscula/minúscula que la carpeta
+            Datos.tags = tags;
+
+            try
+            {
+                Admin_SQL.Agregar_Diseno();
+                TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
+            }
+            catch (Exception ex)
+            {
+                // Si falla BD, podrías opcionalmente borrar el archivo para no dejar huérfanos
+                try { System.IO.File.Delete(filePath); } catch { /* ignorar */ }
+                TempData["Message"] = $"Error al registrar en BD: {ex.Message}";
+            }
+
+            // PRG pattern: usa TempData para mostrar el mensaje en Index
             return RedirectToAction("Index", "Admin");
         }
+
 
         public IActionResult Etiquetas()
         {
