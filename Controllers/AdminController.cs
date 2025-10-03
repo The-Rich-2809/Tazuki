@@ -32,11 +32,10 @@ namespace Tazuki.Controllers
         [HttpPost]
         public async Task<IActionResult> AgregarDiseno(string nombre, string descripcion, string tipoTaza, string[] tags, IFormFile archivo)
         {
-            //var uploadsFolder = @"C:\Users\ricar\Documents\MP4";
             Datos.rutaDiseno = @"mp4/" + archivo.FileName;
-            
-            //var uploadsFolder = @"/home/rich/compartido/MP4";
-            //Datos.rutaDiseno = uploadsFolder + @"/" + archivo.FileName;
+
+            //var uploadsFolder = @"/home/rich/compartido/Tazuki/wwwroot/mp4";
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
             Datos.Nombre = nombre;
             Datos.descripcion = descripcion;
@@ -53,7 +52,7 @@ namespace Tazuki.Controllers
 
             // 2. Crear una ruta segura para guardar el archivo
             // Es una buena práctica crear una carpeta "uploads" dentro de wwwroot
-            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
+
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
