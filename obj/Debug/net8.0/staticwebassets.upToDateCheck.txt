@@ -3,6 +3,7 @@ wwwroot\favicon.ico
 wwwroot\img\taza1.jpg
 wwwroot\img\taza2.jpg
 wwwroot\img\Tazuki.jpg
+wwwroot\img\tazukilogo.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
