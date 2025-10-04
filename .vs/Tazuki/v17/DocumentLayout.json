@@ -59,8 +59,7 @@
               "RelativeToolTip": "Controllers\\HomeController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-04T22:16:46.368Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-04T22:16:46.368Z"
             },
             {
               "$type": "Document",
@@ -72,8 +71,7 @@
               "RelativeToolTip": "Views\\Home\\Catalogo.cshtml",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAA8AAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-04T22:11:36.851Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-04T22:11:36.851Z"
             },
             {
               "$type": "Document",
@@ -85,8 +83,7 @@
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
               "ViewState": "AgIAADMAAAAAAAAAAAAAACoAAACHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-04T22:11:04.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-04T22:11:04.906Z"
             },
             {
               "$type": "Document",
@@ -98,8 +95,7 @@
               "RelativeToolTip": "Controllers\\AdminController.cs",
               "ViewState": "AgIAADgAAAAAAAAAAAAkwKAAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-04T21:48:43.728Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-04T21:48:43.728Z"
             },
             {
               "$type": "Document",
@@ -111,8 +107,7 @@
               "RelativeToolTip": "Views\\Admin\\EliminarDiseno.cshtml",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAAAoAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-04T21:42:24.279Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-04T21:42:24.279Z"
             }
           ]
         }
