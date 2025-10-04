@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 using System.Data;
 using System.Globalization;
 using System.Text;
@@ -25,8 +26,22 @@ namespace Tazuki.Controllers
             ViewBag.Tags = dt;
             DataTable TT = Admin_SQL.Mostrar_Tazas_Tags();
             ViewBag.Taza_Tags = TT;
+            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tamano = dt;
             return View();
         }
+        [HttpPost]
+        public IActionResult ActDesDiseno([FromBody] EtiquetaParaRecibir model)
+        {
+            Datos.Id = model.Id;
+            int Activo = 0;
+            if (model.Activo == true)
+                Activo = 1;
+
+            Admin_SQL.Mod_ActDesDiseno(Activo);
+            return Ok();
+        }
+
 
         [HttpGet]
         public IActionResult AgregarDiseno()
@@ -38,10 +53,9 @@ namespace Tazuki.Controllers
             ViewBag.Tamano = dt;
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> AgregarDiseno(
-     string nombre, string descripcion, string tipoTaza, string[] tags, IFormFile archivo)
+     string nombre, string descripcion, string tipoTaza, double precio, string[] tags, IFormFile archivo)
         {
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
@@ -97,6 +111,7 @@ namespace Tazuki.Controllers
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
+
             // 2) Guardar primero con CreateNew (no sobrescribe jamás)
             try
             {
@@ -121,6 +136,7 @@ namespace Tazuki.Controllers
             Datos.Nombre = nombre;
             Datos.descripcion = descripcion;
             Datos.tamanoTaza = tipoTaza;
+            Datos.precio = precio;
             Datos.rutaDiseno = $"MP4/{uniqueFileName}";
             Datos.tags = tags;
 
@@ -141,6 +157,18 @@ namespace Tazuki.Controllers
             TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
             return RedirectToAction("Index", "Admin");
         }
+        
+        [HttpGet]
+        public IActionResult EliminarDiseno()
+        {
+            ViewBag.ErrorMessage = Datos.Mensaje;
+            DataTable dt = Admin_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt;
+            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tamano = dt;
+            return View();
+        }
+
 
         public IActionResult Etiquetas()
         {

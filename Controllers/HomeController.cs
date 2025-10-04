@@ -16,13 +16,13 @@ namespace Tazuki.Controllers
 
         public IActionResult Index()
         {
-            string[] tazas = { "mp4/Dragon_Ball.mp4", "mp4/taza1.mp4", "mp4/Amor.mp4", "mp4/taza4.mp4", "mp4/Caballeros.mp4", "mp4/Toluca.mp4" };
-            ViewBag.Tazas = tazas;
+            DataTable dt = Home_SQL.Mostrar_Tazas();
+            ViewBag.Videos = dt;
             return View();
         }
         public IActionResult Catalogo()
         {
-            DataTable dt = Admin_SQL.Mostrar_Tazas();
+            DataTable dt = Home_SQL.Mostrar_Tazas();
             ViewBag.Videos = dt;
             return View();
         }

@@ -116,8 +116,8 @@ namespace Tazuki.Models
         {
             Datos.Mensaje = "";
             string sql = @"INSERT INTO disenos 
-                   (nombre, tamano_taza_id, descripcion, ruta_diseno, fecha_creacion, publicado) 
-                   VALUES (@nombre, @tamano_taza_id, @descripcion, @ruta_diseno, @fecha_creacion, @publicado);";
+                   (nombre, precio, tamano_taza_id, descripcion, ruta_diseno, fecha_creacion, publicado) 
+                   VALUES (@nombre, @precio, @tamano_taza_id, @descripcion, @ruta_diseno, @fecha_creacion, @publicado);";
 
             using (MySqlConnection conexionBD = Conexion.conexion())
             {
@@ -128,6 +128,7 @@ namespace Tazuki.Models
                     using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
                     {
                         comando.Parameters.AddWithValue("@nombre", Datos.Nombre);
+                        comando.Parameters.AddWithValue("@precio", Datos.precio);
                         comando.Parameters.AddWithValue("@tamano_taza_id", Datos.tamanoTaza);
                         comando.Parameters.AddWithValue("@descripcion", Datos.descripcion);
                         comando.Parameters.AddWithValue("@ruta_diseno", Datos.rutaDiseno);
@@ -154,7 +155,6 @@ namespace Tazuki.Models
                 }
             }
         }
-
         public static DataTable Agregar_Tags()
         {
             Datos.Mensaje = "";
@@ -185,7 +185,6 @@ namespace Tazuki.Models
             }
             return dt;
         }
-
         public static DataTable Agregar_Diseno_Tags(string idTag)
         {
             Datos.Mensaje = "";
@@ -303,6 +302,37 @@ namespace Tazuki.Models
             {
                 if (ex.Number == 1062)
                     Datos.Mensaje = "El tamaño ya existe.";
+                else
+                    Datos.Mensaje = "Error al buscar " + ex.Message;
+
+                conexionBD.Close();
+                return false;
+            }
+        }
+        public static bool Mod_ActDesDiseno(int i)
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "UPDATE disenos SET publicado = @publicado WHERE id = @id;";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("publicado", i);
+                comando.Parameters.AddWithValue("id", Datos.Id);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                if (ex.Number == 1062)
+                    Datos.Mensaje = "La etiqueta ya existe.";
                 else
                     Datos.Mensaje = "Error al buscar " + ex.Message;
 

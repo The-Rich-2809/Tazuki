@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+}
+@using System.Data;
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Eliminar Diseño</h1>
+
+    @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
+
+        <!-- Campo oculto para el ID del diseño a eliminar -->
+        <input type="hidden" name="id" value="@ViewBag.Diseno.Id" />
+
+        <!-- Nombre del Diseño -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Nombre del Diseño</label>
+            <p class="form-control-plaintext">@ViewBag.Diseno.Nombre</p>
+        </div>
+
+        <!-- Descripción -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Descripción</label>
+            <p class="form-control-plaintext">@ViewBag.Diseno.Descripcion</p>
+        </div>
+
+        <!-- Precio -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Precio</label>
+            <p class="form-control-plaintext">@ViewBag.Diseno.Precio.ToString("C")</p>
+        </div>
+
+        <!-- Botón de Envío para Eliminar -->
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="VerDisenos" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+</div>

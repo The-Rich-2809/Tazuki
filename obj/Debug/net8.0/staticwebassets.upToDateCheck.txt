@@ -62,5 +62,8 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\mp4\ricardo.mp4
+wwwroot\mp4\amor.mp4
+wwwroot\mp4\caballeros-del-zodiaco.mp4
+wwwroot\mp4\dallas.mp4
+wwwroot\mp4\dragon-ball.mp4
 wwwroot\mp4\toluca.mp4
