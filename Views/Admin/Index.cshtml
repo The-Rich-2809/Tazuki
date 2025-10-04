@@ -41,13 +41,13 @@
         <h1 class="mb-4 text-center">Galería de Videos</h1>
 
         <!-- Contenedor de Filtros -->
-        <div id="filters" class="text-center mb-4">
+       @*  <div id="filters" class="text-center mb-4">
             <button class="btn btn-primary active" data-filter="all">Todos</button>
             <button class="btn btn-outline-primary" data-filter="naturaleza">Naturaleza</button>
             <button class="btn btn-outline-primary" data-filter="tecnologia">Tecnología</button>
             <button class="btn btn-outline-primary" data-filter="animacion">Animación</button>
             <button class="btn btn-outline-primary" data-filter="viajes">Viajes</button>
-        </div>
+        </div> *@
 
         <div class="row">
             <!-- Video 1 -->
@@ -65,12 +65,31 @@
                             <p class="video-description">@row_video[3]</p>
                         </div>
                         <div class="categories mt-2">
-                            <span class="badge bg-primary">Naturaleza</span>
-                            <span class="badge bg-secondary">4K</span>
+                            @foreach(DataRow row_taza_tags in ViewBag.Taza_Tags.Rows)
+                            {
+                                if (row_taza_tags[0] == row_video[0])
+                                {
+                                    @foreach (DataRow row_tags in ViewBag.Tags.Rows)
+                                    {
+                                        if(row_tags[0] == row_taza_tags[1])
+                                        {
+                                            <span class="badge bg-secondary">@row_tags[1]</span>
+                                            break;
+                                        }
+                                    }
+
+                                }
+                            }
                         </div>
                         <div class="actions mt-3 text-end">
-                            <button class="btn btn-success btn-sm me-2">Publicar</button>
-                            <button class="btn btn-danger btn-sm">Quitar</button>
+                            @if(row_video[6].ToString() == "True")
+                            {
+                                <a href="@Url.Action("Desactivar_Video", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-warning">Desactivar</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Activar_Video", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-success">Activar</a>
+                            }
                         </div>
                     </div>
                 </div>

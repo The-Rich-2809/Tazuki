@@ -13,8 +13,9 @@ CREATE TABLE `disenos` (
   `descripcion` TEXT NULL,
   `ruta_diseno` VARCHAR(512) NULL,
   `fecha_creacion` DATE NOT NULL,
-  
-  PRIMARY KEY (`id`)
+  `publicado` BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `ruta_diseno_UNIQUE` (`ruta_diseno` ASC)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `tags` (

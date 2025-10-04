@@ -110,6 +110,13 @@
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Formulario con Carga de Archivos</h1>
 
+    @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
     <!-- El atributo enctype="multipart/form-data" es crucial para la subida de archivos -->
     <form asp-controller="Admin" asp-action="AgregarDiseno" method="post" enctype="multipart/form-data">
 
@@ -122,18 +129,19 @@
         <!-- Área de Texto (Textarea) -->
         <div class="mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Añade una descripción"></textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Añade una descripción" required></textarea>
         </div>
 
         <!-- Menú Desplegable (Combobox/Select) -->
         <div class="mb-3">
             <label for="tipoTaza" class="form-label">Tamaño de taza</label>
-            <select class="form-select" id="tipoDocumento" name="tipoTaza" aria-label="Selecciona un tipo de documento">
-                <option selected disabled>Elige una opción...</option>
-                <option value="factura">Factura</option>
-                <option value="reporte">Reporte</option>
-                <option value="contrato">Contrato</option>
-                <option value="otro">Otro</option>
+            <select class="form-select" id="tipoTaza" name="tipoTaza" aria-label="Selecciona un tipo de documento"
+                    required>
+                <option selected disabled value="">Elige una opción...</option>
+                @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
+                {
+                    <option value="@row_tamano[0]">@row_tamano[1]</option>
+                }
             </select>
         </div>
 
@@ -168,7 +176,7 @@
         <div class="mb-3">
             <label for="formFileMultiple" class="form-label">Subir Archivos</label>
             <!-- El atributo "multiple" permite seleccionar más de un archivo -->
-            <input class="form-control" type="file" name="archivo">
+            <input class="form-control" type="file" name="archivo" required>
         </div>
 
         <!-- Botón de Envío -->

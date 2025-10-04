@@ -21,36 +21,36 @@ namespace Tazuki.Controllers
         {
             DataTable dt = Admin_SQL.Mostrar_Tazas();
             ViewBag.Videos = dt;
+            dt = Admin_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt;
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags();
+            ViewBag.Taza_Tags = TT;
             return View();
         }
 
         [HttpGet]
         public IActionResult AgregarDiseno()
         {
+            ViewBag.ErrorMessage = Datos.Mensaje;
             DataTable dt = Admin_SQL.Mostrar_Tags();
             ViewBag.Tags = dt;
+            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tamano = dt;
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> AgregarDiseno(
-    string nombre,
-    string descripcion,
-    string tipoTaza,
-    string[] tags,
-    IFormFile archivo)
+     string nombre, string descripcion, string tipoTaza, string[] tags, IFormFile archivo)
         {
-            // Carpeta física donde se guardará el archivo
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
-            // 1) Validaciones básicas
             if (archivo == null || archivo.Length == 0)
             {
                 TempData["Message"] = "Error: No se ha seleccionado ningún archivo.";
                 return RedirectToAction("Index", "Admin");
             }
 
-            // Validar extensión/MIME (ajusta la lista según tu caso)
             var extension = Path.GetExtension(archivo.FileName);
             var allowedExt = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     { ".mp4", ".mov", ".m4v", ".webm" };
@@ -61,33 +61,27 @@ namespace Tazuki.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            // (Opcional) validar MIME
             if (archivo.ContentType?.StartsWith("video/", StringComparison.OrdinalIgnoreCase) != true)
             {
-                TempData["Message"] = $"Error: El archivo no parece ser de video (MIME: {archivo.ContentType}).";
+                TempData["Message"] =
+                    $"Error: El archivo no parece ser de video (MIME: {archivo.ContentType}).";
                 return RedirectToAction("Index", "Admin");
             }
 
-            // 2) Asegurar carpeta
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
-            // 3) Crear nombre basado en "nombre" (slug) + timestamp + extensión
-            //    - Evita caracteres problemáticos
-            //    - Evita colisiones
             var baseName = string.IsNullOrWhiteSpace(nombre) ? "diseno" : nombre;
 
             string Slugify(string s)
             {
                 var sinExt = Path.GetFileNameWithoutExtension(s);
-                // Reemplaza espacios por guiones, elimina caracteres no válidos
                 var normalized = sinExt.Normalize(NormalizationForm.FormD);
                 var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
                 var clean = new string(chars.ToArray());
                 clean = Regex.Replace(clean, @"[^a-zA-Z0-9\-_]+", "-");
                 clean = Regex.Replace(clean, @"-+", "-").Trim('-');
                 if (string.IsNullOrEmpty(clean)) clean = "diseno";
-                // Limitar largo para evitar nombres gigantes
                 return clean.Length > 50 ? clean[..50] : clean;
             }
 
@@ -95,13 +89,27 @@ namespace Tazuki.Controllers
             var uniqueFileName = $"{safeName}{extension}";
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            // 4) Guardar físicamente
+            // 1) Rechazar si ya existe
+            if (System.IO.File.Exists(filePath))
+            {
+                TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
+                Datos.Mensaje = "El diseño ya existe "+ uniqueFileName;
+                return RedirectToAction("AgregarDiseno", "Admin");
+            }
+
+            // 2) Guardar primero con CreateNew (no sobrescribe jamás)
             try
             {
-                using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                await using (var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
                     await archivo.CopyToAsync(stream);
                 }
+            }
+            catch (IOException)
+            {
+                // Alguien creó el archivo entre el Exists y el CreateNew
+                TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
+                return RedirectToAction("Index", "Admin");
             }
             catch (Exception ex)
             {
@@ -109,30 +117,30 @@ namespace Tazuki.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            // 5) Guardar en BD *después* de conocer el nombre final
-            //    (asegúrate de que Admin_SQL.Agregar_Diseno() use estos campos)
+            // 3) Insertar en BD; si falla, revertir el archivo guardado
             Datos.Nombre = nombre;
             Datos.descripcion = descripcion;
             Datos.tamanoTaza = tipoTaza;
-            Datos.rutaDiseno = $"MP4/{uniqueFileName}"; // usa misma mayúscula/minúscula que la carpeta
+            Datos.rutaDiseno = $"MP4/{uniqueFileName}";
             Datos.tags = tags;
 
-            try
+            if (!Admin_SQL.Agregar_Diseno())
             {
-                Admin_SQL.Agregar_Diseno();
-                TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
+                try { System.IO.File.Delete(filePath); } catch { /* best-effort */ }
+                TempData["Message"] = "Error al registrar el diseño en la BD. No se han guardado cambios.";
+                return RedirectToAction("AgregarDiseno", "Admin");
             }
-            catch (Exception ex)
+            else
             {
-                // Si falla BD, podrías opcionalmente borrar el archivo para no dejar huérfanos
-                try { System.IO.File.Delete(filePath); } catch { /* ignorar */ }
-                TempData["Message"] = $"Error al registrar en BD: {ex.Message}";
+                for(int i = 0; i < tags.Length; i++)
+                {
+                    Admin_SQL.Agregar_Diseno_Tags(tags[i]);
+                }
             }
 
-            // PRG pattern: usa TempData para mostrar el mensaje en Index
+            TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
             return RedirectToAction("Index", "Admin");
         }
-
 
         public IActionResult Etiquetas()
         {
@@ -141,7 +149,6 @@ namespace Tazuki.Controllers
             ViewBag.Tags = dt;
             return View();
         }
-        
         [HttpPost]
         public IActionResult AgregarEtiquetas(string nombre)
         {
@@ -149,12 +156,64 @@ namespace Tazuki.Controllers
             Admin_SQL.Agregar_Tags();
             return RedirectToAction("Etiquetas", "Admin");
         }
+        [HttpPost]
+        public IActionResult ModEtiquetas([FromBody] EtiquetaParaRecibir data)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(data.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vacío.");
+            }
+
+            Datos.Id = data.Id;
+            Datos.Nombre = data.Nombre;
+            if (Admin_SQL.Mod_Tags() == true)
+                return Ok(new { message = "Etiqueta actualizada correctamente." });
+            else
+                return StatusCode(500, "Ocurrió un error en el servidor al intentar actualizar.");
+        }
         [HttpGet]
         public IActionResult EliminarEtiquetas(int Id)
         {
             Datos.Id = Id;
             Admin_SQL.Eliminar_Tags();
             return RedirectToAction("Etiquetas", "Admin");
+        }
+
+        public IActionResult TamanosTaza()
+        {
+            ViewBag.ErrorMessage = Datos.Mensaje;
+            DataTable dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tags = dt;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AgregarTamano(string nombre)
+        {
+            Datos.Nombre = nombre;
+            Admin_SQL.Agregar_Tamano();
+            return RedirectToAction("TamanosTaza", "Admin");
+        }
+        [HttpPost]
+        public IActionResult ModTamano([FromBody] EtiquetaParaRecibir data)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(data.Nombre))
+            {
+                return BadRequest("El nombre no puede estar vacío.");
+            }
+
+            Datos.Id = data.Id;
+            Datos.Nombre = data.Nombre;
+            if (Admin_SQL.Mod_Tamano() == true)
+                return Ok(new { message = "El tamaño fue actualizado correctamente." });
+            else
+                return StatusCode(500, "Ocurrió un error en el servidor al intentar actualizar.");
+        }
+        [HttpGet]
+        public IActionResult EliminarTamano(int Id)
+        {
+            Datos.Id = Id;
+            Admin_SQL.Eliminar_Tamano();
+            return RedirectToAction("TamanosTaza", "Admin");
         }
     }
 }
