@@ -79,10 +79,10 @@
                             }
                         </div>
                         <div class="actions mt-3 d-flex justify-content-between">
-                            @* <div>
+                            <div>
                                 <a href="@Url.Action("EditarDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-primary">Editar</a>
                                 <a href="@Url.Action("EliminarDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-danger">Eliminar</a>
-                            </div> *@
+                            </div>
                             <div>
                                 <button class="btn btn-sm @(row_video[7].ToString() == "True" ? "btn-warning" : "btn-success") toggle-status-btn"
                                         data-id="@row_video[0]"

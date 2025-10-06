@@ -107,7 +107,7 @@ namespace Tazuki.Controllers
             if (System.IO.File.Exists(filePath))
             {
                 TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
-                Datos.Mensaje = "El diseño ya existe "+ uniqueFileName;
+                Datos.Mensaje = "El diseño ya existe " + uniqueFileName;
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
@@ -148,7 +148,7 @@ namespace Tazuki.Controllers
             }
             else
             {
-                for(int i = 0; i < tags.Length; i++)
+                for (int i = 0; i < tags.Length; i++)
                 {
                     Admin_SQL.Agregar_Diseno_Tags(tags[i]);
                 }
@@ -157,16 +157,84 @@ namespace Tazuki.Controllers
             TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
             return RedirectToAction("Index", "Admin");
         }
-        
+
         [HttpGet]
-        public IActionResult EliminarDiseno()
+        public IActionResult EliminarDiseno(string Id)
         {
             ViewBag.ErrorMessage = Datos.Mensaje;
-            DataTable dt = Admin_SQL.Mostrar_Tags();
-            ViewBag.Tags = dt;
-            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
-            ViewBag.Tamano = dt;
+
+            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas();
+            DataTable dt_Tags = Admin_SQL.Mostrar_Tags();
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id);
+            string[] Tags = new string[TT.Rows.Count];
+            ViewBag.Count_Tags = TT.Rows.Count;
+            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas();
+
+            foreach (DataRow row_taza in dt_Tazas.Rows)
+            {
+                if (row_taza[0].ToString() == Id)
+                {
+                    ViewBag.Taza = row_taza;
+                    Datos.rutaDiseno = row_taza[5].ToString();
+                    break;
+                }
+            }
+
+            int i = 0;
+            foreach (DataRow row_TT in TT.Rows)
+            {
+                foreach (DataRow row_tag in dt_Tags.Rows)
+                {
+                    if (row_tag[0].ToString() == row_TT[1].ToString())
+                    {
+                        Tags[i] = row_tag[1].ToString();
+                        i++;
+                    }
+                }
+            }
+
+            
+            ViewBag.Tags_Taza = Tags;
+
             return View();
+        }
+        
+        [HttpGet]
+        public IActionResult EliminarDisenoP(int Id)
+        {
+            Datos.Id = Id;
+            Admin_SQL.Eliminar_Diseno();
+            Admin_SQL.Eliminar_Diseno_Tags();
+
+            try
+            {
+
+                // --- 3. Construir la ruta completa y segura ---
+                // Combina la carpeta de uploads (ej. wwwroot/imagenes/uploads) con el nombre del archivo.
+                var carpetaUploads = Path.Combine(_webHostEnvironment.WebRootPath, "mp4");
+                var rutaCompleta = Path.Combine(carpetaUploads, Datos.rutaDiseno);
+
+                // --- 4. Verificar si el archivo existe antes de borrar ---
+                if (System.IO.File.Exists(rutaCompleta))
+                {
+                    // --- 5. Eliminar el archivo ---
+                    System.IO.File.Delete(rutaCompleta);
+                    TempData["Exito"] = $"El archivo '{Datos.rutaDiseno}' fue eliminado correctamente.";
+                }
+                else
+                {
+                    TempData["Error"] = $"El archivo '{Datos.rutaDiseno}' no existe.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Es una buena práctica registrar el error (ex.Message)
+                TempData["Error"] = "Ocurrió un error inesperado al eliminar el archivo.";
+            }
+
+
+
+            return RedirectToAction("Index", "Admin");
         }
 
 

@@ -39,7 +39,7 @@ namespace Tazuki.Models
             DataTable dt = new DataTable();
             string sql;
 
-            sql = "SELECT * From tags";
+            sql = "SELECT * FROM tags ORDER BY id ASC";
 
             MySqlConnection conexionBD = Conexion.conexion();
             conexionBD.Open();
@@ -73,6 +73,33 @@ namespace Tazuki.Models
             try
             {
                 MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                //comando.Parameters.AddWithValue("AccesoSite", Datos.AccesoSite);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Mostrar_Tazas_Tags_Id(string id)
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From diseno_tags Where diseno_id = @id ORDER BY diseno_id ASC";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("id", id);
                 //comando.Parameters.AddWithValue("AccesoSite", Datos.AccesoSite);
                 dt.Load(comando.ExecuteReader());
                 conexionBD.Close();
@@ -382,6 +409,58 @@ namespace Tazuki.Models
             {
                 MySqlCommand comando = new MySqlCommand(sql, conexionBD);
                 comando.Parameters.AddWithValue("id", Datos.Id);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Eliminar_Diseno()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "DELETE FROM disenos WHERE id = @id";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("id", Datos.Id);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Eliminar_Diseno_Tags()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "DELETE FROM diseno_tags WHERE diseno_id = @diseno_id";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("diseno_id", Datos.Id);
                 dt.Load(comando.ExecuteReader());
                 conexionBD.Close();
 

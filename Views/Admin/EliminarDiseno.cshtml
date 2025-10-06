@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_LayoutAdmin";
 }
-@using System.Data;
+@using System
 
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Eliminar Diseño</h1>
@@ -13,32 +13,55 @@
         </div>
     }
 
-    <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
 
-        <!-- Campo oculto para el ID del diseño a eliminar -->
-        <input type="hidden" name="id" value="@ViewBag.Diseno.Id" />
+                <!-- Campo oculto para el ID del diseño a eliminar -->
+                <input type="hidden" name="id" value="ViewBag.Diseno.Id" />
 
-        <!-- Nombre del Diseño -->
-        <div class="mb-3">
-            <label class="form-label fw-bold">Nombre del Diseño</label>
-            <p class="form-control-plaintext">@ViewBag.Diseno.Nombre</p>
+                <!-- Nombre del Diseño -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nombre del Diseño</label>
+                    <p class="form-control-plaintext"> @ViewBag.Taza[1]</p>
+                </div>
+
+                <!-- Descripción -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Descripción</label>
+                    <p class="form-control-plaintext"> @ViewBag.Taza[4]</p>
+                </div>
+
+                <!-- Precio -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Precio</label>
+                    <p class="form-control-plaintext">$ @ViewBag.Taza[2]</p>
+                </div>
+
+                <!-- Características -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Características</label>
+                    <div class="form-control-plaintext" style="padding-top: 0;">
+                        <ul style="margin-bottom: 0;">
+                            @for (int i = 0; i < ViewBag.Count_Tags; i++)
+                            {
+                                <li>@ViewBag.Tags_Taza[i]</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Botón de Envío para Eliminar -->
+                <a href="@Url.Action("EliminarDisenoP", "Admin", new { Id = ViewBag.Taza[0] })" class="btn btn-sm btn-danger">Eliminar</a>
+                <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary">Cancelar</a>
+
+            </form>
         </div>
-
-        <!-- Descripción -->
-        <div class="mb-3">
-            <label class="form-label fw-bold">Descripción</label>
-            <p class="form-control-plaintext">@ViewBag.Diseno.Descripcion</p>
+        <div class="col-md-6">
+            <video class="card-img-bottom" autoplay muted loop playsinline controls preload="metadata">
+                <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
+                Tu navegador no soporta video HTML5.
+            </video>
         </div>
-
-        <!-- Precio -->
-        <div class="mb-3">
-            <label class="form-label fw-bold">Precio</label>
-            <p class="form-control-plaintext">@ViewBag.Diseno.Precio.ToString("C")</p>
-        </div>
-
-        <!-- Botón de Envío para Eliminar -->
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-        <a asp-action="VerDisenos" class="btn btn-secondary">Cancelar</a>
-
-    </form>
+    </div>
 </div>
