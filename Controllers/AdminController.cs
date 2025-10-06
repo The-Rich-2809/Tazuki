@@ -175,7 +175,7 @@ namespace Tazuki.Controllers
                 if (row_taza[0].ToString() == Id)
                 {
                     ViewBag.Taza = row_taza;
-                    Datos.rutaDiseno = row_taza[5].ToString();
+                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0,4);
                     break;
                 }
             }

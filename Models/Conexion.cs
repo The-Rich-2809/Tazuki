@@ -14,7 +14,7 @@ namespace Tazuki.Models
             string cadenaConexion = "";
             cadenaConexion = "datasource=192.168.101.7; username=rich; password=300920; database=disenos_db";
             //cadenaConexion = "datasource=localhost; username=rich; password=300920; database=disenos_db";
-            cadenaConexion = "datasource=192.168.101.5; username=rich; password=300920; database=db";
+            //cadenaConexion = "datasource=192.168.101.5; username=rich; password=300920; database=db";
 
             try
             {
