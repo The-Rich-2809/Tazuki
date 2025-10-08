@@ -159,6 +159,50 @@ namespace Tazuki.Controllers
         }
 
         [HttpGet]
+        public IActionResult ModDiseno(string Id)
+        {
+            ViewBag.ErrorMessage = Datos.Mensaje;
+
+            DataTable dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tamano = dt;
+
+            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas();
+            DataTable dt_Tags = Admin_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt_Tags;
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id);
+            string[] Tags = new string[TT.Rows.Count];
+            ViewBag.Count_Tags = TT.Rows.Count;
+            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas();
+
+            foreach (DataRow row_taza in dt_Tazas.Rows)
+            {
+                if (row_taza[0].ToString() == Id)
+                {
+                    ViewBag.Taza = row_taza;
+                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0, 4);
+                    break;
+                }
+            }
+
+            int i = 0;
+            foreach (DataRow row_TT in TT.Rows)
+            {
+                foreach (DataRow row_tag in dt_Tags.Rows)
+                {
+                    if (row_tag[0].ToString() == row_TT[1].ToString())
+                    {
+                        Tags[i] = row_tag[1].ToString();
+                        i++;
+                    }
+                }
+            }
+
+
+            ViewBag.Tags_Taza = Tags;
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult EliminarDiseno(string Id)
         {
             ViewBag.ErrorMessage = Datos.Mensaje;
@@ -198,7 +242,6 @@ namespace Tazuki.Controllers
 
             return View();
         }
-        
         [HttpGet]
         public IActionResult EliminarDisenoP(int Id)
         {
