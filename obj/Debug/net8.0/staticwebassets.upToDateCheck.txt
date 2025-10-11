@@ -63,9 +63,9 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\mp4\america-14.mp4
+wwwroot\mp4\america-campeon-14.mp4
+wwwroot\mp4\america-campeon-15.mp4
 wwwroot\mp4\amor.mp4
 wwwroot\mp4\caballeros-del-zodiaco.mp4
-wwwroot\mp4\dallas.mp4
 wwwroot\mp4\goku.mp4
 wwwroot\mp4\toluca.mp4

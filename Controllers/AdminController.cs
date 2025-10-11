@@ -18,6 +18,7 @@ namespace Tazuki.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [HttpGet] //Mostrar diseños 
         public IActionResult Index()
         {
             DataTable dt = Admin_SQL.Mostrar_Tazas();
@@ -30,7 +31,8 @@ namespace Tazuki.Controllers
             ViewBag.Tamano = dt;
             return View();
         }
-        [HttpPost]
+
+        [HttpPost] // Funcion para actualizar el si esta actvo
         public IActionResult ActDesDiseno([FromBody] EtiquetaParaRecibir model)
         {
             Datos.Id = model.Id;
@@ -43,7 +45,7 @@ namespace Tazuki.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet] //Agregar diseños
         public IActionResult AgregarDiseno()
         {
             ViewBag.ErrorMessage = Datos.Mensaje;
@@ -54,8 +56,7 @@ namespace Tazuki.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AgregarDiseno(
-     string nombre, string descripcion, string tipoTaza, double precio, string[] tags, IFormFile archivo)
+        public async Task<IActionResult> AgregarDiseno(string nombre, string descripcion, string tipoTaza, double precio, string[] tags, IFormFile archivo)
         {
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
@@ -163,45 +164,32 @@ namespace Tazuki.Controllers
         {
             ViewBag.ErrorMessage = Datos.Mensaje;
 
-            DataTable dt = Admin_SQL.Mostrar_Tamanos_Tazas();
-            ViewBag.Tamano = dt;
-
-            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas();
-            DataTable dt_Tags = Admin_SQL.Mostrar_Tags();
+            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas(); //Mostrar diseños de tazas
+            DataTable dt_Tags = Admin_SQL.Mostrar_Tags(); //Mostrar los tags (etiquetas)
             ViewBag.Tags = dt_Tags;
-            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id);
-            string[] Tags = new string[TT.Rows.Count];
-            ViewBag.Count_Tags = TT.Rows.Count;
-            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas();
+            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas(); //Mostrar los tamaños de tazas
+            ViewBag.Tamano = dt_Tamanos;
 
-            foreach (DataRow row_taza in dt_Tazas.Rows)
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id); //Mostrar Tabla intermedia Tags y Diseños
+            ViewBag.TT = TT;
+
+            foreach (DataRow row_taza in dt_Tazas.Rows) //Permite buscar los datos del diseño
             {
                 if (row_taza[0].ToString() == Id)
                 {
                     ViewBag.Taza = row_taza;
-                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0, 4);
                     break;
                 }
             }
 
-            int i = 0;
-            foreach (DataRow row_TT in TT.Rows)
-            {
-                foreach (DataRow row_tag in dt_Tags.Rows)
-                {
-                    if (row_tag[0].ToString() == row_TT[1].ToString())
-                    {
-                        Tags[i] = row_tag[1].ToString();
-                        i++;
-                    }
-                }
-            }
-
-
-            ViewBag.Tags_Taza = Tags;
             return View();
         }
 
+        [HttpPost]
+        public IActionResult ModDiseno(int Id)
+        {
+            return RedirectToAction("Index", "Admin");
+        }
         [HttpGet]
         public IActionResult EliminarDiseno(string Id)
         {
@@ -242,8 +230,8 @@ namespace Tazuki.Controllers
 
             return View();
         }
-        [HttpGet]
-        public IActionResult EliminarDisenoP(int Id)
+        [HttpPost]
+        public IActionResult EliminarDiseno(int Id)
         {
             Datos.Id = Id;
             Admin_SQL.Eliminar_Diseno();

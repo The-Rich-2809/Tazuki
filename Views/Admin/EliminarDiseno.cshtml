@@ -1,67 +1,175 @@
 ﻿@{
     Layout = "_LayoutAdmin";
 }
-@using System
 
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">Eliminar Diseño</h1>
+<!-- Google Fonts and modern CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
-    {
-        <div class="alert alert-danger" role="alert">
-            @ViewBag.ErrorMessage
-        </div>
+<style>
+    :root {
+        --primary-color: #4B92DB;
+        --danger-color: #dc3545;
+        --danger-hover-color: #c82333;
+        --background-color: #f0f2f5;
+        --container-bg-color: #ffffff;
+        --text-color: #495057;
+        --label-color: #333;
+        --border-color: #dee2e6;
+        --font-family: 'Poppins', sans-serif;
     }
 
-    <div class="row">
-        <div class="col-md-6">
-            <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
+    body {
+        background-color: var(--background-color);
+        font-family: var(--font-family);
+        color: var(--text-color);
+    }
 
-                <!-- Campo oculto para el ID del diseño a eliminar -->
-                <input type="hidden" name="id" value="ViewBag.Diseno.Id" />
+    .container {
+        max-width: 900px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
 
-                <!-- Nombre del Diseño -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Nombre del Diseño</label>
-                    <p class="form-control-plaintext"> @ViewBag.Taza[1]</p>
-                </div>
+    .card {
+        background-color: var(--container-bg-color);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    
+    h1 {
+        font-weight: 700;
+        color: var(--danger-color);
+        margin-bottom: 15px;
+    }
 
-                <!-- Descripción -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Descripción</label>
-                    <p class="form-control-plaintext"> @ViewBag.Taza[4]</p>
-                </div>
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+        display: flex;
+        align-items: center;
+    }
 
-                <!-- Precio -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Precio</label>
-                    <p class="form-control-plaintext">$ @ViewBag.Taza[2]</p>
-                </div>
+    .alert-warning::before {
+        content: "⚠️";
+        font-size: 1.5rem;
+        margin-right: 15px;
+    }
 
-                <!-- Características -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Características</label>
-                    <div class="form-control-plaintext" style="padding-top: 0;">
-                        <ul style="margin-bottom: 0;">
-                            @for (int i = 0; i < ViewBag.Count_Tags; i++)
-                            {
-                                <li>@ViewBag.Tags_Taza[i]</li>
-                            }
-                        </ul>
-                    </div>
-                </div>
+    .property-label {
+        font-weight: 600;
+        color: var(--label-color);
+    }
 
-                <!-- Botón de Envío para Eliminar -->
-                <a href="@Url.Action("EliminarDisenoP", "Admin", new { Id = ViewBag.Taza[0] })" class="btn btn-sm btn-danger">Eliminar</a>
-                <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary">Cancelar</a>
+    .property-value {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
 
-            </form>
+    .video-preview {
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    .btn-danger:hover {
+        background-color: var(--danger-hover-color);
+        border-color: var(--danger-hover-color);
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <h1 class="text-center">Eliminar Diseño</h1>
+        <p class="text-center text-muted">Estás a punto de eliminar un diseño. Esta acción no se puede deshacer.</p>
+
+        @if (ViewBag.ErrorMessage != null && !string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        
+        <div class="alert alert-warning mt-3" role="alert">
+            Por favor, revisa los detalles del diseño cuidadosamente antes de confirmar la eliminación.
         </div>
-        <div class="col-md-6">
-            <video class="card-img-bottom" autoplay muted loop playsinline controls preload="metadata">
-                <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
-                Tu navegador no soporta video HTML5.
-            </video>
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="mb-3">
+                    <p class="property-label">Nombre del Diseño</p>
+                    <p class="property-value">@ViewBag.Taza[1]</p>
+                </div>
+
+                <div class="mb-3">
+                    <p class="property-label">Descripción</p>
+                    <p class="property-value">@ViewBag.Taza[4]</p>
+                </div>
+
+                <div class="mb-3">
+                    <p class="property-label">Precio</p>
+                    <p class="property-value">$@ViewBag.Taza[2]</p>
+                </div>
+
+                <div class="mb-3">
+                    <p class="property-label">Características</p>
+                    <ul class="list-unstyled property-value">
+                        @for (int i = 0; i < ViewBag.Count_Tags; i++)
+                        {
+                            <li>- @ViewBag.Tags_Taza[i]</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <p class="property-label">Vista Previa</p>
+                <video class="video-preview" autoplay muted loop playsinline controls preload="metadata">
+                    <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
+                    Tu navegador no soporta video HTML5.
+                </video>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary me-2">Cancelar</a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Eliminar
+            </button>
         </div>
     </div>
 </div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar el diseño "@ViewBag.Taza[1]"? Esta acción es irreversible.
+            </div>
+            <div class="modal-footer">
+                <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
+                    <input type="hidden" name="Id" value="@ViewBag.Taza[0]" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

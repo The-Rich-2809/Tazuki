@@ -3,112 +3,157 @@
 }
 @using System.Data;
 
+<!-- Google Fonts and modern CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    /* Estilos generales */
-    body {
-        background-color: #f8f9fa;
-        font-family: 'Arial', sans-serif;
+    /* Variables for colors and fonts */
+    :root {
+        --primary-color: #4B92DB;
+        --primary-hover-color: #3a7cc0;
+        --background-color: #f0f2f5;
+        --container-bg-color: #ffffff;
+        --text-color: #495057;
+        --label-color: #333;
+        --border-color: #dee2e6;
+        --font-family: 'Poppins', sans-serif;
     }
 
-    /* Contenedor principal */
+    /* General styles */
+    body {
+        background-color: var(--background-color);
+        font-family: var(--font-family);
+        color: var(--text-color);
+    }
+
+    /* Main container */
     .container {
         max-width: 800px;
         margin-top: 50px;
         margin-bottom: 50px;
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: var(--container-bg-color);
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
-    /* Títulos */
+    /* Titles */
     h1 {
         font-size: 2.5rem;
-        font-weight: bold;
-        color: #4B92DB;
+        font-weight: 700;
+        color: var(--primary-color);
         margin-bottom: 30px;
+        text-align: center;
     }
 
-    /* Formulario */
-    form {
-        padding: 20px;
-    }
-
-    /* Etiquetas y campos de texto */
-    label {
+    /* Form labels */
+    .form-label {
         font-weight: 600;
-        color: #495057;
+        color: var(--label-color);
+        margin-bottom: 8px;
     }
 
-    /* Campos de texto */
-    input[type="text"], textarea, select, input[type="file"] {
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        padding: 10px;
+    /* Form controls */
+    .form-control,
+    .form-select {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 15px;
         font-size: 1rem;
         width: 100%;
-        margin-top: 5px;
+        transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    /* Áreas de texto */
-    textarea {
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(75, 146, 219, 0.25);
+        outline: none;
+    }
+
+    textarea.form-control {
         resize: vertical;
+        min-height: 120px;
     }
 
-    /* Botones */
-    button[type="submit"] {
-        background-color: #4B92DB;
+    /* Submit button */
+    .btn-primary {
+        background-color: var(--primary-color);
         color: white;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         border: none;
         padding: 12px 30px;
-        border-radius: 5px;
+        border-radius: 8px;
         margin-top: 20px;
         cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        width: 100%;
     }
 
-        button[type="submit"]:hover {
-            background-color: #3a7cc0;
-        }
+    .btn-primary:hover {
+        background-color: var(--primary-hover-color);
+        transform: translateY(-2px);
+    }
 
-    /* Estilo de los checkboxes */
+    /* Checkbox group */
     .checkbox-group {
-        margin-bottom: 20px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 10px;
     }
 
-    /* Paginación */
+    .custom-control.custom-checkbox {
+        padding: 8px 10px;
+        border-radius: 5px;
+        transition: background-color 0.2s;
+    }
+
+    .custom-control.custom-checkbox:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Pagination */
     #pagination {
         text-align: center;
         margin-top: 20px;
     }
 
-        #pagination button {
-            margin: 0 5px;
-            font-size: 1rem;
-        }
+    #pagination .btn {
+        margin: 0 4px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+    }
 
-        #pagination .active {
-            background-color: #4B92DB;
-            color: white;
-        }
+    #pagination .btn.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
 
-    /* Campo de búsqueda */
+    /* Search input */
     #search {
+        margin-bottom: 15px;
+    }
+
+    /* Video player */
+    .video-preview {
+        width: 100%;
+        border-radius: 8px;
         margin-top: 10px;
-        margin-bottom: 20px;
     }
 
-    /* Ajustes de espaciado */
-    .mb-3 {
-        margin-bottom: 20px;
+    /* Spacing */
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
     }
-
 </style>
 
-
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">Formulario con Carga de Archivos</h1>
+<div class="container">
+    <h1>Modificar Diseño</h1>
 
     @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
     {
@@ -117,77 +162,84 @@
         </div>
     }
 
-    <!-- El atributo enctype="multipart/form-data" es crucial para la subida de archivos -->
-    <form asp-controller="Admin" asp-action="AgregarDiseno" method="post" enctype="multipart/form-data">
+    <form asp-controller="Admin" asp-action="ModDiseno" method="post" enctype="multipart/form-data">
 
-        <!-- Campo de Texto (Textbox) -->
-        <div class="mb-3">
+        <div class="mb-4">
             <label for="nombre" class="form-label">Nombre del Diseño</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="@ViewBag.Taza[1]" placeholder="Ej: Taza de Gato" required>
         </div>
 
-        <!-- Área de Texto (Textarea) -->
-        <div class="mb-3">
+        <div class="mb-4">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Añade una descripción" required></textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Añade una descripción detallada del diseño" required>@ViewBag.Taza[4]</textarea>
         </div>
 
-        <!-- Precio -->
-        <div class="mb-3">
-            <label for="precio" class="form-label">Precio</label>
-            <input type="number" class="form-control" id="precio" name="precio" placeholder="Ingresa el precio"
-                   required>
-        </div>
-
-        <!-- Menú Desplegable (Combobox/Select) -->
-        <div class="mb-3">
-            <label for="tipoTaza" class="form-label">Tamaño de taza</label>
-            <select class="form-select" id="tipoTaza" name="tipoTaza" aria-label="Selecciona un tipo de documento"
-                    required>
-                <option selected disabled value="">Elige una opción...</option>
-                @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
-                {
-                    <option value="@row_tamano[0]">@row_tamano[1]</option>
-                }
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <!-- Campo de búsqueda -->
-            <div class="form-group">
-                <label for="search">Buscar opciones</label>
-                <input type="text" id="search" class="form-control" placeholder="Busca una opción...">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="precio" name="precio" value="@ViewBag.Taza[2]" placeholder="Ej: 150.00" step="0.01" required>
             </div>
-
-            <div class="form-group">
-                <label for="opciones">Selecciona tus opciones</label>
-                <div id="opciones" class="checkbox-group">
-                    <!-- Las opciones se cargarán aquí -->
-                    @foreach (DataRow row_tag in ViewBag.Tags.Rows)
+            <div class="col-md-6 mb-4">
+                <label for="tipoTaza" class="form-label">Tamaño de taza</label>
+                <select class="form-select" id="tipoTaza" name="tipoTaza" required>
+                    <option disabled value="">Elige un tamaño...</option>
+                    @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
                     {
-                        <div class="custom-control custom-checkbox">
-                            <input name="tags" type="checkbox" class="custom-control-input" id="opcion1" value="@row_tag[0]">
-                            <label class="custom-control-label" for="opcion1">@row_tag[1]</label>
-                        </div>
+                        if (ViewBag.Taza[3] == Convert.ToInt32(row_tamano[0]))
+                        {
+                            <option selected value="@row_tamano[0]">@row_tamano[1]</option>
+                        }
+                        else
+                        {
+                            <option value="@row_tamano[0]">@row_tamano[1]</option>
+                        }
                     }
-                </div>
-            </div>
-
-            <!-- Paginación -->
-            <div class="btn-group" id="pagination">
-                <!-- Los botones de paginación se agregarán aquí -->
+                </select>
             </div>
         </div>
 
-        <!-- Campo para Subir Múltiples Archivos -->
-        <div class="mb-3">
-            <label for="formFileMultiple" class="form-label">Subir Archivos</label>
-            <!-- El atributo "multiple" permite seleccionar más de un archivo -->
-            <input class="form-control" type="file" name="archivo" required>
+        <div class="mb-4">
+            <label for="search" class="form-label">Categorías del Diseño</label>
+            <input type="text" id="search" class="form-control" placeholder="Buscar categorías...">
+            
+            <div id="opciones" class="checkbox-group mt-2">
+                @{ int tagCounter = 0; }
+                @foreach (DataRow row_tag in ViewBag.Tags.Rows)
+                {
+                    bool isChecked = false;
+                    foreach (DataRow row_tt in ViewBag.TT.Rows)
+                    {
+                        if (row_tt[1].ToString() == row_tag[0].ToString())
+                        {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    <div class="custom-control custom-checkbox">
+                        <input name="tags" type="checkbox" class="custom-control-input" id="tag-@tagCounter" value="@row_tag[0]" @(isChecked ? "checked" : "")>
+                        <label class="custom-control-label" for="tag-@tagCounter">@row_tag[1]</label>
+                    </div>
+                    tagCounter++;
+                }
+            </div>
+            <div id="pagination" class="btn-toolbar justify-content-center mt-2" role="toolbar">
+            </div>
         </div>
 
-        <!-- Botón de Envío -->
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <div class="mb-4">
+            <label for="formFileMultiple" class="form-label">Video del Diseño</label>
+            <input class="form-control" type="file" name="archivo" id="formFileMultiple" accept="video/*" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Vista Previa del Video</label>
+            <video class="video-preview" autoplay muted loop playsinline controls preload="metadata">
+                <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
+                Tu navegador no soporta video HTML5.
+            </video>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
 
     </form>
 </div>
@@ -197,57 +249,67 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    const itemsPerPage = 10;
-    let currentPage = 1;
+    document.addEventListener("DOMContentLoaded", function() {
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        const optionsContainer = document.getElementById('opciones');
+        const allOptions = Array.from(optionsContainer.querySelectorAll('.custom-control.custom-checkbox'));
+        const paginationContainer = document.getElementById("pagination");
+        const searchInput = document.getElementById("search");
 
-    // Función para mostrar las opciones
-    function showOptions(page, query = "") {
-        const checkboxes = document.querySelectorAll('.custom-control');
-        const filteredOptions = Array.from(checkboxes).filter(option => {
-            return option.querySelector('.custom-control-label').textContent.toLowerCase().includes(query.toLowerCase());
+        function showOptions(page, query = "") {
+            const lowerCaseQuery = query.toLowerCase();
+            
+            const filteredOptions = allOptions.filter(option => {
+                const label = option.querySelector('.custom-control-label');
+                return label && label.textContent.toLowerCase().includes(lowerCaseQuery);
+            });
+
+            allOptions.forEach(option => option.style.display = 'none');
+
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedOptions = filteredOptions.slice(start, end);
+
+            paginatedOptions.forEach(option => option.style.display = 'block');
+
+            updatePagination(filteredOptions.length, page);
+        }
+
+        function updatePagination(totalItems, page) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            paginationContainer.innerHTML = "";
+
+            if (totalPages <= 1) return;
+
+            const group = document.createElement("div");
+            group.classList.add("btn-group");
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.classList.add("btn", "btn-outline-secondary");
+                btn.textContent = i;
+                
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    showOptions(currentPage, searchInput.value);
+                });
+
+                if (i === page) {
+                    btn.classList.add("active");
+                }
+                group.appendChild(btn);
+            }
+            paginationContainer.appendChild(group);
+        }
+
+        searchInput.addEventListener("input", function() {
+            currentPage = 1;
+            showOptions(currentPage, this.value);
         });
 
-        const start = (page - 1) * itemsPerPage;
-        const end = page * itemsPerPage;
-
-        // Ocultar todas las opciones primero
-        checkboxes.forEach(option => option.style.display = 'none');
-
-        // Mostrar solo las opciones que pertenecen a la página actual
-        filteredOptions.slice(start, end).forEach(option => option.style.display = '');
-
-        // Actualizar la paginación
-        updatePagination(filteredOptions.length, page);
-    }
-
-    // Función para actualizar los botones de paginación
-    function updatePagination(totalItems, currentPage) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const paginationContainer = document.getElementById("pagination");
-
-        paginationContainer.innerHTML = ""; // Limpiar la paginación
-
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("button");
-            btn.classList.add("btn", "btn-secondary");
-            btn.textContent = i;
-            btn.onclick = () => {
-                currentPage = i;
-                showOptions(currentPage, document.getElementById("search").value);
-            };
-            if (i === currentPage) {
-                btn.classList.add("active");
-            }
-            paginationContainer.appendChild(btn);
-        }
-    }
-
-    // Función de búsqueda
-    document.getElementById("search").addEventListener("input", function() {
-        showOptions(1, this.value);
+        // Initial load
+        showOptions(currentPage);
     });
-
-    // Mostrar las opciones iniciales
-    showOptions(currentPage);
-
 </script>
