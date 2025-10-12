@@ -59,6 +59,33 @@ namespace Tazuki.Models
             }
             return dt;
         }
+        public static DataTable Buscar_Tags(string nombre)
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * FROM tags WHERE nombre = @nombre";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("nombre", nombre);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+
+        }
+
         public static DataTable Mostrar_Tazas_Tags()
         {
             Datos.Mensaje = "";
@@ -182,36 +209,39 @@ namespace Tazuki.Models
                 }
             }
         }
-        public static DataTable Agregar_Tags()
+        public static int Agregar_Tags()
         {
             Datos.Mensaje = "";
-            DataTable dt = new DataTable();
-            string sql;
+            int nuevoId = 0;
+            string sql = "INSERT INTO tags (nombre) VALUES (@nombre);";
 
-            sql = "INSERT INTO tags (nombre) VALUES (@nombre);";
-
-            MySqlConnection conexionBD = Conexion.conexion();
-            conexionBD.Open();
-
-            try
+            using (MySqlConnection conexionBD = Conexion.conexion())
             {
-                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
-                comando.Parameters.AddWithValue("nombre", Datos.Nombre);
-                dt.Load(comando.ExecuteReader());
-                conexionBD.Close();
+                try
+                {
+                    conexionBD.Open();
 
-            }
-            catch (MySqlException ex)
-            {
-                if(ex.Number == 1062)
-                    Datos.Mensaje = "La etiqueta ya existe.";
-                else
-                    Datos.Mensaje = "Error al buscar " + ex.Message;
+                    using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
+                    {
+                        comando.Parameters.AddWithValue("@nombre", Datos.Nombre);
+                        comando.ExecuteNonQuery(); // ejecuta el INSERT
 
-                conexionBD.Close();
+                        // Recuperar el ID insertado
+                        nuevoId = (int)comando.LastInsertedId;
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    if (ex.Number == 1062)
+                        Datos.Mensaje = "La etiqueta ya existe.";
+                    else
+                        Datos.Mensaje = "Error al insertar: " + ex.Message;
+                }
             }
-            return dt;
+
+            return nuevoId;
         }
+
         public static DataTable Agregar_Diseno_Tags(string idTag)
         {
             Datos.Mensaje = "";

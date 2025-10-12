@@ -26,7 +26,6 @@ C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.build.jso
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\Tazuki.dll
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\refint\Tazuki.dll
 C:\Users\Rich\Documents\GitHub\Tazuki\obj\Debug\net8.0\Tazuki.pdb

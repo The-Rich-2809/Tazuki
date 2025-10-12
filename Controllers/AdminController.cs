@@ -159,6 +159,180 @@ namespace Tazuki.Controllers
             return RedirectToAction("Index", "Admin");
         }
 
+        [HttpGet] //Agregar diseños (Se agregan los datos desde el archivo)
+        public IActionResult AgregarDisenoArchivo()
+        {
+            ViewBag.ErrorMessage = Datos.Mensaje;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AgregarDisenoArchivo(string nombre, IFormFile archivo)
+        {
+            if (archivo == null || archivo.Length == 0)
+            {
+                ViewBag.ErrorMessage = "Debes seleccionar un archivo de video.";
+                return PartialView("_AlertaDiseno");
+            }
+
+            var extension = Path.GetExtension(archivo.FileName);
+            var allowedExt = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        { ".mp4", ".mov", ".m4v", ".webm" };
+            if (!allowedExt.Contains(extension))
+            {
+                ViewBag.ErrorMessage = $"Error: Extensión no permitida ({extension}).";
+                return PartialView("_AlertaDiseno");
+            }
+            if (archivo.ContentType?.StartsWith("video/", StringComparison.OrdinalIgnoreCase) != true)
+            {
+                ViewBag.ErrorMessage = $"Error: El archivo no parece ser de video (MIME: {archivo.ContentType}).";
+                return PartialView("_AlertaDiseno");
+            }
+
+            // Guardar en carpeta temporal (una sola vez)
+            var tempFolder = Path.Combine(_webHostEnvironment.WebRootPath, "_tmp");
+            Directory.CreateDirectory(tempFolder);
+
+            var uploadToken = Guid.NewGuid().ToString("N");
+            var tempFileName = uploadToken + extension;
+            var tempPath = Path.Combine(tempFolder, tempFileName);
+
+            await using (var fs = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                await archivo.CopyToAsync(fs);
+            }
+
+            // --- Tu lógica de frases / tags ---
+            string[] frases = archivo.FileName.Split(new[] { " - " }, StringSplitOptions.None);
+            string[,] frasesBuscadas = new string[frases.Length, 3];
+            for (int i = 0; i < frases.Length; i++)
+            {
+                var texto = frases[i]
+                    .Replace(".mp4", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace(".mov", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace(".m4v", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace(".webm", "", StringComparison.OrdinalIgnoreCase);
+
+                frasesBuscadas[i, 0] = texto;
+
+                var dt = Admin_SQL.Buscar_Tags(frases[i]); // evita llamarlo dos veces
+                if (dt.Rows.Count > 0)
+                {
+                    frasesBuscadas[i, 1] = "Encontrada";
+                    frasesBuscadas[i, 2] = dt.Rows[0][0].ToString();
+                }
+                else
+                {
+                    frasesBuscadas[i, 1] = "No encontrada";
+                    frasesBuscadas[i, 2] = "-1";
+                }
+
+                if (i == frases.Length - 1)
+                {
+                    Datos.descripcion = texto;
+                    frasesBuscadas[i, 1] = "Descripción";
+                }
+                    
+            }
+
+            // Pasa token/ext (ideal: como hidden inputs; si sigues usando Datos.*, al menos setéalos una vez)
+            ViewBag.Nombre = nombre;
+            ViewBag.MensajeConfirmacion = $"¿Estás seguro de agregar el diseño: {nombre}?";
+            ViewBag.Tags = frasesBuscadas;
+            ViewBag.UploadToken = uploadToken;
+            ViewBag.UploadExt = extension;
+
+            // Si vas a usar Datos.* entre peticiones, setéalos aquí (ojo: no es multiusuario-safe)
+            Datos.UploadExt = extension;
+            Datos.UploadToken = uploadToken;
+            Datos.tamanoTaza = nombre;
+            Datos.Etiquetas = frasesBuscadas;
+            Datos.Nombre = nombre; // <-- para que no sea null al Slugify del siguiente paso
+
+            return PartialView("_AlertaDiseno");
+        }
+
+        [HttpPost] //Agregar diseños (Se agregan los datos desde el archivo)
+        public async Task<IActionResult> GuardarDisenoConfirmado()
+        {
+            var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
+            var tempFolder = Path.Combine(_webHostEnvironment.WebRootPath, "_tmp");
+            Directory.CreateDirectory(uploadsFolder);
+
+            if (string.IsNullOrWhiteSpace(Datos.UploadToken) || string.IsNullOrWhiteSpace(Datos.UploadExt))
+            {
+                TempData["Message"] = "Error: Archivo temporal no encontrado o expirado.";
+                return RedirectToAction("Index", "Admin");
+            }
+
+            var tempPath = Path.Combine(tempFolder, Datos.UploadToken + Datos.UploadExt);
+            if (!System.IO.File.Exists(tempPath))
+            {
+                TempData["Message"] = "Error: El archivo temporal ya no existe.";
+                return RedirectToAction("Index", "Admin");
+            }
+
+            // Construye el nombre final como ya lo hacías (Slugify, etc.)
+            var baseName = string.IsNullOrWhiteSpace(Datos.Nombre) ? "diseno" : Datos.Nombre;
+            string Slugify(string s)
+            {
+                var sinExt = Path.GetFileNameWithoutExtension(s);
+                var normalized = sinExt.Normalize(NormalizationForm.FormD);
+                var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
+                var clean = new string(chars.ToArray());
+                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\-_]+", "-");
+                clean = Regex.Replace(clean, @"-+", "-").Trim('-');
+                if (string.IsNullOrEmpty(clean)) clean = "diseno";
+                return clean.Length > 50 ? clean[..50] : clean;
+            }
+
+            var safeName = Slugify(baseName).ToLowerInvariant();
+            var uniqueFileName = $"{safeName}{Datos.UploadExt}";
+            var finalPath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            if (System.IO.File.Exists(finalPath))
+            {
+                TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
+                try { System.IO.File.Delete(tempPath); } catch { }
+                return RedirectToAction("AgregarDiseno", "Admin");
+            }
+
+            // Mover de temporal a definitivo (atómico en la misma unidad)
+            System.IO.File.Move(tempPath, finalPath);
+
+            // ---- Inserción en BD (igual que antes)
+            Datos.rutaDiseno = $"MP4/{uniqueFileName}";
+            Datos.precio = 50.00; // Precio fijo por ahora
+            Datos.tamanoTaza = "1"; // Tamaño fijo por ahora
+
+            // Asegúrate de tener seteados Datos.Nombre / Datos.precio / Datos.tamanoTaza según tu UI
+            if (!Admin_SQL.Agregar_Diseno())
+            {
+                try { System.IO.File.Delete(finalPath); } catch { }
+                TempData["Message"] = "Error al registrar el diseño en la BD. No se han guardado cambios.";
+                return RedirectToAction("AgregarDiseno", "Admin");
+            }
+
+            for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
+            {
+                if (Datos.Etiquetas[i, 1] == "No encontrada")
+                {
+                    Datos.Nombre = Datos.Etiquetas[i, 0]; // nombre del tag
+                    int nuevoId = Admin_SQL.Agregar_Tags(); // <-- que te devuelva el ID
+                    Datos.Etiquetas[i, 2] = nuevoId.ToString();
+                }
+            }
+            for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
+            {
+                if (Datos.Etiquetas[i, 1] != "Descripción")
+                {
+                    Admin_SQL.Agregar_Diseno_Tags(Datos.Etiquetas[i, 2]);
+                }
+            }
+            
+            return RedirectToAction("Index", "Admin");
+        }
+
         [HttpGet]
         public IActionResult ModDiseno(string Id)
         {
@@ -207,7 +381,7 @@ namespace Tazuki.Controllers
                 if (row_taza[0].ToString() == Id)
                 {
                     ViewBag.Taza = row_taza;
-                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0,4);
+                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0, 4);
                     break;
                 }
             }
@@ -225,7 +399,7 @@ namespace Tazuki.Controllers
                 }
             }
 
-            
+
             ViewBag.Tags_Taza = Tags;
 
             return View();
@@ -262,8 +436,6 @@ namespace Tazuki.Controllers
                 // Es una buena práctica registrar el error (ex.Message)
                 TempData["Error"] = "Ocurrió un error inesperado al eliminar el archivo.";
             }
-
-
 
             return RedirectToAction("Index", "Admin");
         }
