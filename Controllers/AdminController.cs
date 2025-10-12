@@ -88,15 +88,24 @@ namespace Tazuki.Controllers
 
             var baseName = string.IsNullOrWhiteSpace(nombre) ? "diseno" : nombre;
 
+            // --- Slugify que conserva espacios (no pone "-") ---
             string Slugify(string s)
             {
                 var sinExt = Path.GetFileNameWithoutExtension(s);
                 var normalized = sinExt.Normalize(NormalizationForm.FormD);
                 var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
                 var clean = new string(chars.ToArray());
-                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\-_]+", "-");
-                clean = Regex.Replace(clean, @"-+", "-").Trim('-');
-                if (string.IsNullOrEmpty(clean)) clean = "diseno";
+
+                // Permite letras, números, guiones, guion bajo y espacios
+                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\s\-_]+", "");
+
+                // Colapsa espacios múltiples y recorta extremos
+                clean = Regex.Replace(clean, @"\s{2,}", " ").Trim();
+
+                if (string.IsNullOrEmpty(clean))
+                    clean = "diseno";
+
+                // Limita a 50 caracteres
                 return clean.Length > 50 ? clean[..50] : clean;
             }
 
@@ -112,14 +121,11 @@ namespace Tazuki.Controllers
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
-
             // 2) Guardar primero con CreateNew (no sobrescribe jamás)
             try
             {
-                await using (var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-                {
-                    await archivo.CopyToAsync(stream);
-                }
+                await using var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+                await archivo.CopyToAsync(stream);
             }
             catch (IOException)
             {
@@ -139,7 +145,7 @@ namespace Tazuki.Controllers
             Datos.tamanoTaza = tipoTaza;
             Datos.precio = precio;
             Datos.rutaDiseno = $"MP4/{uniqueFileName}";
-            Datos.tags = tags;
+            Datos.tags = tags ?? Array.Empty<string>();
 
             if (!Admin_SQL.Agregar_Diseno())
             {
@@ -149,15 +155,20 @@ namespace Tazuki.Controllers
             }
             else
             {
-                for (int i = 0; i < tags.Length; i++)
+                if (Datos.tags?.Length > 0)
                 {
-                    Admin_SQL.Agregar_Diseno_Tags(tags[i]);
+                    for (int i = 0; i < Datos.tags.Length; i++)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Datos.tags[i]))
+                            Admin_SQL.Agregar_Diseno_Tags(Datos.tags[i]);
+                    }
                 }
             }
 
             TempData["Message"] = $"Archivo guardado y diseño registrado: {uniqueFileName}";
             return RedirectToAction("Index", "Admin");
         }
+
 
         [HttpGet] //Agregar diseños (Se agregan los datos desde el archivo)
         public IActionResult AgregarDisenoArchivo()
@@ -232,7 +243,7 @@ namespace Tazuki.Controllers
                     Datos.descripcion = texto;
                     frasesBuscadas[i, 1] = "Descripción";
                 }
-                    
+
             }
 
             // Pasa token/ext (ideal: como hidden inputs; si sigues usando Datos.*, al menos setéalos una vez)
@@ -252,13 +263,16 @@ namespace Tazuki.Controllers
             return PartialView("_AlertaDiseno");
         }
 
-        [HttpPost] //Agregar diseños (Se agregan los datos desde el archivo)
+        [HttpPost] // Agregar diseños (confirma y mueve desde carpeta temporal)
         public async Task<IActionResult> GuardarDisenoConfirmado()
         {
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
             var tempFolder = Path.Combine(_webHostEnvironment.WebRootPath, "_tmp");
-            Directory.CreateDirectory(uploadsFolder);
 
+            Directory.CreateDirectory(uploadsFolder);
+            Directory.CreateDirectory(tempFolder);
+
+            // Validación de token/extensión generados en el paso previo (subida temporal)
             if (string.IsNullOrWhiteSpace(Datos.UploadToken) || string.IsNullOrWhiteSpace(Datos.UploadExt))
             {
                 TempData["Message"] = "Error: Archivo temporal no encontrado o expirado.";
@@ -272,16 +286,22 @@ namespace Tazuki.Controllers
                 return RedirectToAction("Index", "Admin");
             }
 
-            // Construye el nombre final como ya lo hacías (Slugify, etc.)
+            // Nombre base (desde la UI previa) — caer en 'diseno' si viene vacío
             var baseName = string.IsNullOrWhiteSpace(Datos.Nombre) ? "diseno" : Datos.Nombre;
-            string Slugify(string s)
+
+            // Slugify que CONSERVA espacios (no convierte a '-'), y elimina caracteres inválidos
+            static string Slugify(string s)
             {
                 var sinExt = Path.GetFileNameWithoutExtension(s);
                 var normalized = sinExt.Normalize(NormalizationForm.FormD);
                 var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
                 var clean = new string(chars.ToArray());
-                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\-_]+", "-");
-                clean = Regex.Replace(clean, @"-+", "-").Trim('-');
+
+                // Permite letras, números, ESPACIOS, guion y guion bajo; elimina lo demás
+                clean = Regex.Replace(clean, @"[^a-zA-Z0-9\s\-_]+", "");
+                // Colapsa espacios múltiples y recorta extremos
+                clean = Regex.Replace(clean, @"\s{2,}", " ").Trim();
+
                 if (string.IsNullOrEmpty(clean)) clean = "diseno";
                 return clean.Length > 50 ? clean[..50] : clean;
             }
@@ -293,45 +313,82 @@ namespace Tazuki.Controllers
             if (System.IO.File.Exists(finalPath))
             {
                 TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
-                try { System.IO.File.Delete(tempPath); } catch { }
+                try { System.IO.File.Delete(tempPath); } catch { /* best-effort */ }
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
-            // Mover de temporal a definitivo (atómico en la misma unidad)
-            System.IO.File.Move(tempPath, finalPath);
+            // Mover de temporal a definitivo (misma unidad → operación atómica)
+            try
+            {
+                System.IO.File.Move(tempPath, finalPath);
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = $"Error al mover el archivo final: {ex.Message}";
+                return RedirectToAction("Index", "Admin");
+            }
 
-            // ---- Inserción en BD (igual que antes)
-            Datos.rutaDiseno = $"MP4/{uniqueFileName}";
-            Datos.precio = 50.00; // Precio fijo por ahora
-            Datos.tamanoTaza = "1"; // Tamaño fijo por ahora
+            // ------ Inserción en BD ------
+            // Si aún no manejas estos campos desde la UI previa, usa valores por defecto.
+            if (Datos.precio <= 0) Datos.precio = 50.00; // TODO: reemplazar por el valor real desde la UI
+            Datos.tamanoTaza = "1";
 
-            // Asegúrate de tener seteados Datos.Nombre / Datos.precio / Datos.tamanoTaza según tu UI
+            var rutaRelativa = $"MP4/{uniqueFileName}";
+            Datos.rutaDiseno = rutaRelativa;
+
+            // Intento de registrar el diseño; si falla, revertimos el archivo movido.
             if (!Admin_SQL.Agregar_Diseno())
             {
-                try { System.IO.File.Delete(finalPath); } catch { }
+                try { System.IO.File.Delete(finalPath); } catch { /* best-effort */ }
                 TempData["Message"] = "Error al registrar el diseño en la BD. No se han guardado cambios.";
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
-            for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
+            // ------ Etiquetas (Datos.Etiquetas: [nombre, estado, id]) ------
+            // Asegura que el arreglo exista y tenga el formato esperado.
+            if (Datos.Etiquetas != null &&
+                Datos.Etiquetas.Rank == 2 &&
+                Datos.Etiquetas.GetLength(1) >= 3)
             {
-                if (Datos.Etiquetas[i, 1] == "No encontrada")
+                // 1) Crear los tags faltantes y guardar su ID
+                for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
                 {
-                    Datos.Nombre = Datos.Etiquetas[i, 0]; // nombre del tag
-                    int nuevoId = Admin_SQL.Agregar_Tags(); // <-- que te devuelva el ID
-                    Datos.Etiquetas[i, 2] = nuevoId.ToString();
+                    if (Datos.Etiquetas[i, 1] == "No encontrada")
+                    {
+                        var tagNombreOriginal = Datos.Nombre; // respaldo
+                        var nuevoTagNombre = Datos.Etiquetas[i, 0];
+
+                        // OJO: si Admin_SQL.Agregar_Tags() depende de Datos.Nombre,
+                        // seteamos temporalmente y luego restauramos.
+                        Datos.Nombre = nuevoTagNombre;
+
+                        // Debe devolver el ID insertado. Asegúrate de haber ajustado ese método.
+                        int nuevoId = Admin_SQL.Agregar_Tags();
+                        Datos.Etiquetas[i, 2] = nuevoId.ToString();
+
+                        Datos.Nombre = tagNombreOriginal; // restaurar
+                    }
+                }
+
+                // 2) Relacionar el diseño con cada tag por su ID
+                for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
+                {
+                    // Evita la fila de encabezado "Descripción" si así viene en tu matriz
+                    if (!string.Equals(Datos.Etiquetas[i, 1], "Descripción", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var tagId = Datos.Etiquetas[i, 2];
+                        if (!string.IsNullOrWhiteSpace(tagId))
+                        {
+                            Admin_SQL.Agregar_Diseno_Tags(tagId);
+                        }
+                    }
                 }
             }
-            for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
-            {
-                if (Datos.Etiquetas[i, 1] != "Descripción")
-                {
-                    Admin_SQL.Agregar_Diseno_Tags(Datos.Etiquetas[i, 2]);
-                }
-            }
-            
+
+            TempData["Message"] = $"Diseño confirmado y guardado: {uniqueFileName}";
             return RedirectToAction("Index", "Admin");
         }
+
 
         [HttpGet]
         public IActionResult ModDiseno(string Id)
