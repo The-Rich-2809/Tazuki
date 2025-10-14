@@ -12,6 +12,7 @@
         public static double precio { get; set; }
         public static string rutaDiseno { get; set; } = string.Empty;
         public static string[,] Etiquetas { get; set; }
+        public static List<string[]> TagsList { get; set; } = new List<string[]>();
         public static string UploadToken { get; set; } = string.Empty;
         public static string UploadExt { get; set; } = string.Empty;
     }
@@ -20,5 +21,10 @@
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public bool Activo { get; set; }
+    }
+    public class Tag
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
     }
 }

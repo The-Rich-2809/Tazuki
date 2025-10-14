@@ -86,6 +86,53 @@ namespace Tazuki.Models
 
         }
 
+        public static List<string[]> Buscar_TagsList(List<string> nombres)
+        {
+            Datos.Mensaje = "";
+            var nombresEncontrados = new List<string[]>();
+
+            if (nombres == null || nombres.Count == 0)
+            {
+                return nombresEncontrados;
+            }
+
+            using (MySqlConnection conexionBD = Conexion.conexion())
+            {
+                try
+                {
+                    conexionBD.Open();
+
+                    // Cambiamos la consulta para pedir solo la columna 'nombre'
+                    var sql = "SELECT id, nombre FROM tags WHERE nombre IN (";
+                    var parametros = new List<MySqlParameter>();
+                    for (int i = 0; i < nombres.Count; i++)
+                    {
+                        string nombreParametro = "@nombre" + i;
+                        sql += nombreParametro + ",";
+                        parametros.Add(new MySqlParameter(nombreParametro, nombres[i]));
+                    }
+                    sql = sql.TrimEnd(',') + ")";
+
+                    using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
+                    {
+                        comando.Parameters.AddRange(parametros.ToArray());
+
+                        using (MySqlDataReader reader = comando.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                nombresEncontrados.Add(new string[] { reader.GetInt32("id").ToString(), reader.GetString("nombre"), "Encontrado" });
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Datos.Mensaje = "Error al buscar: " + ex.Message;
+                }
+            }
+            return nombresEncontrados;
+        }
         public static DataTable Mostrar_Tazas_Tags()
         {
             Datos.Mensaje = "";

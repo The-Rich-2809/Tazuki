@@ -55,6 +55,7 @@ namespace Tazuki.Controllers
             ViewBag.Tamano = dt;
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> AgregarDiseno(string nombre, string descripcion, string tipoTaza, double precio, string[] tags, IFormFile archivo)
         {
@@ -214,42 +215,39 @@ namespace Tazuki.Controllers
             }
 
             // --- Tu lógica de frases / tags ---
-            string[] frases = archivo.FileName.Split(new[] { " - " }, StringSplitOptions.None);
-            string[,] frasesBuscadas = new string[frases.Length, 3];
-            for (int i = 0; i < frases.Length; i++)
-            {
-                var texto = frases[i]
+            List<string> frasesEnLista = archivo.FileName.Split(new[] { " - " },
+                StringSplitOptions.None).ToList();
+
+            frasesEnLista[^1] = frasesEnLista[^1]
                     .Replace(".mp4", "", StringComparison.OrdinalIgnoreCase)
                     .Replace(".mov", "", StringComparison.OrdinalIgnoreCase)
                     .Replace(".m4v", "", StringComparison.OrdinalIgnoreCase)
                     .Replace(".webm", "", StringComparison.OrdinalIgnoreCase);
 
-                frasesBuscadas[i, 0] = texto;
+            List<string[]> tags = Admin_SQL.Buscar_TagsList(frasesEnLista);
 
-                var dt = Admin_SQL.Buscar_Tags(frases[i]); // evita llamarlo dos veces
-                if (dt.Rows.Count > 0)
+            var nombresQueYaExisten = new HashSet<string>(tags.Select(dato => dato[1]));
+            var nombresNuevos = frasesEnLista.Where(nombre => !nombresQueYaExisten.Contains(nombre));
+
+            for (int i = 0; i < nombresNuevos.Count(); i++)
+            {
+                string estado = string.Empty;
+                if (i == nombresNuevos.Count() - 1)
                 {
-                    frasesBuscadas[i, 1] = "Encontrada";
-                    frasesBuscadas[i, 2] = dt.Rows[0][0].ToString();
+                    Datos.descripcion = nombresNuevos.ElementAt(i);
+                    estado = "Descripción";
                 }
                 else
-                {
-                    frasesBuscadas[i, 1] = "No encontrada";
-                    frasesBuscadas[i, 2] = "-1";
-                }
+                    estado = "No encontrado";
 
-                if (i == frases.Length - 1)
-                {
-                    Datos.descripcion = texto;
-                    frasesBuscadas[i, 1] = "Descripción";
-                }
-
+                string[] nuevoRegistro = new string[] { "-1", nombresNuevos.ElementAt(i), estado };
+                tags.Add(nuevoRegistro);
             }
 
             // Pasa token/ext (ideal: como hidden inputs; si sigues usando Datos.*, al menos setéalos una vez)
             ViewBag.Nombre = nombre;
             ViewBag.MensajeConfirmacion = $"¿Estás seguro de agregar el diseño: {nombre}?";
-            ViewBag.Tags = frasesBuscadas;
+            ViewBag.Tags = tags;
             ViewBag.UploadToken = uploadToken;
             ViewBag.UploadExt = extension;
 
@@ -257,10 +255,10 @@ namespace Tazuki.Controllers
             Datos.UploadExt = extension;
             Datos.UploadToken = uploadToken;
             Datos.tamanoTaza = nombre;
-            Datos.Etiquetas = frasesBuscadas;
+            Datos.TagsList = tags;
             Datos.Nombre = nombre; // <-- para que no sea null al Slugify del siguiente paso
 
-            return PartialView("_AlertaDiseno");
+            return PartialView("_AlertaDiseno",tags);
         }
 
         [HttpPost] // Agregar diseños (confirma y mueve desde carpeta temporal)
@@ -344,45 +342,17 @@ namespace Tazuki.Controllers
                 return RedirectToAction("AgregarDiseno", "Admin");
             }
 
-            // ------ Etiquetas (Datos.Etiquetas: [nombre, estado, id]) ------
-            // Asegura que el arreglo exista y tenga el formato esperado.
-            if (Datos.Etiquetas != null &&
-                Datos.Etiquetas.Rank == 2 &&
-                Datos.Etiquetas.GetLength(1) >= 3)
+            foreach (var tag in Datos.TagsList)
             {
-                // 1) Crear los tags faltantes y guardar su ID
-                for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
+                if (tag[2] == "No encontrado")
                 {
-                    if (Datos.Etiquetas[i, 1] == "No encontrada")
-                    {
-                        var tagNombreOriginal = Datos.Nombre; // respaldo
-                        var nuevoTagNombre = Datos.Etiquetas[i, 0];
-
-                        // OJO: si Admin_SQL.Agregar_Tags() depende de Datos.Nombre,
-                        // seteamos temporalmente y luego restauramos.
-                        Datos.Nombre = nuevoTagNombre;
-
-                        // Debe devolver el ID insertado. Asegúrate de haber ajustado ese método.
-                        int nuevoId = Admin_SQL.Agregar_Tags();
-                        Datos.Etiquetas[i, 2] = nuevoId.ToString();
-
-                        Datos.Nombre = tagNombreOriginal; // restaurar
-                    }
+                    Datos.Nombre = tag[1];
+                    tag[0] = Convert.ToString(Admin_SQL.Agregar_Tags());
+                    tag[2] = "Encontrado";
                 }
 
-                // 2) Relacionar el diseño con cada tag por su ID
-                for (int i = 0; i < Datos.Etiquetas.GetLength(0); i++)
-                {
-                    // Evita la fila de encabezado "Descripción" si así viene en tu matriz
-                    if (!string.Equals(Datos.Etiquetas[i, 1], "Descripción", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var tagId = Datos.Etiquetas[i, 2];
-                        if (!string.IsNullOrWhiteSpace(tagId))
-                        {
-                            Admin_SQL.Agregar_Diseno_Tags(tagId);
-                        }
-                    }
-                }
+                if (tag[2] == "Encontrado")
+                    Admin_SQL.Agregar_Diseno_Tags(tag[0]);
             }
 
             TempData["Message"] = $"Diseño confirmado y guardado: {uniqueFileName}";

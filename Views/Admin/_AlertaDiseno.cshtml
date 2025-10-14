@@ -1,12 +1,13 @@
 @{
+    // --- ESTA PARTE SE MANTIENE IGUAL ---
     var mensaje = ViewBag.MensajeConfirmacion as string;
     var nombre = ViewBag.Nombre as string;
-    var tags = ViewBag.Tags as string[,];
+    var tags = ViewBag.Tags as string[,]; // Esta variable ya no la usaremos en la tabla
     var error = ViewBag.ErrorMessage as string;
 
     // Tamaño y precio
-    var tamanoNombre = ViewBag.TamanoNombre as string; // ej. "11 oz clásica"
-    object precioObj = ViewBag.Precio;                 // decimal o string numérico
+    var tamanoNombre = ViewBag.TamanoNombre as string; 
+    object precioObj = ViewBag.Precio;
 
     // Formateo MXN seguro
     string precioFmt = "—";
@@ -15,9 +16,8 @@
         var mx = new System.Globalization.CultureInfo("es-MX");
         if (precioObj != null)
         {
-            // Intento convertir a decimal (acepta decimal y string)
             decimal p = Convert.ToDecimal(precioObj, mx);
-            precioFmt = string.Format(mx, "{0:C}", p); // $123.00
+            precioFmt = string.Format(mx, "{0:C}", p);
         }
     }
     catch
@@ -25,6 +25,8 @@
         precioFmt = precioObj?.ToString() ?? "—";
     }
 }
+@* La declaración del modelo es correcta para recibir una List<string[]> *@
+@model List<string[]>
 
 @if (!string.IsNullOrEmpty(error))
 {
@@ -33,18 +35,19 @@
 else
 {
     <div>
+        @* --- ESTA PARTE SE MANTIENE IGUAL --- *@
         <h3 class="fw-semibold text-primary mb-3">@mensaje</h3>
-
-        <!-- Resumen del diseño -->
         <div class="row text-start g-2">
             <div class="col-12"><strong>Nombre del diseño:</strong> @(!string.IsNullOrWhiteSpace(nombre) ? nombre : "—")</div>
-            @*<div class="col-12 col-md-6"><strong>Tamaño de taza:</strong> @(!string.IsNullOrWhiteSpace(tamanoNombre) ? tamanoNombre : "—")</div>*@
             <div class="col-12 col-md-6"><strong>Tamaño de taza: Taza de 11oz </strong> </div>
-            @*<div class="col-12 col-md-6"><strong>Precio:</strong> @precioFmt</div>*@
             <div class="col-12 col-md-6"><strong>Precio: $50.00</strong> </div>
         </div>
 
-        @if (tags != null && tags.GetLength(0) > 0)
+        @* --- INICIO DE LA SECCIÓN MODIFICADA --- *@
+
+        @* CAMBIO 1: La condición ahora usa el 'Model' fuertemente tipado. 
+           .Any() es la forma recomendada para ver si una lista tiene elementos. *@
+        @if (Model != null && Model.Any())
         {
             <table class="table table-bordered mt-3">
                 <thead class="table-light">
@@ -54,29 +57,33 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                @for (int i = 0; i < tags.GetLength(0); i++)
-                {
-                    var estado = tags[i, 1];
-                    <tr>
-                        <td>@tags[i, 0]</td>
-                        <td>
-                            @if (estado == "Encontrada")
-                            {
-                                <span class="badge bg-success">@estado</span>
-                            }
-                            else if (estado == "No encontrada")
-                            {
-                                <span class="badge bg-danger">@estado</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">@estado</span>
-                            }
-                        </td>
-                    </tr>
-                }
+                    @* CAMBIO 2: Se usa un bucle 'foreach', que es más limpio y seguro para recorrer una Lista. *@
+                    @foreach (var fila in Model)
+                    {
+                        @* CAMBIO 3: Se accede a los datos por el índice del array 'fila'. *@
+                        var estado = fila[2]; 
+                        <tr>
+                            <td>@fila[1]</td>
+                            <td>
+                                @* La lógica de los badges se mantiene, ya que depende de la variable 'estado' *@
+                                @if (estado == "Encontrado")
+                                {
+                                    <span class="badge bg-success">@estado</span>
+                                }
+                                else if (estado == "No encontrado" || estado == "no encontrado")
+                                {
+                                    <span class="badge bg-danger">@estado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@estado</span>
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
+        @* --- FIN DE LA SECCIÓN MODIFICADA --- *@
     </div>
 }
