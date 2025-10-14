@@ -6,7 +6,6 @@
     // Creamos una nueva colección ordenada de forma aleatoria (barajada)
     var shuffledRows = rows.OrderBy(r => Guid.NewGuid());
 }
-<!-- HERO -->
 <header id="inicio" class="hero py-5 py-lg-6">
     <div class="container py-3">
         <div class="row align-items-center g-4">
@@ -33,7 +32,6 @@
     </div>
 </header>
 
-<!-- CATALOGO -->
 <section id="catalogo" class="pb-5">
     <div class="container">
         <div class="d-flex align-items-end justify-content-between mb-3">
@@ -56,7 +54,7 @@
                 {
                     <div class="col-sm-6 col-lg-4 producto" data-tags="taza cerámica blanca 11oz" data-cat="taza" data-precio="@row_video[2]">
                         <div class="card h-100">
-                            <video class="card-img-bottom" autoplay muted loop playsinline controls preload="metadata">
+                            <video class="card-img-bottom" autoplay muted loop playsinline preload="metadata">
                                 <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
                                 Tu navegador no soporta video HTML5.
                             </video>
@@ -80,7 +78,6 @@
     </div>
 </section>
 
-<!-- CTA PERSONALIZA -->
 <section id="personaliza" class="py-5">
     <div class="container">
         <div class="row align-items-center g-4">
@@ -97,3 +94,105 @@
         </div>
     </div>
 </section>
+
+<div id="custom-fullscreen-overlay">
+    <video id="custom-fullscreen-video" loop controls></video>
+    <button id="custom-fullscreen-close-btn">&times;</button>
+</div>
+
+<style>
+    #custom-fullscreen-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    #custom-fullscreen-overlay.visible {
+        display: flex;
+    }
+    #custom-fullscreen-video {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+    }
+    #custom-fullscreen-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-shadow: 0 0 5px black;
+    }
+    .producto video {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const isIphone = /iPhone/i.test(navigator.userAgent);
+        if (isIphone) {
+            return;
+        }
+
+        const originalVideos = document.querySelectorAll('.producto video');
+        const overlay = document.getElementById('custom-fullscreen-overlay');
+        const overlayVideo = document.getElementById('custom-fullscreen-video');
+        const closeBtn = document.getElementById('custom-fullscreen-close-btn');
+
+        function openCustomFullscreen(videoElement) {
+            const source = videoElement.querySelector('source').src;
+            overlayVideo.src = source;
+            overlay.classList.add('visible');
+            overlayVideo.muted = false;
+            overlayVideo.play();
+            // Añadimos una entrada en el historial del navegador
+            history.pushState(null, '', '#video');
+        }
+
+        function closeCustomFullscreen() {
+            overlay.classList.remove('visible');
+            overlayVideo.pause();
+            overlayVideo.src = "";
+        }
+
+        // --- AÑADIMOS LOS EVENTOS ---
+
+        originalVideos.forEach(video => {
+            video.addEventListener('click', function (event) {
+                event.preventDefault();
+                openCustomFullscreen(this);
+            });
+        });
+
+        // El botón 'X' ahora simplemente simula un clic en "atrás"
+        closeBtn.addEventListener('click', () => {
+            history.back();
+        });
+
+        // La tecla 'Escape' también simula un clic en "atrás"
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape" && overlay.classList.contains('visible')) {
+                history.back();
+            }
+        });
+
+        // Este es el nuevo evento clave: escucha cuando el usuario presiona "atrás"
+        window.addEventListener('popstate', function(event) {
+            // Si el evento "atrás" sucede y nuestra capa está visible, la cerramos.
+            if (overlay.classList.contains('visible')) {
+                closeCustomFullscreen();
+            }
+        });
+    });
+</script>
