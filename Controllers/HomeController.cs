@@ -24,6 +24,10 @@ namespace Tazuki.Controllers
         {
             DataTable dt = Home_SQL.Mostrar_Tazas();
             ViewBag.Videos = dt;
+            dt = Home_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt;
+            dt = Home_SQL.Mostrar_Tazas_Tags();
+            ViewBag.DisenoTags = dt;
             return View();
         }
         public IActionResult Contacto()

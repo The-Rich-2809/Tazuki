@@ -1,12 +1,21 @@
 ﻿@using System.Data
- <!-- HERO -->
+@{
+    // Convertimos la colección de filas a un tipo enumerable
+    var rows = ((DataTable)ViewBag.Videos).Rows.Cast<DataRow>();
+
+    // Creamos una nueva colección ordenada de forma aleatoria (barajada)
+    var shuffledRows = rows.OrderBy(r => Guid.NewGuid());
+}
+<!-- HERO -->
 <header id="inicio" class="hero py-5 py-lg-6">
     <div class="container py-3">
         <div class="row align-items-center g-4">
             <div class="col-lg-6">
                 <span class="badge rounded-pill hero-badge mb-3">Personaliza desde 1 pieza</span>
-                <h1 class="display-5 fw-bold">Tazas y regalos sublimados <span class="text-primary">listos para regalar</span></h1>
-                <p class="lead text-secondary mb-4">Diseños a tu medida para eventos, marcas y ocasiones especiales. Fabricación rápida y envíos a todo México.</p>
+                <h1 class="display-5 fw-bold">Tazas y regalos sublimados <span class="text-primary">listos para
+                        regalar</span></h1>
+                <p class="lead text-secondary mb-4">Diseños a tu medida para eventos, marcas y ocasiones especiales.
+                    Fabricación rápida y envíos a todo México.</p>
                 <div class="d-flex gap-2">
                     <a href="#catalogo" class="btn btn-primary btn-lg">Ver catálogo</a>
                     <a href="#personaliza" class="btn btn-outline-primary btn-lg">Sube tu diseño</a>
@@ -24,7 +33,7 @@
     </div>
 </header>
 
-    <!-- CATALOGO -->
+<!-- CATALOGO -->
 <section id="catalogo" class="pb-5">
     <div class="container">
         <div class="d-flex align-items-end justify-content-between mb-3">
@@ -38,31 +47,34 @@
             </div>
         </div>
         <div class="row g-4" id="gridProductos">
-            @foreach (DataRow row_video in ViewBag.Videos.Rows)
+            @if (ViewBag.Videos != null && ViewBag.Videos.Rows.Count > 0)
             {
-                <div class="col-sm-6 col-lg-4 producto" data-tags="taza cerámica blanca 11oz" data-cat="taza" data-precio="@row_video[2]">
-                    <div class="card h-100">
-                        <video class="card-img-bottom" autoplay muted loop playsinline controls preload="metadata">
-                            <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
-                            Tu navegador no soporta video HTML5.
-                        </video>
+                // Creamos una nueva colección ordenada de forma aleatoria Y TOMAMOS SOLO 6
+                var randomSixRows = rows.OrderBy(r => Guid.NewGuid()).Take(6);
 
-                        <div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <h5 class="card-title">@row_video[1]</h5>
-                                <span class="badge rounded-pill badge-price">$@row_video[2]</span>
-                            </div>
-                            @*<p class="card-text text-secondary">@row_video[4]</p>*@
-                            <div class="rating mb-2" aria-label="Calificación 5 de 5">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                            </div>
-                            <div class="mt-auto d-flex gap-2">
-                                @* <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalPersonaliza" data-producto="Taza blanca 11oz" data-precio="149">Personalizar</button> *@
-                                <a class="btn btn-primary w-100" href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20comprar%20Taza%20blanca%2011oz">Comprar</a>
+                foreach (DataRow row_video in randomSixRows)
+                {
+                    <div class="col-sm-6 col-lg-4 producto" data-tags="taza cerámica blanca 11oz" data-cat="taza" data-precio="@row_video[2]">
+                        <div class="card h-100">
+                            <video class="card-img-bottom" autoplay muted loop playsinline controls preload="metadata">
+                                <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
+                                Tu navegador no soporta video HTML5.
+                            </video>
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title">@row_video[1]</h5>
+                                    <span class="badge rounded-pill badge-price">$@row_video[2]</span>
+                                </div>
+                                <div class="rating mb-2" aria-label="Calificación 5 de 5">
+                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                </div>
+                                <div class="mt-auto d-flex gap-2">
+                                    <a class="btn btn-primary w-100" href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20comprar%20Taza%20blanca%2011oz">Comprar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>
@@ -77,8 +89,10 @@
             </div>
             <div class="col-lg-6">
                 <h2 class="fw-bold">¿Tienes un diseño? <span class="text-primary">Nosotros lo imprimimos</span></h2>
-                <p class="text-secondary">Cuéntanos qué necesitas: cantidades, colores, nombres, logotipo, fotografías o frases. Podemos sugerirte opciones de empaque y acabado.</p>
-                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalPersonaliza" data-producto="Pedido personalizado" data-precio="">Personalizar ahora</button>
+                <p class="text-secondary">Cuéntanos qué necesitas: cantidades, colores, nombres, logotipo, fotografías o
+                    frases. Podemos sugerirte opciones de empaque y acabado.</p>
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalPersonaliza"
+                    data-producto="Pedido personalizado" data-precio="">Personalizar ahora</button>
             </div>
         </div>
     </div>

@@ -31,5 +31,58 @@ namespace Tazuki.Models
             }
             return dt;
         }
+        public static DataTable Mostrar_Tags()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From tags";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                //comando.Parameters.AddWithValue("AccesoSite", Datos.AccesoSite);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+        public static DataTable Mostrar_Tazas_Tags()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From diseno_tags";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                //comando.Parameters.AddWithValue("AccesoSite", Datos.AccesoSite);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
     }
+
 }

@@ -1,83 +1,203 @@
-﻿@using System.Data
-<!-- CATÁLOGO SOLO TAZAS -->
-<section id="catalogo" class="py-5">
+﻿@* --- DEPENDENCIAS --- *@
+@using System.Data
+
+@* ============================================================================== *@
+@* =========================== INICIO DEL CÓDIGO COMPLETO =========================== *@
+@* ============================================================================== *@
+
+
+@* --- 1. ESTILOS CSS PARA LOS FILTROS Y VIDEOS --- *@
+<style>
+    /* Contenedor de los filtros para que se muestren como píldoras horizontales */
+    #listaFiltros {
+        display: flex;
+        flex-wrap: wrap; /* Permite que las píldoras pasen a la siguiente línea si no caben */
+        gap: 0.5rem;   /* Espacio entre las píldoras */
+    }
+
+    /* Estilo base para cada píldora (botón de filtro) */
+    .btn-filter {
+        border-radius: 50rem; /* Esto los hace píldoras */
+        font-weight: 500;
+        border: 1px solid #dee2e6; /* Un borde sutil */
+        background-color: #f8f9fa; /* Fondo gris muy claro */
+        color: #495057;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Efecto hover para las píldoras inactivas */
+    .btn-filter:not(.active):hover {
+        background-color: #e9ecef;
+    }
+    
+    /* --- ESTILO PARA LA PÍLDORA ACTIVA (CON EL NUEVO COLOR VERDE) --- */
+    .btn-filter.active {
+        background-color: #4DB6AC; /* <<< CAMBIO AQUÍ */
+        color: white;
+        border-color: #4DB6AC;     /* <<< CAMBIO AQUÍ */
+        box-shadow: 0 4px 8px rgba(77, 182, 172, 0.4); /* <<< CAMBIO AQUÍ (sombra verde) */
+    }
+
+    /* Estilos del video (sin cambios) */
+    video.card-img-top {
+        object-fit: contain;
+        background-color: #f8f9fa;
+        height: 250px;
+    }
+</style>
+
+
+@* --- 2. ESTRUCTURA HTML DEL CATÁLOGO --- *@
+<section id="catalogo" class="pb-5">
     <div class="container">
+        <div class="d-flex align-items-end justify-content-between mb-4 flex-wrap">
+            <div>
+                <h2 class="fw-semibold">Catálogo</h2>
+                <p class="text-secondary mb-0">Selecciona una categoría o busca por nombre.</p>
+            </div>
+            <div class="input-group mt-2 mt-md-0" style="max-width: 320px;">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input id="buscador" type="search" class="form-control" placeholder="Buscar por nombre o etiqueta…">
+            </div>
+        </div>
+
         <div class="row">
-            <!-- Filtros a la izquierda -->
-            <aside class="col-lg-3 mb-4">
-                <div class="p-3 bg-white border rounded-3 shadow-sm sticky-top" style="top:90px">
-                    <h5 class="fw-semibold mb-3">Filtros</h5> <!-- Buscar -->
-                    <div class="mb-3">
-                        <label class="form-label">Buscar</label> <input id="buscador" type="search"
-                                                                        class="form-control" placeholder="Ej. superman, goku, chivas…">
-                    </div> <!-- Precio -->
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Precio máx: <span id="lblPrecio">$1000</span>
-                            MXN
-                        </label> <input id="rangoPrecio" type="range" class="form-range" min="50" max="1000"
-                                        step="10" value="1000">
-                    </div> <!-- Categorías -->
-                    <div>
-                        <label class="form-label">Categoría</label>
-                        <div class="d-flex flex-column gap-2">
-                            <div class="category-pill">
-                                <input type="radio" id="cat-all" name="cat" value="all" checked>
-                                <label class="badge rounded-pill px-3 py-2" for="cat-all">Todas</label>
-                            </div>
-                            <div class="category-pill">
-                                <input type="radio" id="cat-super" name="cat" value="super">
-                                <label class="badge rounded-pill px-3 py-2" for="cat-super">Superhéroe</label>
-                            </div>
-                            <div class="category-pill">
-                                <input type="radio" id="cat-anime" name="cat" value="anime">
-                                <label class="badge rounded-pill px-3 py-2" for="cat-anime">Anime</label>
-                            </div>
-                            <div class="category-pill">
-                                <input type="radio" id="cat-liga" name="cat" value="liga">
-                                <label class="badge rounded-pill px-3 py-2" for="cat-liga">Liga MX</label>
-                            </div>
-                            <div class="category-pill">
-                                <input type="radio" id="cat-otros" name="cat" value="otros">
-                                <label class="badge rounded-pill px-3 py-2" for="cat-otros">Otros</label>
-                            </div>
-                        </div>
+
+            <div class="col-lg-3">
+                <h5 class="fw-bold mb-3">Categorías</h5>
+                @if (ViewBag.Tags != null && ((DataTable)ViewBag.Tags).Rows.Count > 0)
+                {
+                    <div id="listaFiltros">
+                        <button type="button" class="btn btn-sm px-3 py-2 btn-filter active" data-tag="">
+                            Mostrar Todos
+                        </button>
+                        
+                        @foreach (DataRow tagRow in ((DataTable)ViewBag.Tags).Rows)
+                        {
+                            var tagName = tagRow["nombre"].ToString();
+                            <button type="button" class="btn btn-sm px-3 py-2 btn-filter" data-tag="@tagName.ToLower()">
+                                @tagName
+                            </button>
+                        }
                     </div>
-                </div>
-            </aside> <!-- Productos a la derecha -->
+                }
+            </div>
+
             <div class="col-lg-9">
-                <div id="gridProductos" class="row g-4">
-                    @foreach (DataRow row_video in ViewBag.Videos.Rows)
+                <div class="row g-4" id="gridProductos">
+                    @if (ViewBag.Videos != null && ((DataTable)ViewBag.Videos).Rows.Count > 0)
                     {
-                        <div class="col-12 col-sm-6 col-md-4 producto" data-cat="anime" data-precio="@row_video[2]"
-                             data-tags="taza anime goku naruto luffy one piece dragon ball">
-                            <div class="card h-100">
-                                <video poster="https://via.placeholder.com/400x225.png?text=Video+1"
-                                       playsinline autoplay muted loop>
-                                    <source src="~/@row_video[5]" type="video/mp4"> Tu navegador no soporta la etiqueta de
-                                    video.
-                                </video>
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title mb-1">@row_video[1]</h5> <span class="badge badge-price mb-2">$@row_video[2] MXN</span>
-                                    @*<p class="card-text text-secondary small mb-3">@row_video[4]</p>*@
-                                    <div class="mt-auto d-flex flex-column gap-2">
-                                        <!-- Botón agregar a carrito --> <button class="btn btn-outline-secondary w-100 btn-carrito"
-                                                                                 data-producto="Taza Superhéroe" data-precio="199">
-                                            <i class="bi bi-cart-plus"></i> Agregar al carrito
-                                        </button>
-                                        <!-- Botón comprar ahora --> <button class="btn btn-primary w-100"
-                                                                             data-producto="Taza Superhéroe" data-precio="199" data-bs-toggle="modal"
-                                                                             data-bs-target="#modalPersonaliza">
-                                            <i class="bi bi-bag-check"></i> Comprar
-                                            ahora
-                                        </button>
+                        // Lógica C# para unir los datos de los ViewBags
+                        var videos = ((DataTable)ViewBag.Videos).Rows.Cast<DataRow>();
+                        var allTags = ((DataTable)ViewBag.Tags).Rows.Cast<DataRow>();
+                        var disenoTagsRelations = ((DataTable)ViewBag.DisenoTags).Rows.Cast<DataRow>();
+
+                        // Generar una tarjeta por cada video, en orden aleatorio
+                        foreach (var row_video in videos.OrderBy(r => Guid.NewGuid()))
+                        {
+                            var videoId = Convert.ToInt32(row_video["id"]);
+
+                            // 1. Encontrar los IDs de las etiquetas para este video
+                            var tagIdsForThisVideo = disenoTagsRelations
+                                .Where(r => Convert.ToInt32(r["diseno_id"]) == videoId)
+                                .Select(r => Convert.ToInt32(r["tag_id"]));
+
+                            // 2. Encontrar los nombres de las etiquetas usando los IDs
+                            var tagsForThisVideo = allTags
+                                .Where(t => tagIdsForThisVideo.Contains(Convert.ToInt32(t["id"])))
+                                .Select(t => t["nombre"].ToString());
+
+                            // 3. Crear el string para el atributo data-tags (ej: "pareja aniversario")
+                            var dataTagsValue = string.Join(" ", tagsForThisVideo).ToLower();
+
+                            // Clases de columna para 3 videos por fila en pantallas medianas y grandes
+                            <div class="col-md-6 col-lg-4 producto" data-tags="@dataTagsValue" data-nombre="@row_video["nombre"].ToString().ToLower()">
+                                <div class="card h-100 shadow-sm border-0">
+                                    <video class="card-img-top" autoplay muted loop playsinline preload="metadata">
+                                        <source src="@Url.Content("~/" + row_video["ruta_diseno"].ToString())" type="video/mp4" />
+                                        Tu navegador no soporta video HTML5.
+                                    </video>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <h5 class="card-title fw-bold">@row_video["nombre"]</h5>
+                                            <span class="badge rounded-pill badge-price fs-6">$@row_video["precio"]</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            @foreach (var tagName in tagsForThisVideo)
+                                            {
+                                                <span class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1">@tagName</span>
+                                            }
+                                        </div>
+                                        <div class="mt-auto">
+                                            <a class="btn btn-primary w-100" href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20comprar%20'@row_video["nombre"]'">Comprar</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     }
-                </div><!-- /gridProductos -->
-            </div>
-        </div>
-    </div>
+                </div>
+            </div> </div> </div>
 </section>
+
+
+@* --- 3. SCRIPT JAVASCRIPT PARA LA FUNCIONALIDAD DE FILTRADO --- *@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterContainer = document.getElementById('listaFiltros');
+    const searchInput = document.getElementById('buscador');
+    const products = document.querySelectorAll('#gridProductos .producto');
+    
+    // Almacena la etiqueta activa (solo una a la vez)
+    let activeTag = ''; 
+
+    // 1. Manejador para los clics en los botones de filtro
+    if (filterContainer) {
+        const filterButtons = filterContainer.querySelectorAll('.btn-filter');
+
+        filterContainer.addEventListener('click', function (e) {
+            const clickedButton = e.target.closest('.btn-filter');
+            if (!clickedButton) return;
+
+            // Quitar la clase 'active' de todos los botones
+            filterButtons.forEach(button => button.classList.remove('active'));
+            // Añadir 'active' solo al botón clickeado
+            clickedButton.classList.add('active');
+
+            // Actualizar la etiqueta activa
+            activeTag = clickedButton.dataset.tag;
+
+            // Ejecutar el filtro
+            filterProducts();
+        });
+    }
+
+    // 2. Manejador para el input de búsqueda de texto
+    if (searchInput) {
+        searchInput.addEventListener('input', filterProducts);
+    }
+
+    // 3. La función principal que filtra los productos
+    function filterProducts() {
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+
+        products.forEach(product => {
+            const productTags = product.dataset.tags;
+            const productName = product.dataset.nombre;
+
+            // Condición de búsqueda de texto
+            const searchMatch = searchTerm === '' || productTags.includes(searchTerm) || productName.includes(searchTerm);
+            
+            // Condición de etiqueta (lógica de selección única)
+            const tagMatch = activeTag === '' || productTags.includes(activeTag);
+            
+            // Mostrar solo si ambas condiciones se cumplen
+            if (searchMatch && tagMatch) {
+                product.style.display = '';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
