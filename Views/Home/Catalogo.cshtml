@@ -6,43 +6,102 @@
 @* ============================================================================== *@
 
 
-@* --- 1. ESTILOS CSS PARA LOS FILTROS Y VIDEOS --- *@
+@* --- 1. ESTILOS CSS (CATÁLOGO + PAGINACIÓN) --- *@
 <style>
-    /* Contenedor de los filtros para que se muestren como píldoras horizontales */
+    /* === Estilos del Catálogo === */
     #listaFiltros {
         display: flex;
-        flex-wrap: wrap; /* Permite que las píldoras pasen a la siguiente línea si no caben */
-        gap: 0.5rem;   /* Espacio entre las píldoras */
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 
-    /* Estilo base para cada píldora (botón de filtro) */
     .btn-filter {
-        border-radius: 50rem; /* Esto los hace píldoras */
+        border-radius: 50rem;
         font-weight: 500;
-        border: 1px solid #dee2e6; /* Un borde sutil */
-        background-color: #f8f9fa; /* Fondo gris muy claro */
+        border: 1px solid #dee2e6;
+        background-color: #f8f9fa;
         color: #495057;
         transition: all 0.2s ease-in-out;
     }
     
-    /* Efecto hover para las píldoras inactivas */
     .btn-filter:not(.active):hover {
         background-color: #e9ecef;
     }
     
-    /* --- ESTILO PARA LA PÍLDORA ACTIVA (CON EL NUEVO COLOR VERDE) --- */
     .btn-filter.active {
-        background-color: #4DB6AC; /* <<< CAMBIO AQUÍ */
+        background-color: #4DB6AC;
         color: white;
-        border-color: #4DB6AC;     /* <<< CAMBIO AQUÍ */
-        box-shadow: 0 4px 8px rgba(77, 182, 172, 0.4); /* <<< CAMBIO AQUÍ (sombra verde) */
+        border-color: #4DB6AC;
+        box-shadow: 0 4px 8px rgba(77, 182, 172, 0.4);
     }
 
-    /* Estilos del video (sin cambios) */
     video.card-img-top {
         object-fit: contain;
         background-color: #f8f9fa;
         height: 250px;
+    }
+
+    /* === Estilos de la Paginación (Integrados) === */
+    .pagination-container {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 40px; /* Más espacio arriba */
+    }
+
+    .pagination-container button, .pagination-container .ellipsis {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        background-color: #ffffff;
+        color: #4DB6AC; /* Usamos el color principal */
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .pagination-container .ellipsis {
+        cursor: default;
+        border-color: transparent;
+        background-color: transparent;
+        color: #6c757d;
+    }
+
+    .pagination-container button.arrow {
+        min-width: 100px;
+        background-color: #4DB6AC;
+        color: white;
+        border-color: #4DB6AC;
+    }
+
+    .pagination-container button:hover:not(:disabled) {
+        background-color: #3b9a8f; /* Un verde más oscuro */
+        color: white;
+        border-color: #3b9a8f;
+    }
+
+    .pagination-container button:disabled {
+        background-color: #e9ecef;
+        color: #6c757d;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+    
+    .pagination-container button.active {
+        background-color: #4DB6AC;
+        color: white;
+        border-color: #4DB6AC;
+        font-weight: bold;
+    }
+
+    #page-numbers {
+        display: flex;
+        gap: 8px;
     }
 </style>
 
@@ -87,30 +146,21 @@
                 <div class="row g-4" id="gridProductos">
                     @if (ViewBag.Videos != null && ((DataTable)ViewBag.Videos).Rows.Count > 0)
                     {
-                        // Lógica C# para unir los datos de los ViewBags
                         var videos = ((DataTable)ViewBag.Videos).Rows.Cast<DataRow>();
                         var allTags = ((DataTable)ViewBag.Tags).Rows.Cast<DataRow>();
                         var disenoTagsRelations = ((DataTable)ViewBag.DisenoTags).Rows.Cast<DataRow>();
 
-                        // Generar una tarjeta por cada video, en orden aleatorio
                         foreach (var row_video in videos.OrderBy(r => Guid.NewGuid()))
                         {
                             var videoId = Convert.ToInt32(row_video["id"]);
-
-                            // 1. Encontrar los IDs de las etiquetas para este video
                             var tagIdsForThisVideo = disenoTagsRelations
                                 .Where(r => Convert.ToInt32(r["diseno_id"]) == videoId)
                                 .Select(r => Convert.ToInt32(r["tag_id"]));
-
-                            // 2. Encontrar los nombres de las etiquetas usando los IDs
                             var tagsForThisVideo = allTags
                                 .Where(t => tagIdsForThisVideo.Contains(Convert.ToInt32(t["id"])))
                                 .Select(t => t["nombre"].ToString());
-
-                            // 3. Crear el string para el atributo data-tags (ej: "pareja aniversario")
                             var dataTagsValue = string.Join(" ", tagsForThisVideo).ToLower();
 
-                            // Clases de columna para 3 videos por fila en pantallas medianas y grandes
                             <div class="col-md-6 col-lg-4 producto" data-tags="@dataTagsValue" data-nombre="@row_video["nombre"].ToString().ToLower()">
                                 <div class="card h-100 shadow-sm border-0">
                                     <video class="card-img-top" autoplay muted loop playsinline preload="metadata">
@@ -137,67 +187,231 @@
                         }
                     }
                 </div>
-            </div> </div> </div>
+
+                @* --- CONTENEDOR PARA EL MENSAJE DE "NO RESULTADOS" --- *@
+                <div id="no-results" class="text-center py-5" style="display: none;">
+                    <h4 class="text-muted">No se encontraron resultados</h4>
+                    <p class="text-secondary">Intenta con otra categoría o término de búsqueda.</p>
+                </div>
+
+                @* --- CONTENEDOR PARA LA PAGINACIÓN --- *@
+                <div id="paginationContainer" class="pagination-container">
+                    <button id="prev-page" class="arrow">Anterior</button>
+                    <div id="page-numbers"></div>
+                    <button id="next-page" class="arrow">Siguiente</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </section>
 
 
-@* --- 3. SCRIPT JAVASCRIPT PARA LA FUNCIONALIDAD DE FILTRADO --- *@
+@* --- 3. SCRIPT JAVASCRIPT (FILTRADO + PAGINACIÓN) --- *@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    
+    // --- CONFIGURACIÓN Y ESTADO ---
+    const videosPerPage = 9; // Cantidad de videos a mostrar por página
+    let currentPage = 1;
+    let activeTag = '';
+    const ellipsis = '...';
+
+    // --- ELEMENTOS DEL DOM ---
     const filterContainer = document.getElementById('listaFiltros');
     const searchInput = document.getElementById('buscador');
-    const products = document.querySelectorAll('#gridProductos .producto');
-    
-    // Almacena la etiqueta activa (solo una a la vez)
-    let activeTag = ''; 
+    const allProducts = document.querySelectorAll('#gridProductos .producto');
+    const noResultsMessage = document.getElementById('no-results');
 
-    // 1. Manejador para los clics en los botones de filtro
+    const paginationContainer = document.getElementById('paginationContainer');
+    const prevButton = document.getElementById('prev-page');
+    const nextButton = document.getElementById('next-page');
+    const pageNumbersContainer = document.getElementById('page-numbers');
+
+    /**
+     * Función principal que se encarga de aplicar filtros, actualizar la lista de productos
+     * visibles y renderizar la página actual con su paginación.
+     */
+    function applyFiltersAndRender() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // 1. Filtrar los productos que coinciden con los criterios actuales
+        const visibleProducts = Array.from(allProducts).filter(product => {
+            const productTags = product.dataset.tags;
+            const productName = product.dataset.nombre;
+            
+            const searchMatch = searchTerm === '' || productTags.includes(searchTerm) || productName.includes(searchTerm);
+            const tagMatch = activeTag === '' || productTags.includes(activeTag);
+
+            return searchMatch && tagMatch;
+        });
+
+        // 2. Gestionar la visibilidad del mensaje "No hay resultados"
+        if (visibleProducts.length === 0) {
+            noResultsMessage.style.display = 'block';
+            paginationContainer.style.display = 'none';
+        } else {
+            noResultsMessage.style.display = 'none';
+            paginationContainer.style.display = 'flex';
+        }
+
+        // 3. Renderizar la página actual con los productos filtrados
+        renderPage(visibleProducts);
+    }
+
+    /**
+     * Muestra los productos de la página actual y actualiza los controles de paginación.
+     * @@param {Array<HTMLElement>} visibleProducts - La lista de productos que pasaron el filtro.
+     */
+    function renderPage(visibleProducts) {
+        // Ocultar todos los productos primero
+        allProducts.forEach(p => p.style.display = 'none');
+
+        const totalPages = Math.ceil(visibleProducts.length / videosPerPage);
+        
+        // Ajustar la página actual si está fuera de los límites (p.ej. después de un filtro)
+        if (currentPage > totalPages) {
+            currentPage = totalPages || 1;
+        }
+
+        // Calcular qué productos mostrar
+        const startIndex = (currentPage - 1) * videosPerPage;
+        const pageProducts = visibleProducts.slice(startIndex, startIndex + videosPerPage);
+
+        // Mostrar solo los productos de la página actual
+        pageProducts.forEach(p => p.style.display = '');
+
+        // Actualizar los botones y números de la paginación
+        setupPagination(totalPages);
+    }
+
+    /**
+     * Genera y muestra los controles de la paginación (botones, números, elipsis).
+     * @@param {number} totalPages - El número total de páginas para la selección actual.
+     */
+    function setupPagination(totalPages) {
+        pageNumbersContainer.innerHTML = '';
+
+        // Si solo hay una página (o menos), ocultar la paginación
+        if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+        paginationContainer.style.display = 'flex';
+
+        const range = getPaginationRange(totalPages, currentPage);
+
+        range.forEach(page => {
+            if (page === ellipsis) {
+                const span = document.createElement('span');
+                span.className = 'ellipsis';
+                span.textContent = '...';
+                pageNumbersContainer.appendChild(span);
+            } else {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = page;
+                if (page === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageButton.addEventListener('click', () => {
+                    currentPage = page;
+                    applyFiltersAndRender();
+                });
+                pageNumbersContainer.appendChild(pageButton);
+            }
+        });
+
+        prevButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
+    }
+
+    /**
+     * Lógica para crear el rango de paginación con elipsis (ej: 1 ... 5 6 7 ... 12).
+     */
+    function getPaginationRange(totalPages, currentPage, siblings = 1) {
+        const totalNumbers = siblings * 2 + 3;
+        const totalBlocks = totalNumbers + 2;
+
+        if (totalPages <= totalBlocks) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+
+        const leftSiblingIndex = Math.max(currentPage - siblings, 1);
+        const rightSiblingIndex = Math.min(currentPage + siblings, totalPages);
+        const shouldShowLeftDots = leftSiblingIndex > 2;
+        const shouldShowRightDots = rightSiblingIndex < totalPages - 2;
+
+        if (!shouldShowLeftDots && shouldShowRightDots) {
+            let leftItemCount = 3 + 2 * siblings;
+            let leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
+            return [...leftRange, ellipsis, totalPages];
+        }
+
+        if (shouldShowLeftDots && !shouldShowRightDots) {
+            let rightItemCount = 3 + 2 * siblings;
+            let rightRange = Array.from({ length: rightItemCount }, (_, i) => totalPages - rightItemCount + i + 1);
+            return [1, ellipsis, ...rightRange];
+        }
+
+        if (shouldShowLeftDots && shouldShowRightDots) {
+            let middleRange = Array.from({ length: rightSiblingIndex - leftSiblingIndex + 1 }, (_, i) => leftSiblingIndex + i);
+            return [1, ellipsis, ...middleRange, ellipsis, totalPages];
+        }
+    }
+
+
+    // --- MANEJADORES DE EVENTOS ---
+
+    // 1. Clics en los botones de filtro de categoría
     if (filterContainer) {
-        const filterButtons = filterContainer.querySelectorAll('.btn-filter');
-
         filterContainer.addEventListener('click', function (e) {
             const clickedButton = e.target.closest('.btn-filter');
             if (!clickedButton) return;
 
-            // Quitar la clase 'active' de todos los botones
-            filterButtons.forEach(button => button.classList.remove('active'));
-            // Añadir 'active' solo al botón clickeado
+            filterContainer.querySelectorAll('.btn-filter').forEach(button => button.classList.remove('active'));
             clickedButton.classList.add('active');
-
-            // Actualizar la etiqueta activa
+            
             activeTag = clickedButton.dataset.tag;
-
-            // Ejecutar el filtro
-            filterProducts();
+            currentPage = 1; // Siempre regresar a la página 1 al cambiar de filtro
+            applyFiltersAndRender();
         });
     }
 
-    // 2. Manejador para el input de búsqueda de texto
+    // 2. Búsqueda de texto en el input
     if (searchInput) {
-        searchInput.addEventListener('input', filterProducts);
-    }
-
-    // 3. La función principal que filtra los productos
-    function filterProducts() {
-        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-
-        products.forEach(product => {
-            const productTags = product.dataset.tags;
-            const productName = product.dataset.nombre;
-
-            // Condición de búsqueda de texto
-            const searchMatch = searchTerm === '' || productTags.includes(searchTerm) || productName.includes(searchTerm);
-            
-            // Condición de etiqueta (lógica de selección única)
-            const tagMatch = activeTag === '' || productTags.includes(activeTag);
-            
-            // Mostrar solo si ambas condiciones se cumplen
-            if (searchMatch && tagMatch) {
-                product.style.display = '';
-            } else {
-                product.style.display = 'none';
-            }
+        searchInput.addEventListener('input', () => {
+            currentPage = 1; // Siempre regresar a la página 1 al buscar
+            applyFiltersAndRender();
         });
     }
+    
+    // 3. Botón de página anterior
+    prevButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            applyFiltersAndRender();
+        }
+    });
+
+    // 4. Botón de página siguiente
+    nextButton.addEventListener('click', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const visibleProducts = Array.from(allProducts).filter(product => {
+             const productTags = product.dataset.tags;
+             const productName = product.dataset.nombre;
+             const searchMatch = searchTerm === '' || productTags.includes(searchTerm) || productName.includes(searchTerm);
+             const tagMatch = activeTag === '' || productTags.includes(activeTag);
+             return searchMatch && tagMatch;
+        });
+        const totalPages = Math.ceil(visibleProducts.length / videosPerPage);
+
+        if (currentPage < totalPages) {
+            currentPage++;
+            applyFiltersAndRender();
+        }
+    });
+
+    // --- INICIALIZACIÓN ---
+    applyFiltersAndRender();
 });
 </script>

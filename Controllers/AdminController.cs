@@ -312,7 +312,7 @@ namespace Tazuki.Controllers
             {
                 TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
                 try { System.IO.File.Delete(tempPath); } catch { /* best-effort */ }
-                return RedirectToAction("AgregarDiseno", "Admin");
+                return RedirectToAction("AgregarDisenoArchivo", "Admin");
             }
 
             // Mover de temporal a definitivo (misma unidad → operación atómica)
@@ -339,7 +339,7 @@ namespace Tazuki.Controllers
             {
                 try { System.IO.File.Delete(finalPath); } catch { /* best-effort */ }
                 TempData["Message"] = "Error al registrar el diseño en la BD. No se han guardado cambios.";
-                return RedirectToAction("AgregarDiseno", "Admin");
+                return RedirectToAction("AgregarDisenoArchivo", "Admin");
             }
 
             foreach (var tag in Datos.TagsList)

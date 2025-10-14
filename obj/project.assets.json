@@ -1609,23 +1609,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ricar\\.nuget\\packages\\": {},
+    "C:\\Users\\Rich\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
+      "projectUniqueName": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
       "projectName": "Tazuki",
-      "projectPath": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
-      "packagesPath": "C:\\Users\\ricar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\obj\\",
+      "projectPath": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\Tazuki.csproj",
+      "packagesPath": "C:\\Users\\Rich\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Rich\\Documents\\GitHub\\Tazuki\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ricar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Rich\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1634,7 +1634,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
