@@ -106,7 +106,6 @@ C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.build.js
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\Tazuki.csproj.Up2Date
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\Tazuki.dll
 C:\Users\ricar\Documents\GitHub\Tazuki\obj\Debug\net8.0\refint\Tazuki.dll

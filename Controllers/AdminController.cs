@@ -323,7 +323,7 @@ namespace Tazuki.Controllers
             catch (Exception ex)
             {
                 TempData["Message"] = $"Error al mover el archivo final: {ex.Message}";
-                return RedirectToAction("Index", "Admin");
+                return Ok();
             }
 
             // ------ Inserción en BD ------
@@ -356,7 +356,7 @@ namespace Tazuki.Controllers
             }
 
             TempData["Message"] = $"Diseño confirmado y guardado: {uniqueFileName}";
-            return RedirectToAction("Index", "Admin");
+           return RedirectToAction("Index", "Admin");
         }
 
 
