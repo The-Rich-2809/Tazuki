@@ -75,7 +75,6 @@
                         </video>
                         <div class="video-card-body">
                             <h5 class="video-title mt-3">@row_video[1]</h5>
-                            <p class="video-description">@row_video[4]</p>
                             @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
                             {
                                 if (row_tamano[0].ToString() == row_video[3].ToString())

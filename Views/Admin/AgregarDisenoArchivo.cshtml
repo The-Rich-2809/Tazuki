@@ -101,10 +101,10 @@
     <h1>Agregar Nuevo Diseño</h1>
 
     <form id="formAgregarDiseno" enctype="multipart/form-data">
-        <div class="mb-4">
+        @* <div class="mb-4">
             <label for="nombre" class="form-label">Nombre del Diseño</label>
             <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Taza de Gato" required>
-        </div>
+        </div> *@
 
         <div class="mb-4">
             <label class="form-label">Video del Diseño</label>
@@ -123,7 +123,6 @@
             <button class="btn btn-secondary" onclick="cerrarAlerta()">Cancelar</button>
             <form id="formAgregarDiseno" action="@Url.Action("GuardarDisenoConfirmado", "Admin")" method="post"
                 enctype="multipart/form-data">
-
                 <button type="submit" class="btn btn-primary">Guardar Diseño</button>
             </form>
         </div>

@@ -16,7 +16,7 @@
                 <p class="lead text-secondary mb-4">Diseños a tu medida para eventos, marcas y ocasiones especiales.
                     Fabricación rápida y envíos a todo México.</p>
                 <div class="d-flex gap-2">
-                    <a href="#catalogo" class="btn btn-primary btn-lg">Ver catálogo</a>
+                    <a href="@Url.Action("Catalogo", "Home")" class="btn btn-primary btn-lg" >Ver catálogo</a>
                     <a href="#personaliza" class="btn btn-outline-primary btn-lg">Sube tu diseño</a>
                 </div>
                 <div class="d-flex gap-4 mt-4 text-secondary small">
@@ -54,14 +54,20 @@
                 {
                     <div class="col-sm-6 col-lg-4 producto" data-tags="taza cerámica blanca 11oz" data-cat="taza" data-precio="@row_video[2]">
                         <div class="card h-100">
-                            <video class="card-img-bottom" autoplay muted loop playsinline preload="metadata">
-                                <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
-                                Tu navegador no soporta video HTML5.
-                            </video>
+                            
+                            <div class="video-container">
+                                <video class="card-img-bottom" autoplay muted loop playsinline preload="metadata">
+                                    <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
+                                    Tu navegador no soporta video HTML5.
+                                </video>
+                                <div class="video-overlay">
+                                    <i class="bi bi-volume-up-fill"></i> Da click para escuchar
+                                </div>
+                            </div>
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <h5 class="card-title">@row_video[1]</h5>
-                                    <span class="badge rounded-pill badge-price">$@row_video[2]</span>
+                                    <span class="badge rounded-pill badge-price">Desde $@row_video[2]</span>
                                 </div>
                                 <div class="rating mb-2" aria-label="Calificación 5 de 5">
                                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
@@ -96,7 +102,7 @@
 </section>
 
 <div id="custom-fullscreen-overlay">
-    <video id="custom-fullscreen-video" loop controls></video>
+    <video id="custom-fullscreen-video" loop controls controlsList="nodownload"></video>
     <button id="custom-fullscreen-close-btn">&times;</button>
 </div>
 
@@ -136,6 +142,28 @@
     .producto video {
         cursor: pointer;
     }
+
+    /* === INICIO CSS AÑADIDO (para Modificación 2) === */
+    .video-container {
+        position: relative; /* Necesario para posicionar el overlay */
+    }
+    .video-overlay {
+        position: absolute;
+        bottom: 10px; /* Posición desde abajo */
+        left: 50%; /* Centrado horizontal */
+        transform: translateX(-50%); /* Ajuste fino del centrado */
+        background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+        color: white;
+        padding: 5px 12px; /* Relleno interno */
+        border-radius: 20px; /* Bordes redondeados (píldora) */
+        font-size: 0.85rem;
+        font-weight: 500;
+        z-index: 10;
+        pointer-events: none; /* MUY IMPORTANTE: deja que el click "atraviese" el texto y llegue al video */
+        white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+    }
+    /* === FIN CSS AÑADIDO === */
+
 </style>
 
 <script>

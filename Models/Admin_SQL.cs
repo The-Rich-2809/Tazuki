@@ -217,8 +217,8 @@ namespace Tazuki.Models
         {
             Datos.Mensaje = "";
             string sql = @"INSERT INTO disenos 
-                   (nombre, precio, tamano_taza_id, descripcion, ruta_diseno, fecha_creacion, publicado) 
-                   VALUES (@nombre, @precio, @tamano_taza_id, @descripcion, @ruta_diseno, @fecha_creacion, @publicado);";
+                   (nombre, precio, tamano_taza_id, ruta_diseno, fecha_creacion, publicado) 
+                   VALUES (@nombre, @precio, @tamano_taza_id, @ruta_diseno, @fecha_creacion, @publicado);";
 
             using (MySqlConnection conexionBD = Conexion.conexion())
             {
@@ -231,7 +231,6 @@ namespace Tazuki.Models
                         comando.Parameters.AddWithValue("@nombre", Datos.Nombre);
                         comando.Parameters.AddWithValue("@precio", Datos.precio);
                         comando.Parameters.AddWithValue("@tamano_taza_id", Datos.tamanoTaza);
-                        comando.Parameters.AddWithValue("@descripcion", Datos.descripcion);
                         comando.Parameters.AddWithValue("@ruta_diseno", Datos.rutaDiseno);
                         comando.Parameters.AddWithValue("@fecha_creacion", DateTime.Now);
                         comando.Parameters.AddWithValue("@publicado", 1);

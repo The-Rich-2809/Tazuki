@@ -8,33 +8,7 @@
 
 @* --- 1. ESTILOS CSS (CATÁLOGO + PAGINACIÓN) --- *@
 <style>
-    /* === Estilos del Catálogo === */
-    #listaFiltros {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .btn-filter {
-        border-radius: 50rem;
-        font-weight: 500;
-        border: 1px solid #dee2e6;
-        background-color: #f8f9fa;
-        color: #495057;
-        transition: all 0.2s ease-in-out;
-    }
-    
-    .btn-filter:not(.active):hover {
-        background-color: #e9ecef;
-    }
-    
-    .btn-filter.active {
-        background-color: #4DB6AC;
-        color: white;
-        border-color: #4DB6AC;
-        box-shadow: 0 4px 8px rgba(77, 182, 172, 0.4);
-    }
-
+    /* === Estilos del Catálogo (Video) === */
     video.card-img-top {
         object-fit: contain;
         background-color: #f8f9fa;
@@ -109,6 +83,8 @@
 @* --- 2. ESTRUCTURA HTML DEL CATÁLOGO --- *@
 <section id="catalogo" class="pb-5">
     <div class="container">
+        
+        @* --- Encabezado y Buscador --- *@
         <div class="d-flex align-items-end justify-content-between mb-4 flex-wrap">
             <div>
                 <h2 class="fw-semibold">Catálogo</h2>
@@ -120,29 +96,35 @@
             </div>
         </div>
 
+        @* --- Filtros (MODIFICADO CON <select>) --- *@
+        <div class="mb-4">
+            @if (ViewBag.Tags != null && ((DataTable)ViewBag.Tags).Rows.Count > 0)
+            {
+                @* Usamos 'form-label' y 'h5' para mantener el estilo visual *@
+                <label for="filtroCategorias" class="form-label fw-bold mb-2 h5">Categorías</label>
+                
+                @* Este es el nuevo menú desplegable *@
+                <select id="filtroCategorias" class="form-select" aria-label="Filtrar por categoría">
+                    
+                    @* Esta es la opción por defecto *@
+                    <option value="" selected>Mostrar Todos</option>
+                    
+                    @* El bucle ahora crea <option> en lugar de <button> *@
+                    @foreach (DataRow tagRow in ((DataTable)ViewBag.Tags).Rows)
+                    {
+                        var tagName = tagRow["nombre"].ToString();
+                        <option value="@tagName.ToLower()">
+                            @tagName
+                        </option>
+                    }
+                </select>
+            }
+        </div>
+
+
+        @* --- Contenido Principal (Productos) --- *@
         <div class="row">
-
-            <div class="col-lg-3">
-                <h5 class="fw-bold mb-3">Categorías</h5>
-                @if (ViewBag.Tags != null && ((DataTable)ViewBag.Tags).Rows.Count > 0)
-                {
-                    <div id="listaFiltros">
-                        <button type="button" class="btn btn-sm px-3 py-2 btn-filter active" data-tag="">
-                            Mostrar Todos
-                        </button>
-                        
-                        @foreach (DataRow tagRow in ((DataTable)ViewBag.Tags).Rows)
-                        {
-                            var tagName = tagRow["nombre"].ToString();
-                            <button type="button" class="btn btn-sm px-3 py-2 btn-filter" data-tag="@tagName.ToLower()">
-                                @tagName
-                            </button>
-                        }
-                    </div>
-                }
-            </div>
-
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <div class="row g-4" id="gridProductos">
                     @if (ViewBag.Videos != null && ((DataTable)ViewBag.Videos).Rows.Count > 0)
                     {
@@ -212,13 +194,13 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     // --- CONFIGURACIÓN Y ESTADO ---
-    const videosPerPage = 9; // Cantidad de videos a mostrar por página
+    const videosPerPage = 9; 
     let currentPage = 1;
     let activeTag = '';
     const ellipsis = '...';
 
-    // --- ELEMENTOS DEL DOM ---
-    const filterContainer = document.getElementById('listaFiltros');
+    // --- ELEMENTOS DEL DOM (MODIFICADO) ---
+    const categorySelect = document.getElementById('filtroCategorias'); // <--- MODIFICADO
     const searchInput = document.getElementById('buscador');
     const allProducts = document.querySelectorAll('#gridProductos .producto');
     const noResultsMessage = document.getElementById('no-results');
@@ -362,16 +344,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- MANEJADORES DE EVENTOS ---
 
-    // 1. Clics en los botones de filtro de categoría
-    if (filterContainer) {
-        filterContainer.addEventListener('click', function (e) {
-            const clickedButton = e.target.closest('.btn-filter');
-            if (!clickedButton) return;
-
-            filterContainer.querySelectorAll('.btn-filter').forEach(button => button.classList.remove('active'));
-            clickedButton.classList.add('active');
+    // 1. Cambio en el dropdown de categorías (MODIFICADO)
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function (e) {
+            // e.target.value nos da el 'value' de la opción seleccionada
+            activeTag = e.target.value;
             
-            activeTag = clickedButton.dataset.tag;
             currentPage = 1; // Siempre regresar a la página 1 al cambiar de filtro
             applyFiltersAndRender();
         });

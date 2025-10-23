@@ -179,7 +179,7 @@ namespace Tazuki.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarDisenoArchivo(string nombre, IFormFile archivo)
+        public async Task<IActionResult> AgregarDisenoArchivo(IFormFile archivo)
         {
             if (archivo == null || archivo.Length == 0)
             {
@@ -235,6 +235,8 @@ namespace Tazuki.Controllers
                 if (i == nombresNuevos.Count() - 1)
                 {
                     Datos.descripcion = nombresNuevos.ElementAt(i);
+                    ViewBag.Nombre = nombresNuevos.ElementAt(i);
+                    Datos.Nombre = nombresNuevos.ElementAt(i);
                     estado = "Descripción";
                 }
                 else
@@ -245,8 +247,7 @@ namespace Tazuki.Controllers
             }
 
             // Pasa token/ext (ideal: como hidden inputs; si sigues usando Datos.*, al menos setéalos una vez)
-            ViewBag.Nombre = nombre;
-            ViewBag.MensajeConfirmacion = $"¿Estás seguro de agregar el diseño: {nombre}?";
+            ViewBag.MensajeConfirmacion = $"¿Estás seguro de agregar el diseño: {Datos.Nombre}?";
             ViewBag.Tags = tags;
             ViewBag.UploadToken = uploadToken;
             ViewBag.UploadExt = extension;
@@ -254,9 +255,8 @@ namespace Tazuki.Controllers
             // Si vas a usar Datos.* entre peticiones, setéalos aquí (ojo: no es multiusuario-safe)
             Datos.UploadExt = extension;
             Datos.UploadToken = uploadToken;
-            Datos.tamanoTaza = nombre;
-            Datos.TagsList = tags;
-            Datos.Nombre = nombre; // <-- para que no sea null al Slugify del siguiente paso
+            Datos.tamanoTaza = Datos.Nombre;
+            Datos.TagsList = tags; // <-- para que no sea null al Slugify del siguiente paso
 
             return PartialView("_AlertaDiseno",tags);
         }
