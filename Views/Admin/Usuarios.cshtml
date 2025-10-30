@@ -1,0 +1,55 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+@using System.Data;
+<div class="container mt-5">
+    <h1 class="mb-4">Gestión de Etiquetas</h1>
+
+    @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    <!-- Formulario para añadir nueva etiqueta -->
+    <form asp-action="AgregarEtiquetas" asp-controller="Admin" method="post">
+        <div class="input-group mb-3">
+            <input name="nombre" type="text" class="form-control" placeholder="Nombre de la nueva etiqueta" required>
+        </div>
+    </form>
+
+    <!-- Tabla para mostrar las etiquetas -->
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Nombre de la Etiqueta</th>
+                <th scope="col">Tipo de Usuario</th>
+                <th scope="col" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row_user in ViewBag.Usuarios.Rows)
+            {
+                <form asp-action="Usuarios" asp-controller="Admin" method="post">
+                <input type="hidden" name="email" value="@row_user[4]" />
+                <input type="hidden" name="user" value="@row_user[6]" />
+                <tr data-id="@row_user[0]">
+                    <td>@row_user[4]</td>
+                    <td>@row_user[6]</td>
+                    <td class="text-center">
+                        <button type="submit" class="btn btn-warning btn-sm me-2">Cambiar de tipo</button>
+                        @* <a href="@Url.Action("EliminarEtiquetas", "Admin", new { Id = row_user[0] })"
+                           class="btn btn-danger btn-sm">Eliminar</a> *@
+                    </td>
+                </tr>
+                </form>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- JS de Bootstrap 5 (Bundle) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>

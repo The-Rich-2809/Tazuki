@@ -5,25 +5,16 @@
     var tags = ViewBag.Tags as string[,]; // Esta variable ya no la usaremos en la tabla
     var error = ViewBag.ErrorMessage as string;
 
-    // Tamaño y precio
+    // --- ¡AÑADIR ESTO! ---
+    // Recuperamos el Token y la Extensión para pasarlos al siguiente formulario
+    var uploadToken = ViewBag.UploadToken as string;
+    var uploadExt = ViewBag.UploadExt as string;
+
+    // Tamaño y precio (Tu lógica original)
     var tamanoNombre = ViewBag.TamanoNombre as string; 
     object precioObj = ViewBag.Precio;
-
-    // Formateo MXN seguro
-    string precioFmt = "—";
-    try
-    {
-        var mx = new System.Globalization.CultureInfo("es-MX");
-        if (precioObj != null)
-        {
-            decimal p = Convert.ToDecimal(precioObj, mx);
-            precioFmt = string.Format(mx, "{0:C}", p);
-        }
-    }
-    catch
-    {
-        precioFmt = precioObj?.ToString() ?? "—";
-    }
+    
+    // (Tu lógica de formateo de precio está bien)
 }
 @* La declaración del modelo es correcta para recibir una List<string[]> *@
 @model List<string[]>
@@ -43,10 +34,7 @@ else
             <div class="col-12 col-md-6"><strong>Precio: $50.00</strong> </div>
         </div>
 
-        @* --- INICIO DE LA SECCIÓN MODIFICADA --- *@
-
-        @* CAMBIO 1: La condición ahora usa el 'Model' fuertemente tipado. 
-           .Any() es la forma recomendada para ver si una lista tiene elementos. *@
+        @* --- ESTA SECCIÓN ESTÁ PERFECTA --- *@
         @if (Model != null && Model.Any())
         {
             <table class="table table-bordered mt-3">
@@ -57,15 +45,12 @@ else
                     </tr>
                 </thead>
                 <tbody>
-                    @* CAMBIO 2: Se usa un bucle 'foreach', que es más limpio y seguro para recorrer una Lista. *@
                     @foreach (var fila in Model)
                     {
-                        @* CAMBIO 3: Se accede a los datos por el índice del array 'fila'. *@
                         var estado = fila[2]; 
                         <tr>
                             <td>@fila[1]</td>
                             <td>
-                                @* La lógica de los badges se mantiene, ya que depende de la variable 'estado' *@
                                 @if (estado == "Encontrado")
                                 {
                                     <span class="badge bg-success">@estado</span>
@@ -84,6 +69,11 @@ else
                 </tbody>
             </table>
         }
-        @* --- FIN DE LA SECCIÓN MODIFICADA --- *@
     </div>
+
+    <div id="hiddenModalData" style="display: none;">
+        <input type="hidden" name="UploadToken" value="@uploadToken" />
+        <input type="hidden" name="UploadExt" value="@uploadExt" />
+        
+        </div>
 }

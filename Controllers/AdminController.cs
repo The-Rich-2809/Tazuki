@@ -21,6 +21,9 @@ namespace Tazuki.Controllers
         [HttpGet] //Mostrar diseños 
         public IActionResult Index()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             DataTable dt = Admin_SQL.Mostrar_Tazas();
             ViewBag.Videos = dt;
             dt = Admin_SQL.Mostrar_Tags();
@@ -35,6 +38,9 @@ namespace Tazuki.Controllers
         [HttpPost] // Funcion para actualizar el si esta actvo
         public IActionResult ActDesDiseno([FromBody] EtiquetaParaRecibir model)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Id = model.Id;
             int Activo = 0;
             if (model.Activo == true)
@@ -48,6 +54,9 @@ namespace Tazuki.Controllers
         [HttpGet] //Agregar diseños
         public IActionResult AgregarDiseno()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
             DataTable dt = Admin_SQL.Mostrar_Tags();
             ViewBag.Tags = dt;
@@ -59,6 +68,9 @@ namespace Tazuki.Controllers
         [HttpPost]
         public async Task<IActionResult> AgregarDiseno(string nombre, string descripcion, string tipoTaza, double precio, string[] tags, IFormFile archivo)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
 
             if (archivo == null || archivo.Length == 0)
@@ -174,6 +186,9 @@ namespace Tazuki.Controllers
         [HttpGet] //Agregar diseños (Se agregan los datos desde el archivo)
         public IActionResult AgregarDisenoArchivo()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
             return View();
         }
@@ -181,6 +196,9 @@ namespace Tazuki.Controllers
         [HttpPost]
         public async Task<IActionResult> AgregarDisenoArchivo(IFormFile archivo)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             if (archivo == null || archivo.Length == 0)
             {
                 ViewBag.ErrorMessage = "Debes seleccionar un archivo de video.";
@@ -264,6 +282,9 @@ namespace Tazuki.Controllers
         [HttpPost] // Agregar diseños (confirma y mueve desde carpeta temporal)
         public async Task<IActionResult> GuardarDisenoConfirmado()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
             var tempFolder = Path.Combine(_webHostEnvironment.WebRootPath, "_tmp");
 
@@ -311,6 +332,7 @@ namespace Tazuki.Controllers
             if (System.IO.File.Exists(finalPath))
             {
                 TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
+                Datos.Mensaje = "El diseño ya existe " + uniqueFileName;
                 try { System.IO.File.Delete(tempPath); } catch { /* best-effort */ }
                 return RedirectToAction("AgregarDisenoArchivo", "Admin");
             }
@@ -363,6 +385,9 @@ namespace Tazuki.Controllers
         [HttpGet]
         public IActionResult ModDiseno(string Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
 
             DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas(); //Mostrar diseños de tazas
@@ -389,11 +414,17 @@ namespace Tazuki.Controllers
         [HttpPost]
         public IActionResult ModDiseno(int Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             return RedirectToAction("Index", "Admin");
         }
         [HttpGet]
         public IActionResult EliminarDiseno(string Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
 
             DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas();
@@ -434,6 +465,9 @@ namespace Tazuki.Controllers
         [HttpPost]
         public IActionResult EliminarDiseno(int Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Id = Id;
             Admin_SQL.Eliminar_Diseno();
             Admin_SQL.Eliminar_Diseno_Tags();
@@ -470,6 +504,9 @@ namespace Tazuki.Controllers
 
         public IActionResult Etiquetas()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
             DataTable dt = Admin_SQL.Mostrar_Tags();
             ViewBag.Tags = dt;
@@ -478,6 +515,9 @@ namespace Tazuki.Controllers
         [HttpPost]
         public IActionResult AgregarEtiquetas(string nombre)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Nombre = nombre;
             Admin_SQL.Agregar_Tags();
             return RedirectToAction("Etiquetas", "Admin");
@@ -485,6 +525,9 @@ namespace Tazuki.Controllers
         [HttpPost]
         public IActionResult ModEtiquetas([FromBody] EtiquetaParaRecibir data)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             if (data == null || string.IsNullOrWhiteSpace(data.Nombre))
             {
                 return BadRequest("El nombre no puede estar vacío.");
@@ -500,6 +543,9 @@ namespace Tazuki.Controllers
         [HttpGet]
         public IActionResult EliminarEtiquetas(int Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Id = Id;
             Admin_SQL.Eliminar_Tags();
             return RedirectToAction("Etiquetas", "Admin");
@@ -507,21 +553,31 @@ namespace Tazuki.Controllers
 
         public IActionResult TamanosTaza()
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             ViewBag.ErrorMessage = Datos.Mensaje;
             DataTable dt = Admin_SQL.Mostrar_Tamanos_Tazas();
             ViewBag.Tags = dt;
             return View();
         }
         [HttpPost]
-        public IActionResult AgregarTamano(string nombre)
+        public IActionResult AgregarTamano(string nombre, string Precio)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Nombre = nombre;
+            Datos.precio = Convert.ToDouble(Precio);
             Admin_SQL.Agregar_Tamano();
             return RedirectToAction("TamanosTaza", "Admin");
         }
         [HttpPost]
         public IActionResult ModTamano([FromBody] EtiquetaParaRecibir data)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             if (data == null || string.IsNullOrWhiteSpace(data.Nombre))
             {
                 return BadRequest("El nombre no puede estar vacío.");
@@ -529,6 +585,7 @@ namespace Tazuki.Controllers
 
             Datos.Id = data.Id;
             Datos.Nombre = data.Nombre;
+            Datos.precio = data.Precio;
             if (Admin_SQL.Mod_Tamano() == true)
                 return Ok(new { message = "El tamaño fue actualizado correctamente." });
             else
@@ -537,9 +594,53 @@ namespace Tazuki.Controllers
         [HttpGet]
         public IActionResult EliminarTamano(int Id)
         {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             Datos.Id = Id;
             Admin_SQL.Eliminar_Tamano();
             return RedirectToAction("TamanosTaza", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult Usuarios()
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
+            ViewBag.ErrorMessage = Datos.Mensaje;
+            DataTable dt = Admin_SQL.Mostrar_Usuarios();
+            ViewBag.Usuarios = dt;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Usuarios(string email, string user)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            if (email == Sesion.Email)
+            {
+                Datos.Mensaje = "No puedes cambiar tu propio tipo de usuario.";
+                return RedirectToAction("Usuarios", "Admin");
+            }
+
+            if (user == "usuario")
+                user = "admin";
+            else
+                user = "usuario";
+
+            Admin_SQL.Mod_Tipo_Usuario(email, user);
+            return RedirectToAction("Usuarios", "Admin");
+        }
+        public bool Cookies()
+        {
+            var miCookie = HttpContext.Request.Cookies["Tazuky2"];
+            if (Home_SQL.ComprobarCookie(miCookie))
+                if (Sesion.rol == "admin")
+                    return true;
+
+            return false;
         }
     }
 }

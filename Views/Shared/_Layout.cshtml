@@ -49,7 +49,7 @@
         }
 
         .navbar-brand img {
-            height: 40px;
+            height: 60px;
             object-fit: contain
         }
 
@@ -178,11 +178,11 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" asp-action="Catalogo"
                             asp-controller="Home">Catálogo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#personaliza">Personaliza</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
-                    <li class="nav-item ms-lg-2"><a class="btn btn-primary"
+                    <li class="nav-item"><a class="nav-link active"
                             href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Pedir
                             por WhatsApp</a></li>
+                    <li class="nav-item ms-lg-2"><a class="btn btn-primary"
+                            href="@Url.Action("InicioSesion", "Home")">Iniciar Sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -297,66 +297,105 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js"></script>
     <script>
-        // Año dinámico
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // Año dinámico (Esto es seguro)
+        const yearSpan = document.getElementById('year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
 
-        // Estado UI
+        // --- Lógica de Filtros (Segura) ---
         const grid = document.getElementById('gridProductos');
-        const cards = [...grid.querySelectorAll('.producto')];
-        const buscador = document.getElementById('buscador');
-        const rango = document.getElementById('rangoPrecio');
-        const lblPrecio = document.getElementById('lblPrecio');
 
-        // Rango precio inicial (coincide con label por defecto)
-        rango.value = 300; lblPrecio.textContent = '$' + rango.value;
-        rango.addEventListener('input', () => { lblPrecio.textContent = '$' + rango.value; filtrar(); });
+        if (grid) {
+            const cards = [...grid.querySelectorAll('.producto')];
+            const buscador = document.getElementById('buscador');
+            const rango = document.getElementById('rangoPrecio');
+            const lblPrecio = document.getElementById('lblPrecio');
 
-        // Búsqueda por texto
-        buscador.addEventListener('input', filtrar);
+            if (rango && lblPrecio) {
+                rango.value = 300;
+                lblPrecio.textContent = '$' + rango.value;
+                rango.addEventListener('input', () => { lblPrecio.textContent = '$' + rango.value; filtrar(); });
+            }
+            if (buscador) {
+                buscador.addEventListener('input', filtrar);
+            }
 
-        // Categorías (delegación)
-        document.addEventListener('change', (e) => { if (e.target.name === 'cat') filtrar(); });
+            document.addEventListener('change', (e) => { if (e.target.name === 'cat') filtrar(); });
 
-        function filtrar() {
-            const q = buscador.value.toLowerCase().trim();
-            const max = parseInt(rango.value, 10);
-            const cat = document.querySelector('input[name="cat"]:checked')?.value || 'all';
-            cards.forEach(card => {
-                const tags = (card.dataset.tags || '').toLowerCase();
-                const precio = parseInt(card.dataset.precio || '0', 10);
-                const c = card.dataset.cat || '';
-                const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-                const visible = ((!q || tags.includes(q) || title.includes(q)) && (precio <= max || !precio) && (cat === 'all' || c === cat));
-                card.style.display = visible ? '' : 'none';
-            });
-        }
+            function filtrar() {
+                const q = buscador.value.toLowerCase().trim();
+                const max = parseInt(rango.value, 10);
+                const cat = document.querySelector('input[name="cat"]:checked')?.value || 'all';
+                cards.forEach(card => {
+                    const tags = (card.dataset.tags || '').toLowerCase();
+                    const precio = parseInt(card.dataset.precio || '0', 10);
+                    const c = card.dataset.cat || '';
+                    const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+                    const visible = ((!q || tags.includes(q) || title.includes(q)) && (precio <= max || !precio) && (cat === 'all' || c === cat));
+                    card.style.display = visible ? '' : 'none';
+                });
+            }
+        } // --- Fin 'if (grid)'
 
-        // Modal Personaliza → rellena datos y compone link de WhatsApp
+
+        // --- Lógica del Modal (Ahora también es segura) ---
         const modal = document.getElementById('modalPersonaliza');
-        modal?.addEventListener('show.bs.modal', (ev) => {
-            const btn = ev.relatedTarget;
-            const nombre = btn?.getAttribute('data-producto') || 'Producto';
-            const precio = btn?.getAttribute('data-precio') || '';
-            document.getElementById('pNombre').value = nombre;
-            document.getElementById('pPrecio').value = precio ? `$${precio} MXN` : 'A cotizar';
-            document.getElementById('pCantidad').value = 1;
-            document.getElementById('pDetalles').value = '';
-            actualizarWA();
-        });
 
-        ['pDetalles', 'pCantidad'].forEach(id => { document.getElementById(id)?.addEventListener('input', actualizarWA) });
+        // Solo ejecutamos esto SI el modal existe en la página
+        if (modal) {
 
-        function actualizarWA() {
-            const nombre = document.getElementById('pNombre').value;
-            const det = document.getElementById('pDetalles').value.trim();
-            const qty = document.getElementById('pCantidad').value;
-            const mensaje = `Hola, quiero personalizar: ${nombre}%0A` +
-                `Cantidad: ${qty}%0A` +
-                (det ? `Detalles: ${encodeURIComponent(det)}%0A` : ``) +
-                `¿Me ayudas con el diseño y total?`;
-            const telefono = '5215578868430'; // ← CAMBIA A TU NÚMERO REAL
-            document.getElementById('waLink').href = `https://wa.me/${telefono}?text=${mensaje}`;
-        }
+            // Función segura: verifica que los elementos existan DENTRO de la función
+            function actualizarWA() {
+                const pNombre = document.getElementById('pNombre');
+                const pDetalles = document.getElementById('pDetalles');
+                const pCantidad = document.getElementById('pCantidad');
+                const waLink = document.getElementById('waLink');
+
+                // Si alguno falta, no hacemos nada para evitar el crash
+                if (!pNombre || !pDetalles || !pCantidad || !waLink) {
+                    return;
+                }
+
+                const nombre = pNombre.value;
+                const det = pDetalles.value.trim();
+                const qty = pCantidad.value;
+                const mensaje = `Hola, quiero personalizar: ${nombre}%0A` +
+                    `Cantidad: ${qty}%0A` +
+                    (det ? `Detalles: ${encodeURIComponent(det)}%0A` : ``) +
+                    `¿Me ayudas con el diseño y total?`;
+                const telefono = '5215578868430';
+                waLink.href = `https://wa.me/${telefono}?text=${mensaje}`;
+            }
+
+            // Asignar el listener al modal
+            modal.addEventListener('show.bs.modal', (ev) => {
+                const btn = ev.relatedTarget;
+                const nombre = btn?.getAttribute('data-producto') || 'Producto';
+                const precio = btn?.getAttribute('data-precio') || '';
+
+                const pNombreEl = document.getElementById('pNombre');
+                const pPrecioEl = document.getElementById('pPrecio');
+                const pCantidadEl = document.getElementById('pCantidad');
+                const pDetallesEl = document.getElementById('pDetalles');
+
+                if (pNombreEl) pNombreEl.value = nombre;
+                if (pPrecioEl) pPrecioEl.value = precio ? `$${precio} MXN` : 'A cotizar';
+                if (pCantidadEl) pCantidadEl.value = 1;
+                if (pDetallesEl) pDetallesEl.value = '';
+
+                actualizarWA(); // Llamamos a la función segura
+            });
+
+            // Asignar listeners a los inputs
+            ['pDetalles', 'pCantidad'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', actualizarWA);
+                }
+            });
+
+        } // --- Fin 'if (modal)'
     </script>
 </body>
 @await RenderSectionAsync("Scripts", required: false)

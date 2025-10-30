@@ -100,6 +100,13 @@
 <div class="container">
     <h1>Agregar Nuevo Diseño</h1>
 
+    @if (ViewBag.ErrorMessage != null && !string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
     <form id="formAgregarDiseno" enctype="multipart/form-data">
         @* <div class="mb-4">
             <label for="nombre" class="form-label">Nombre del Diseño</label>
@@ -112,6 +119,17 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Analizar Diseño</button>
+        <div id="progressContainer" style="display:none;">
+        <p>Subiendo video, por favor espera...</p>
+        <div class="progress">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+                aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+    </div>
+
+    <div id="resultadoAlerta">
+    </div>
+
     </form>
 </div>
 
@@ -171,5 +189,67 @@
             alert("❌ Error: " + (result.error || "No se pudo guardar."));
         }
     }
+
+    $(document).ready(function () {
+    $("#uploadForm").on('submit', function (e) {
+        e.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+
+        var formData = new FormData(this);
+        var $progressBar = $("#progressBar");
+        var $progressContainer = $("#progressContainer");
+        var $resultadoAlerta = $("#resultadoAlerta");
+
+        // Validar que se seleccionó un archivo (opcional, pero recomendado)
+        if ($('#archivoInput').get(0).files.length === 0) {
+            $resultadoAlerta.html("<div class='alert alert-danger'>Debes seleccionar un archivo.</div>");
+            return;
+        }
+
+        // Mostrar el progreso y limpiar resultados anteriores
+        $progressContainer.show();
+        $progressBar.width('0%').attr('aria-valuenow', 0).text('0%');
+        $resultadoAlerta.html(''); // Limpia alertas previas
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false, // Importante para FormData
+            contentType: false, // Importante para FormData
+            
+            // --- ¡Aquí está la magia del progreso! ---
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                        $progressBar.width(percentComplete + '%')
+                                    .attr('aria-valuenow', percentComplete)
+                                    .text(percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+            },
+            // --- Fin de la magia ---
+
+            success: function (response) {
+                // 'response' es el HTML de tu _AlertaDiseno
+                // El 100% se muestra aquí para asegurar que termine
+                $progressBar.width('100%').attr('aria-valuenow', 100).text('100% - Procesando...');
+                $resultadoAlerta.html(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Manejar errores del servidor
+                $resultadoAlerta.html("<div class='alert alert-danger'>Error al subir el archivo: " + errorThrown + "</div>");
+            },
+            complete: function () {
+                // Ocultar la barra de progreso después de un momento
+                setTimeout(function() {
+                    $progressContainer.hide();
+                }, 3000); // Oculta después de 3 segundos
+            }
+        });
+    });
+});
 
 </script>

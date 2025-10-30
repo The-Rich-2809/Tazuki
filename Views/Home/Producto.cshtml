@@ -1,0 +1,432 @@
+@using System.Data
+@{
+    if (ViewBag.Activo == "1")
+    {
+        Layout = "_LayoutUsuario";
+    }
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Producto - Ancho Completo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            padding: 2rem 0;
+        }
+
+        :root {
+            --custom-main-color: #4CAF50;
+            --custom-dark: #343a40;
+            --custom-light-grey: #e9ecef;
+            --custom-green-success: #28a745;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid var(--custom-light-grey);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .main-product-video {
+            width: 100%;
+            border-radius: 0.75rem;
+            border: 1px solid var(--custom-light-grey);
+            background-color: #000;
+        }
+
+        .product-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--custom-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-new {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--custom-dark);
+            line-height: 1;
+        }
+
+        .btn-buy,
+        .btn-add-cart {
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-buy {
+            background-color: var(--custom-main-color);
+            color: #fff;
+            border: 2px solid var(--custom-main-color);
+        }
+
+        .btn-buy:hover {
+            background-color: #3e8e41;
+            border-color: #3e8e41;
+            color: #fff;
+        }
+
+        .btn-add-cart {
+            background-color: #fff;
+            color: var(--custom-main-color);
+            border: 2px solid var(--custom-main-color);
+        }
+
+        .btn-add-cart:hover {
+            background-color: var(--custom-main-color);
+            color: #fff;
+        }
+
+        /* --- CSS BOTONES DE COLOR --- */
+        .color-selector .color-btn {
+            border: 2px solid #e0e0e0;
+            background-color: #ffffff;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .color-selector .color-btn:hover {
+            border-color: #999;
+        }
+
+        .color-selector .color-btn.active {
+            background-color: #6c757d;
+            color: #ffffff;
+            border-color: #6c757d;
+            font-weight: 600;
+        }
+
+        /* --- NUEVO: CSS PARA VIDEO CLICK --- */
+        .video-container {
+            position: relative;
+            cursor: pointer;
+            /* Indica que se puede hacer clic */
+            border-radius: 0.75rem;
+            /* Para que el mensaje no se salga */
+            overflow: hidden;
+            /* Asegura que todo quede dentro de los bordes */
+        }
+
+        .video-overlay-message {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            pointer-events: none;
+            /* Para que el clic atraviese el mensaje */
+            opacity: 1;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        /* --- FIN CSS VIDEO --- */
+
+
+        /* --- NUEVO: CSS PARA SELECTOR DE CANTIDAD --- */
+        .quantity-selector {
+            max-width: 150px;
+            display: flex;
+        }
+
+        .quantity-selector .btn-quantity {
+            background-color: #fff;
+            border: 2px solid var(--custom-main-color);
+            color: var(--custom-main-color);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.5rem;
+            width: 40px;
+            /* Ancho fijo */
+            height: 40px;
+            /* Alto fijo */
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-selector .btn-quantity:hover {
+            background-color: var(--custom-main-color);
+            color: #fff;
+        }
+
+        .quantity-selector #quantity-minus {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+            border-right: none;
+        }
+
+        .quantity-selector #quantity-plus {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            border-left: none;
+        }
+
+        .quantity-selector #quantity-input {
+            width: 50px;
+            /* Ancho fijo para el número */
+            height: 40px;
+            text-align: center;
+            border: 2px solid var(--custom-main-color);
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            font-weight: 600;
+            padding: 0.5rem 0.25rem;
+            box-shadow: none;
+        }
+
+        .quantity-selector #quantity-input:focus {
+            box-shadow: none;
+            border-color: var(--custom-main-color);
+        }
+
+        /* --- FIN CSS CANTIDAD --- */
+    </style>
+</head>
+
+<body>
+
+    <div class="container my-4">
+        <div class="product-card">
+            <div class="row g-3">
+
+                <div class="col-md-7">
+                    <div class="video-container" id="video-container">
+                        <video id="product-video" class="main-product-video" autoplay muted loop playsinline
+                            preload="metadata"
+                            poster="https://via.placeholder.com/800x800/A0A0A0/FFFFFF?text=Video+del+Producto">
+                            <source src="~/@ViewBag.Taza[5]" type="video/mp4">
+                            Tu navegador no soporta la etiqueta de video.
+                        </video>
+                        <div id="video-mute-message" class="video-overlay-message">
+                            Click para activar sonido
+                        </div>
+                    </div>
+                </div>
+                <form asp-action="Producto" asp-controller="Home" method="post" class="col-md-5">
+                    <input type="hidden" name="Id_Taza" value="@ViewBag.Taza[0]" />
+                    @{
+                        string initialPrice = "";
+                        string initialName = "";
+                        string initialId = "";
+
+                        if (ViewBag.Tamanos != null && ViewBag.Tamanos.Rows.Count > 0)
+                        {
+                            var firstRow = ViewBag.Tamanos.Rows[0];
+                            initialPrice = firstRow[2].ToString();
+                            initialName = firstRow[1].ToString();
+                            initialId = firstRow[0].ToString();
+                        }
+                        else
+                        {
+                            initialPrice = ViewBag.Taza[2].ToString();
+                            initialName = "No disponible";
+                            // Asignar el ID de la taza base si no hay tamaños
+                            initialId = ViewBag.Taza[0].ToString(); 
+                        }
+                    }
+
+                    <input name="Id_Tamano" type="hidden" id="product-id" value="@initialId" />
+
+                    <h1 class="product-title mb-2">@ViewBag.Taza[1]</h1>
+
+                    <div class="mb-3">
+                        <div>
+                            <span class="price-new">$<span id="product-price">@initialPrice</span></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="fw-bold small" style="color: var(--custom-dark);">
+                            <span id="selected-color-name">@initialName</span>
+                            <input name="" type="hidden" id="selected-color-input" value="@initialName" />
+                        </h5>
+                        <div class="color-selector">
+
+                            @{
+                                int i = 0;
+                            }
+                            @foreach (DataRow Tamano in ViewBag.Tamanos.Rows)
+                            {
+                                <button class="color-btn @(i == 0 ? "active" : "")" data-price="@Tamano[2]"
+                                    data-color-name="@Tamano[1]" data-id="@Tamano[0]" type="button">
+                                    @Tamano[1]
+                                </button>
+                                i++;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="fw-bold small" style="color: var(--custom-dark);">Características:</h5>
+                        @for (int o = 0; o < ViewBag.Count_Tags; o++)
+                        {
+                            <span
+                                class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1">@ViewBag.Tags_Taza[o]</span>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="fw-bold small" style="color: var(--custom-dark);">Cantidad:</h5>
+                        <div class="quantity-selector">
+                            <button class="btn-quantity" id="quantity-minus" type="button">-</button>
+                            <input name="Cantidad" type="text" id="quantity-input" class="form-control text-center" value="1"
+                                readonly>
+                            <button class="btn-quantity" id="quantity-plus" type="button">+</button>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 mb-3">
+                        <a id="buy-now-link"
+                           type="submit"
+                           href="@Url.Action("DireccionPago", "Home", new { carrito = 1, Id_Tamano = initialId, Id_Taza = ViewBag.Taza[0], Cantidad = 1 })"
+                           data-base-url="@Url.Action("DireccionPago", "Home")"
+                           data-taza-id="@ViewBag.Taza[0]"
+                           class="btn btn-buy">Comprar ahora</a>
+                        <button class="btn btn-add-cart">Agregar al carrito</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- Lógica para Botones de Color (Segura) ---
+            const priceElement = document.getElementById('product-price');
+            const idElement = document.getElementById('product-id'); // Este es el input del Id_Tamano
+            const colorNameElement = document.getElementById('selected-color-name');
+            const colorButtons = document.querySelectorAll('.color-btn');
+
+            // --- Lógica para Selector de Cantidad (Segura) ---
+            const plusBtn = document.getElementById('quantity-plus');
+            const minusBtn = document.getElementById('quantity-minus');
+            const quantityInput = document.getElementById('quantity-input');
+
+            // --- Lógica para Video (Segura) ---
+            const videoContainer = document.getElementById('video-container');
+            const video = document.getElementById('product-video');
+            const muteMessage = document.getElementById('video-mute-message');
+
+            // --- NUEVO: Seleccionar el enlace de compra ---
+            const buyLink = document.getElementById('buy-now-link');
+
+            // --- NUEVO: Función para actualizar el enlace de "Comprar" ---
+            function updateBuyLink() {
+                // Verificación de seguridad por si algún elemento no se encuentra
+                if (!buyLink || !quantityInput || !idElement) {
+                    console.error("Faltan elementos para actualizar el enlace de compra.");
+                    return;
+                }
+
+                // Obtener los valores estáticos guardados en el enlace
+                const baseUrl = buyLink.getAttribute('data-base-url');
+                const tazaId = buyLink.getAttribute('data-taza-id');
+
+                // Obtener los valores dinámicos actuales
+                const tamanoId = idElement.value; // ID del tamaño/color seleccionado
+                const cantidad = quantityInput.value; // Cantidad seleccionada
+
+                // Construir la nueva URL con todos los parámetros
+                // Formato: /Home/DireccionPago?carrito=0&Id_Tamano=...&Id_Taza=...&Cantidad=...
+                const newHref = `${baseUrl}?carrito=1&Id_Tamano=${tamanoId}&Id_Taza=${tazaId}&Cantidad=${cantidad}`;
+
+                // Actualizar el atributo href del enlace
+                buyLink.href = newHref;
+            }
+
+
+            // --- Lógica para Botones de Color (MODIFICADA) ---
+            if (priceElement && idElement && colorNameElement && colorButtons.length > 0) {
+                colorButtons.forEach(function (button) {
+                    button.addEventListener('click', function (event) { // 'event' añadido
+                        event.preventDefault(); // Prevenir que el botón envíe el formulario
+
+                        colorButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+
+                        const newId = this.getAttribute('data-id');
+                        const newPrice = this.getAttribute('data-price');
+                        const newColorName = this.getAttribute('data-color-name');
+
+                        priceElement.innerText = newPrice;
+                        idElement.value = newId; // Actualiza el Id_Tamano
+                        colorNameElement.innerText = newColorName;
+
+                        // *** LLAMAR A LA FUNCIÓN DE ACTUALIZAR ENLACE ***
+                        updateBuyLink();
+                    });
+                });
+            }
+
+
+            // --- Lógica para Selector de Cantidad (MODIFICADA) ---
+            if (plusBtn && minusBtn && quantityInput) {
+                plusBtn.addEventListener('click', function () {
+                    let currentValue = parseInt(quantityInput.value) || 1;
+                    currentValue++;
+                    quantityInput.value = currentValue;
+
+                    // *** LLAMAR A LA FUNCIÓN DE ACTUALIZAR ENLACE ***
+                    updateBuyLink();
+                });
+
+                minusBtn.addEventListener('click', function () {
+                    let currentValue = parseInt(quantityInput.value) || 1;
+                    if (currentValue > 1) {
+                        currentValue--;
+                        quantityInput.value = currentValue;
+
+                        // *** LLAMAR A LA FUNCIÓN DE ACTUALIZAR ENLACE ***
+                        updateBuyLink();
+                    }
+                });
+            }
+
+
+            // --- Lógica para Video (Sin cambios) ---
+            if (videoContainer && video && muteMessage) {
+                videoContainer.addEventListener('click', function () {
+                    // 1. Alternar el estado de silencio del video
+                    video.muted = !video.muted;
+
+                    // 2. Actualizar el texto del mensaje
+                    muteMessage.innerText = video.muted ? 'Click para activar sonido' : 'Sonido activado';
+
+                    // 3. Mostrar el mensaje (por si estaba oculto)
+                    muteMessage.style.opacity = '1';
+
+                    // 4. Ocultar el mensaje automáticamente después de 1.5 segundos
+                    setTimeout(() => {
+                        muteMessage.style.opacity = '0';
+                    }, 1500);
+                });
+            }
+
+        });
+    </script>
+</body>

@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Crear Cuenta";
+    Layout = "_LayoutVacio"; // ¡Usamos el mismo layout!
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-3"> 
+        
+        <div class="text-center">
+            <img src="~/img/tazukylogo.jpg" alt="Logo de mi marca" style="max-width: 120px; height: auto; margin-bottom: 15px;">
+        </div>
+
+        @if (ViewBag.ErrorMessage != null && !string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        
+        <h3 class="card-title text-center mb-3">Crear una Cuenta</h3> 
+        
+        <form asp-action="Registro" asp-controller="Home" method="POST">
+            
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input name="nombre" type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Primer Apellido</label>
+                <input name="pri_ape" type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Segundo Apellido</label>
+                <input name="seg_ape" type="text" class="form-control" id="nombre" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input name="email" type="email" class="form-control" id="email" placeholder="tu@correo.com" required>
+            </div>
+            
+            <div class="mb-2">
+                <label for="password" class="form-label">Contraseña</label>
+                <input name="password" type="password" class="form-control" id="password" placeholder="Crea una contraseña" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <input name="password2" type="password" class="form-control" id="confirmPassword" placeholder="Repite la contraseña" required>
+            </div>
+
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-primary btn-lg">Crear Cuenta</button>
+            </div>
+            
+        </form>
+
+        <hr class="my-3"> 
+
+        <div class="d-grid text-center">
+            <p class="mb-1">¿Ya tienes una cuenta?</p> <a href="@Url.Action("InicioSesion", "Home")" class="btn btn-secondary">
+                Iniciar Sesión
+            </a>
+        </div>
+        
+    </div>
+</div>

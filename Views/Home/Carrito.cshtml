@@ -1,0 +1,282 @@
+@using System.Data
+@using System.Globalization
+@{
+    // Esto establece el layout que ya tenías
+    if (ViewBag.Active == "1")
+    {
+        // Tu lógica de layout (si aplica)
+    }
+    else
+    {
+        Layout = "_LayoutUsuario";
+    }
+}
+@{
+    // Esto pone el título en la pestaña del navegador
+    ViewData["Title"] = "Tu Carrito";
+}
+
+<style>
+    .product-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 0.375rem;
+    }
+    
+    .quantity-input {
+        width: 70px;
+    }
+</style>
+
+@Html.AntiForgeryToken()
+
+<div class="container my-5">
+    <div class="row">
+        
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h4 class="mb-4">Tu Carrito</h4>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Producto</th>
+                                    <th scope="col" class="text-center">Cantidad</th>
+                                    <th scope="col" class="text-end">Precio</th>
+                                    <th scope="col" class="text-end">Total</th>
+                                    <th scope="col" class="text-center">Quitar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        Cargando productos...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 py-3">
+                    <a href="@Url.Action("Catalogo", "Home")" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Seguir Comprando
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4" id="order-summary-card">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Resumen del Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Subtotal
+                            <span id="cart-subtotal">$0.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-top fw-bold px-0 mt-3">
+                            Total (IVA Incluido)
+                            <span id="cart-total">$0.00</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-white border-0 p-3">
+                    <a href="@Url.Action("DireccionPago", "Home", new { carrito = 0 })" class="btn btn-primary w-100 btn-lg">
+                        Ir a Pagar
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            // --- FUNCIÓN 1: Formatear números ---
+            function formatNumber(number) {
+                return Number(number).toFixed(2);
+            }
+
+            // --- FUNCIÓN 2: Calcular y actualizar totales (MODIFICADA) ---
+            function updateCartTotals() {
+                var subtotal = 0;
+                $('.cart-item-row').each(function () {
+                    var $row = $(this);
+                    var quantity = parseInt($row.find('.quantity-input').val());
+                    var unitPrice = parseFloat($row.find('.quantity-input').data('unit-price'));
+                    
+                    if (!isNaN(quantity) && !isNaN(unitPrice)) {
+                        var itemTotal = quantity * unitPrice;
+                        $row.find('.item-total').text('$' + formatNumber(itemTotal));
+                        subtotal += itemTotal;
+                    }
+                });
+                $('#cart-subtotal').text('$' + formatNumber(subtotal));
+                $('#cart-total').text('$' + formatNumber(subtotal));
+
+                // --- LÍNEAS NUEVAS ---
+                // Revisa cuántas filas de productos quedan
+                var hasItems = $('.cart-item-row').length > 0;
+                // Muestra u oculta la tarjeta de resumen basada en si hay items
+                $('#order-summary-card').toggle(hasItems);
+                // --- FIN DE LÍNEAS NUEVAS ---
+            }
+            
+            // --- FUNCIÓN 3: Cargar el carrito desde la variable (MODIFICADA) ---
+            function loadCart(cartData) {
+                var $tableBody = $('#cart-table-body');
+                $tableBody.empty(); // Limpiar el "Cargando..."
+
+                var loadError = @Html.Raw(Json.Serialize(ViewBag.LoadError));
+                if(loadError)
+                {
+                    console.error("Error desde el controlador:", loadError);
+                    $tableBody.append('<tr><td colspan="5" class="text-center py-4 text-danger">Hubo un error al cargar tu carrito.</td></tr>');
+                    // Igualmente corremos updateCartTotals para que oculte el resumen
+                }
+                else if (cartData && cartData.length > 0) {
+                    
+                    $.each(cartData, function (index, item) {
+                        
+                        var rowHtml = `
+                            <tr class="cart-item-row" data-product-id="${item.productId}" data-size-id="${item.sizeId}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <video class="product-image" autoplay loop muted playsinline>
+                                            <source src="@Url.Content("~/")${item.rutaVideo}" type="video/mp4">
+                                            Tu navegador no soporta videos.
+                                        </video>
+                                        <div class="ms-3">
+                                            <h6 class="mb-0">${item.nombreProducto}</h6>
+                                            <small class="text-muted">${item.nombreTamano}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <input type="number" 
+                                           class="form-control form-control-sm quantity-input mx-auto" 
+                                           value="${item.cantidad}" 
+                                           min="1"
+                                           data-unit-price="${item.precioUnitario}">
+                                </td>
+                                <td class="text-end unit-price">$${formatNumber(item.precioUnitario)}</td>
+                                <td class="text-end fw-bold item-total">$${formatNumber(item.precioTotalItem)}</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-outline-danger btn-sm border-0 remove-item" title="Quitar artículo">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        $tableBody.append(rowHtml);
+                    });
+
+                } else {
+                    $tableBody.append('<tr><td colspan="5" class="text-center py-4">Tu carrito está vacío.</td></tr>');
+                }
+
+                // --- CAMBIO 2: Se movió la llamada aquí ---
+                // Esto asegura que se oculte el resumen si el carrito carga vacío
+                updateCartTotals(); 
+            }
+
+            // --- EVENTO 1: Cambiar cantidad (AJAX) ---
+            $(document).on('change', '.quantity-input', function () {
+                var $input = $(this); 
+                var newQuantity = parseInt($input.val());
+
+                if (newQuantity < 1 || isNaN(newQuantity)) {
+                    newQuantity = 1;
+                    $input.val(1);
+                }
+                
+                // Actualiza los totales en la UI inmediatamente
+                updateCartTotals();
+
+                var $row = $input.closest('.cart-item-row');
+                var productId = parseInt($row.attr('data-product-id'));
+                var sizeId = parseInt($row.attr('data-size-id'));
+
+                console.log("Enviando actualización:", { productId, sizeId, cantidad: newQuantity });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ActualizarCantidad", "Home")', 
+                    data: {
+                        productId: productId,
+                        sizeId: sizeId,
+                        cantidad: newQuantity 
+                    },
+                    headers: { "RequestVerificationToken": token },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log('Cantidad actualizada en la DB');
+                        } else {
+                            console.error('Error al actualizar la DB', response.message);
+                            // Opcional: revertir el cambio si falla
+                        }
+                    },
+                    error: function () {
+                        console.error('Error de red al actualizar cantidad');
+                        // Opcional: revertir el cambio si falla
+                    }
+                });
+            });
+
+            // --- EVENTO 2: Eliminar producto (AJAX) ---
+            $(document).on('click', '.remove-item', function () {
+                var $button = $(this);
+                var $row = $button.closest('.cart-item-row');
+                var productId = parseInt($row.attr('data-product-id'));
+                var sizeId = parseInt($row.attr('data-size-id'));
+
+                console.log("Enviando eliminación:", { productId, sizeId });
+
+                if (confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("EliminarCarrito", "Home")', 
+                        data: {
+                            productId: productId,
+                            sizeId: sizeId
+                        },
+                        headers: {
+                            "RequestVerificationToken": token
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                // 1. Elimina la fila del HTML
+                                $row.remove();
+                                // 2. Recalcula los totales (esto ocultará el resumen si es el último item)
+                                updateCartTotals();
+                                // 3. Muestra mensaje si el carrito queda vacío
+                                if ($('.cart-item-row').length === 0) {
+                                    $('#cart-table-body').append('<tr><td colspan="5" class="text-center py-4">Tu carrito está vacío.</td></tr>');
+                                }
+                            } else {
+                                alert('Error al eliminar el producto: ' + response.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Error de conexión al eliminar el producto');
+                        }
+                    });
+                }
+            });
+
+            // --- INICIAR TODO ---
+            var initialCartData = @Html.Raw(Json.Serialize(ViewBag.CartItems));
+            loadCart(initialCartData);
+        });
+    </script>
+}

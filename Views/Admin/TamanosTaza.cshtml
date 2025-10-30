@@ -12,19 +12,19 @@
         </div>
     }
 
-    <!-- Formulario para añadir nueva etiqueta -->
     <form asp-action="AgregarTamano" asp-controller="Admin" method="post">
         <div class="input-group mb-3">
             <input name="nombre" type="text" class="form-control" placeholder="Nombre" required>
+            <input name="Precio" type="text" class="form-control" placeholder="Precio" required>
             <button class="btn btn-primary" type="submit">Crear</button>
         </div>
     </form>
 
-    <!-- Tabla para mostrar las etiquetas -->
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
                 <th scope="col">Nombre del Tamaño de Taza</th>
+                <th scope="col">Precio</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -33,9 +33,10 @@
             {
                 <tr data-id="@row_tag[0]">
                     <td>@row_tag[1]</td>
+                    <td>@row_tag[2]</td>
                     <td class="text-center">
                         <a href="#" class="btn btn-warning btn-sm me-2">Editar</a>
-                        <a href="@Url.Action("Eliminar_Tamano", "Admin", new { Id = row_tag[0] })"
+                        <a href="@Url.Action("EliminarTamano", "Admin", new { Id = row_tag[0] })"
                            class="btn btn-danger btn-sm">Eliminar</a>
                     </td>
                 </tr>
@@ -44,93 +45,120 @@
     </table>
 </div>
 
-<!-- JS de Bootstrap 5 (Bundle) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-<!-- Script para la funcionalidad de la tabla -->
 <script>
     (function () {
-      const tableBody = document.querySelector('.table tbody');
-      if (!tableBody) return;
+        const tableBody = document.querySelector('.table tbody');
+        if (!tableBody) return;
 
-      tableBody.addEventListener('click', async (event) => {
-        const btn = event.target.closest('.btn-warning, .btn-success');
-        if (!btn) return;
+        tableBody.addEventListener('click', async (event) => {
+            const btn = event.target.closest('.btn-warning, .btn-success');
+            if (!btn) return;
 
-        event.preventDefault();
+            event.preventDefault();
 
-        const row = btn.closest('tr');
-        const cell = row.firstElementChild;
-        const tagId = row.dataset.id;
+            const row = btn.closest('tr');
+            const nameCell = row.children[0];
+            const priceCell = row.children[1]; // Celda de Precio
+            const tagId = row.dataset.id;
 
-        // --- MODO EDITAR ---
-        if (btn.classList.contains('btn-warning')) {
-          const originalName = cell.textContent.trim();
+            // --- MODO EDITAR ---
+            if (btn.classList.contains('btn-warning')) {
+                const originalName = nameCell.textContent.trim();
+                const originalPrice = priceCell.textContent.trim();
 
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.className = 'form-control';
-          input.value = originalName;
+                // Input para Nombre
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.className = 'form-control';
+                nameInput.value = originalName;
 
-          cell.dataset.originalName = originalName;
-          cell.textContent = '';
-          cell.appendChild(input);
-          input.focus();
+                // Input para Precio
+                const priceInput = document.createElement('input');
+                priceInput.type = 'text'; // O 'number' si prefieres
+                priceInput.className = 'form-control';
+                priceInput.value = originalPrice;
 
-          btn.textContent = 'Guardar';
-          btn.classList.remove('btn-warning');
-          btn.classList.add('btn-success');
-          return;
-        }
+                // Guardar valores originales y reemplazar
+                nameCell.dataset.originalValue = originalName;
+                nameCell.textContent = '';
+                nameCell.appendChild(nameInput);
 
-        // --- MODO GUARDAR ---
-        if (btn.classList.contains('btn-success')) {
-          const input = cell.querySelector('input');
-          const originalName = cell.dataset.originalName || '';
-          const newName = input ? input.value.trim() : originalName;
+                priceCell.dataset.originalValue = originalPrice;
+                priceCell.textContent = '';
+                priceCell.appendChild(priceInput);
 
-          if (newName === originalName) {
-            cell.textContent = originalName;
-            btn.textContent = 'Editar';
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-warning');
-            return;
-          }
+                nameInput.focus();
 
-          const data = { Id: parseInt(tagId), Nombre: newName };
-
-          try {
-            const response = await fetch('@Url.Action("ModTamano", "Admin")', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-              cell.textContent = newName;
-              btn.textContent = 'Editar';
-              btn.classList.remove('btn-success');
-              btn.classList.add('btn-warning');
-            } else {
-              alert('Error al guardar la etiqueta.');
-              cell.textContent = originalName;
-              btn.textContent = 'Editar';
-              btn.classList.remove('btn-success');
-              btn.classList.add('btn-warning');
+                btn.textContent = 'Guardar';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-success');
+                return;
             }
-          } catch (err) {
-            console.error('Error en fetch:', err);
-            alert('Hubo un problema de conexión.');
-            cell.textContent = originalName;
-            btn.textContent = 'Editar';
-            btn.classList.remove('btn-success');
-            btn.classList.add('btn-warning');
-          }
-        }
-      });
+
+            // --- MODO GUARDAR ---
+            if (btn.classList.contains('btn-success')) {
+                const nameInput = nameCell.querySelector('input');
+                const priceInput = priceCell.querySelector('input');
+
+                const originalName = nameCell.dataset.originalValue || '';
+                const originalPrice = priceCell.dataset.originalValue || '';
+
+                const newName = nameInput ? nameInput.value.trim() : originalName;
+                const newPrice = priceInput ? priceInput.value.trim() : originalPrice;
+
+                // Si no hay cambios, revertir
+                if (newName === originalName && newPrice === originalPrice) {
+                    nameCell.textContent = originalName;
+                    priceCell.textContent = originalPrice;
+                    btn.textContent = 'Editar';
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-warning');
+                    return;
+                }
+
+                // Preparar datos para enviar
+                const data = { 
+                    Id: parseInt(tagId), 
+                    Nombre: newName, 
+                    Precio: newPrice // Enviar también el precio
+                };
+
+                try {
+                    const response = await fetch('@Url.Action("ModTamano", "Admin")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data) // Enviar el objeto completo
+                    });
+
+                    if (response.ok) {
+                        // Éxito: actualizar celdas
+                        nameCell.textContent = newName;
+                        priceCell.textContent = newPrice;
+                    } else {
+                        // Error: revertir celdas
+                        alert('Error al guardar los cambios.');
+                        nameCell.textContent = originalName;
+                        priceCell.textContent = originalPrice;
+                    }
+                } catch (err) {
+                    console.error('Error en fetch:', err);
+                    alert('Hubo un problema de conexión.');
+                    // Error de conexión: revertir celdas
+                    nameCell.textContent = originalName;
+                    priceCell.textContent = originalPrice;
+                } finally {
+                    // Revertir botón en cualquier caso (éxito o error)
+                    btn.textContent = 'Editar';
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-warning');
+                }
+            }
+        });
     })();
 </script>

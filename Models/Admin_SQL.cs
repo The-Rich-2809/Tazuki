@@ -85,7 +85,6 @@ namespace Tazuki.Models
             return dt;
 
         }
-
         public static List<string[]> Buscar_TagsList(List<string> nombres)
         {
             Datos.Mensaje = "";
@@ -212,6 +211,31 @@ namespace Tazuki.Models
             }
             return dt;
         }
+        public static DataTable Mostrar_Usuarios()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From usuarios";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
 
         public static bool Agregar_Diseno()
         {
@@ -325,7 +349,7 @@ namespace Tazuki.Models
             DataTable dt = new DataTable();
             string sql;
 
-            sql = "INSERT INTO tamanos_taza (nombre) VALUES (@nombre);";
+            sql = "INSERT INTO tamanos_taza (nombre, precio) VALUES (@nombre, @precio);";
 
             MySqlConnection conexionBD = Conexion.conexion();
             conexionBD.Open();
@@ -334,6 +358,7 @@ namespace Tazuki.Models
             {
                 MySqlCommand comando = new MySqlCommand(sql, conexionBD);
                 comando.Parameters.AddWithValue("nombre", Datos.Nombre);
+                comando.Parameters.AddWithValue("precio", Datos.precio);
                 dt.Load(comando.ExecuteReader());
                 conexionBD.Close();
 
@@ -387,7 +412,7 @@ namespace Tazuki.Models
             DataTable dt = new DataTable();
             string sql;
 
-            sql = "UPDATE tamanos_taza SET nombre = @nombre WHERE id = @id;";
+            sql = "UPDATE tamanos_taza SET nombre = @nombre, precio = @precio WHERE id = @id;";
 
             MySqlConnection conexionBD = Conexion.conexion();
             conexionBD.Open();
@@ -397,6 +422,7 @@ namespace Tazuki.Models
                 MySqlCommand comando = new MySqlCommand(sql, conexionBD);
                 comando.Parameters.AddWithValue("nombre", Datos.Nombre);
                 comando.Parameters.AddWithValue("id", Datos.Id);
+                comando.Parameters.AddWithValue("precio", Datos.precio);
                 dt.Load(comando.ExecuteReader());
                 conexionBD.Close();
                 return true;
@@ -439,6 +465,33 @@ namespace Tazuki.Models
                 else
                     Datos.Mensaje = "Error al buscar " + ex.Message;
 
+                conexionBD.Close();
+                return false;
+            }
+        }
+        public static bool Mod_Tipo_Usuario(string email, string tipo)
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "UPDATE usuarios SET rol = @rol WHERE email = @email;";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("email", email);
+                comando.Parameters.AddWithValue("rol", tipo);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
                 conexionBD.Close();
                 return false;
             }
@@ -548,8 +601,7 @@ namespace Tazuki.Models
             }
             return dt;
         }
-
-
+        
 
     }
 }

@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "_LayoutVacio";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 col-xl-4">
+            
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center">
+                        <img src="~/img/tazukylogo.jpg" alt="Logo de mi marca" style="max-width: 150px; height: auto; margin-bottom: 20px;">
+                    </div>
+
+                    @if (ViewBag.ErrorMessage != null && !string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    
+                    <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
+                    
+                    <form action="/Home/InicioSesion" method="POST">
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input name="email" type="email" class="form-control" id="email" placeholder="tu@correo.com" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input name="password" type="password" class="form-control" id="password" placeholder="Tu contraseña" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a href="#" class="small text-decoration-none">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+                        </div>
+                        
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="d-grid text-center">
+                        <p class="mb-2">¿No tienes una cuenta?</p>
+                        <a href="@Url.Action("Registro", "Home")" class="btn btn-success">
+                            Crear cuenta nueva
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
