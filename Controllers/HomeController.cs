@@ -273,13 +273,22 @@ namespace Tazuki.Controllers
                 CarritoCompra.item = item;
                 ViewBag.CarritoCompra = item;
             }
-            
+
             dt = Admin_SQL.Mostrar_Tamanos_Tazas();
             ViewBag.Tamanos = dt;
             dt = Home_SQL.Mostrar_Tazas();
             ViewBag.Tazas = dt;
             ViewBag.Carrito = carrito;
 
+            return View();
+        }
+        public IActionResult Confirmacion()
+        {
+            return View();
+        }
+        
+        public IActionResult MisPedidos()
+        {
             return View();
         }
 
@@ -291,6 +300,7 @@ namespace Tazuki.Controllers
             {
                 ViewBag.Activo = "1";
                 ViewBag.Nombre = Sesion.Nombre;
+                ViewBag.rol = Sesion.rol;
                 return true;
             }
             return false;

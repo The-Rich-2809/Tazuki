@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+    <link rel="icon" href="img/tazukilogo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -200,6 +200,10 @@
                             <li><h6 class="dropdown-header">Hola, @ViewBag.Nombre</h6></li>
                             <li><a class="dropdown-item" asp-controller="Cuenta" asp-action="Perfil">Mi Perfil</a></li>
                             <li><a class="dropdown-item" asp-controller="Pedidos" asp-action="Index">Mis Pedidos</a></li>
+                            @if(ViewBag.rol == "admin")
+                            {
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Admin</a></li>
+                            }
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" asp-controller="Home" asp-action="CerrarSesion">Cerrar Sesión</a></li>
                         </ul>
