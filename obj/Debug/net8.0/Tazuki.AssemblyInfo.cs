@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tazuki")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+20546b2c0fefc6a4ea72db3043a28cc26df8bd42")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12748a774b8bfa58fae663f2989e5c612733719c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tazuki")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tazuki")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -198,7 +198,7 @@ namespace Tazuki.Controllers
         {
             if (!Cookies())
                 return RedirectToAction("ErrorUsuario", "Home");
-                
+
             if (archivo == null || archivo.Length == 0)
             {
                 ViewBag.ErrorMessage = "Debes seleccionar un archivo de video.";
@@ -276,9 +276,10 @@ namespace Tazuki.Controllers
             Datos.tamanoTaza = Datos.Nombre;
             Datos.TagsList = tags; // <-- para que no sea null al Slugify del siguiente paso
 
-            return PartialView("_AlertaDiseno",tags);
+            return PartialView("_AlertaDiseno", tags);
         }
 
+        
         [HttpPost] // Agregar diseños (confirma y mueve desde carpeta temporal)
         public async Task<IActionResult> GuardarDisenoConfirmado()
         {
@@ -319,7 +320,7 @@ namespace Tazuki.Controllers
                 // Permite letras, números, ESPACIOS, guion y guion bajo; elimina lo demás
                 clean = Regex.Replace(clean, @"[^a-zA-Z0-9\s\-_]+", "");
                 // Colapsa espacios múltiples y recorta extremos
-                clean = Regex.Replace(clean, @"\s{2,}", " ").Trim();
+                clean = Regex.Replace(clean, @"\s+", "").Trim();
 
                 if (string.IsNullOrEmpty(clean)) clean = "diseno";
                 return clean.Length > 50 ? clean[..50] : clean;

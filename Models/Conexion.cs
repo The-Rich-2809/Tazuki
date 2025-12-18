@@ -12,8 +12,10 @@ namespace Tazuki.Models
         public static MySqlConnection conexion()
         {
             string cadenaConexion = "";
-            //cadenaConexion = "datasource=192.168.101.7; username=rich; password=300920; database=disenos";
-            cadenaConexion = "datasource=localhost; username=rich; password=300920; database=disenos_db";
+            //Prueba
+            cadenaConexion = "datasource=192.168.101.16; username=rich; password=300920; database=disenos_db_prueba";
+            //Servidor
+            //cadenaConexion = "datasource=192.168.101.16; username=rich; password=300920; database=disenos_db";
             //cadenaConexion = "datasource=localhost; username=root; password=300920; database=disenos";
 
             try

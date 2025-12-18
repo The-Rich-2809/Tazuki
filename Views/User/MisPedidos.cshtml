@@ -1,0 +1,106 @@
+@{
+    if (ViewBag.Activo == "1")
+    {
+        Layout = "_LayoutUsuario";
+    }
+}
+
+<style>
+    /* Contenedor del video para que sea cuadrado y limpio */
+    .video-container {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        background-color: #f8f9fa; /* Color de fondo mientras carga */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Esto hace que el video llene el cuadro sin deformarse */
+    }
+
+    /* Mejora el hover de las filas */
+    .table hover tbody tr:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+</style>
+
+<div class="container my-5">
+    <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+        
+        <div class="card-header bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
+            <div class="text-white">
+                <span class="fw-bold fs-5">Pedido #12345</span>
+                <span class="ms-3 opacity-75 small">15 de Octubre, 2023</span>
+            </div>
+            <span class="badge rounded-pill bg-warning text-dark fw-bold px-3 py-2">
+                EN PREPARACIÓN
+            </span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3" style="width: 140px;">Vista Previa</th>
+                            <th>Producto</th>
+                            <th class="text-center">Cant.</th>
+                            <th>Precio</th>
+                            <th class="pe-4 text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4">
+                                <div class="video-container rounded shadow-sm border">
+                                    <video autoplay loop muted playsinline>
+                                        <source src="/videos/taza_bulma.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                            </td>
+                            <td>
+                                <h6 class="mb-1 fw-bold">01 Bulma y Vegueta</h6>
+                                <p class="text-muted small mb-0">Taza personalizada 11oz</p>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border px-3 py-2 fs-6">4</span>
+                            </td>
+                            <td class="text-secondary">$50.00</td>
+                            <td class="pe-4 text-end fw-bold text-success">$200.00</td>
+                        </tr>
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="video-container rounded shadow-sm border">
+                                    <video autoplay loop muted playsinline>
+                                        <source src="/videos/taza_goku.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                            </td>
+                            <td>
+                                <h6 class="mb-1 fw-bold">02 Goku Ultra Instinto</h6>
+                                <p class="text-muted small mb-0">Taza Mágica</p>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border px-3 py-2 fs-6">2</span>
+                            </td>
+                            <td class="text-secondary">$60.00</td>
+                            <td class="pe-4 text-end fw-bold text-success">$120.00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-light border-top">
+                        <tr>
+                            <td colspan="4" class="text-end py-3 fw-bold fs-5">Total pagado:</td>
+                            <td class="pe-4 text-end py-3 fw-bold fs-4 text-dark">$320.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,9 @@
 }
 <!DOCTYPE html>
 <html lang="es">
+@section Head {
+    <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
+}
 
 <head>
     <meta charset="UTF-8">
@@ -106,7 +109,7 @@
 
     <div class="container my-5">
         <div class="py-5 text-center">
-            <h2>Página de Pago Seguro</h2>
+            <h2>Pago Seguro</h2>
             <p class="lead">Revisa tu pedido y completa tus datos para finalizar la compra.</p>
         </div>
 
@@ -211,7 +214,7 @@
 
             <div class="col-md-7 col-lg-8">
 
-                <h4 class="mb-3">Información de Envío</h4>
+                @* <h4 class="mb-3">Información de Envío</h4>
 
                 <div class="card mb-3" id="direccion-seleccionada-card">
                     <div class="card-body">
@@ -229,30 +232,30 @@
                     Seleccionar otra dirección
                 </button>
 
-                <hr class="my-4">
+                <hr class="my-4"> *@
 
-                <h4 class="mb-3">Método de Pago</h4>
+                <h4 class="mb-3">Método de Envio y Pago</h4>
                 <form class="needs-validation" novalidate>
                     <div class="my-3">
-                        <div class="form-check">
-                            <input id="paypal" name="metodoPago" type="radio" class="form-check-input" checked required>
+                        @* <div class="form-check">
+                            <input id="paypal" name="metodoPago" type="radio" class="form-check-input" required>
                             <label class="form-check-label" for="paypal">PayPal</label>
-                        </div>
+                        </div> *@
                         <div class="form-check">
-                            <input id="whatsapp" name="metodoPago" type="radio" class="form-check-input" required>
+                            <input id="whatsapp" name="metodoPago" type="radio" class="form-check-input" checked required>
                             <label class="form-check-label" for="whatsapp">WhatsApp</label>
                         </div>
                     </div>
 
-                    <div id="paypal-button-container" class="row gy-3">
+                    @* <div id="paypal-button-container" class="row gy-3" style="display: none;">
                         <button class="w-100 btn btn-lg btn-paypal" type="submit">
                             <i class="bi bi-paypal me-2"></i> Pagar con PayPal
                         </button>
-                    </div>
+                    </div> *@
 
-                    <div id="whatsapp-button-container" class="row gy-3" style="display: none;">
+                    <div id="whatsapp-button-container" class="row gy-3">
                         <button class="w-100 btn btn-lg btn-whatsapp" type="submit">
-                            <i class="bi bi-whatsapp me-2"></i> Pagar por WhatsApp
+                            <i class="bi bi-whatsapp me-2"></i> Realizar pedido por WhatsApp
                         </button>
                     </div>
 

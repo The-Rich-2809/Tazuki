@@ -1,57 +1,68 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Gracias por tu compra!</title>
-    
-    <style>
-        /* Estilo para asegurar que el footer se pegue abajo */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        main {
-            flex: 1;
-        }
-    </style>
-</head>
-<body>
+@section Head {
+    <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
 
-    <main class="container my-5">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                
-                <div class="card shadow-lg border-0 rounded-3">
-                    <div class="card-body p-5 text-center">
+<main class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-5 text-center">
+                    
+                    <div class="mb-4">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                    </div>
 
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                    <h1 class="display-5 fw-bold mt-3">¡Gracias por tu compra!</h1>
+                    <p class="lead text-muted">
+                        Tu pedido ha sido recibido con éxito. <br>
+                        Estamos preparando tus productos con mucho estilo.
+                    </p>
 
-                        <h1 class="display-4 fw-bold mt-3">¡Gracias por tu compra!</h1>
-                        
-                        <p class="lead text-muted mt-3">
-                            Hemos recibido tu pedido y ya lo estamos procesando.
-                        </p>
-                        <p>
-                            Recibirás un correo electrónico de confirmación en breve con los detalles de tu pedido. Si tienes alguna pregunta, no dudes en contactarnos.
-                        </p>
+                    <div class="alert alert-secondary my-4">
+                        <strong>Número de pedido:</strong> #12345-ABC
+                    </div>
 
-                        <hr class="my-4">
-
-                        <div class="alert alert-secondary">
-                            <strong>Número de pedido:</strong> #12345-ABC
+                    <div class="card border-0 bg-light my-4">
+                        <div class="card-body text-start">
+                            <h5 class="fw-bold mb-3">¿Qué sigue?</h5>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-primary rounded-circle me-2">1</span>
+                                    <span>Recibirás un correo con la confirmación.</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-primary rounded-circle me-2">2</span>
+                                    <span>Te avisaremos cuando el estatus cambie a "Listo".</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <span class="badge bg-primary rounded-circle me-2">3</span>
+                                    <span>¡Disfruta tu nuevo producto Tazuki!</span>
+                                </li>
+                            </ul>
                         </div>
+                    </div>
 
-                        <a href="index.html" class="btn btn-primary btn-lg mt-3">
+                    <hr class="my-4">
+
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a href="/User/MisPedidos" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-list-check"></i> Ver mis pedidos
+                        </a>
+                        <a href="/" class="btn btn-primary btn-lg px-4">
                             <i class="bi bi-arrow-left"></i> Volver a la tienda
                         </a>
-
                     </div>
-                </div>
-                </div>
-        </div>
-    </main>
 
-</body>
-</html>
+                    <div class="mt-5 pt-3 border-top">
+                        <p class="text-muted small">¿Tienes alguna duda con tu diseño?</p>
+                        <a href="https://wa.me/tu-numero" class="btn btn-outline-success btn-sm rounded-pill px-4">
+                            <i class="bi bi-whatsapp"></i> Contactar por WhatsApp
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

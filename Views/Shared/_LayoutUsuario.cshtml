@@ -1,3 +1,4 @@
+@RenderSection("Head", required: false)
 <!doctype html>
 <html lang="es" data-bs-theme="light">
 
@@ -181,7 +182,7 @@
                     <li class="nav-item"><a class="nav-link active" asp-action="Catalogo"
                             asp-controller="Home">Catálogo</a></li>
                     <li class="nav-item"><a class="nav-link active"
-                            href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Pedir
+                            href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Pedir
                             por WhatsApp</a></li>
                     
                     <li class="nav-item ms-lg-2">
@@ -199,7 +200,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><h6 class="dropdown-header">Hola, @ViewBag.Nombre</h6></li>
                             <li><a class="dropdown-item" asp-controller="Cuenta" asp-action="Perfil">Mi Perfil</a></li>
-                            <li><a class="dropdown-item" asp-controller="Pedidos" asp-action="Index">Mis Pedidos</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="MisPedidos">Mis Pedidos</a></li>
                             @if(ViewBag.rol == "admin")
                             {
                                 <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Admin</a></li>
@@ -227,7 +228,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header"><button class="accordion-button" type="button"
                                     data-bs-toggle="collapse" data-bs-target="#q1">¿Tiempo de elaboración?</button></h2>
-                            <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc">
+                            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
                                 <div class="accordion-body">De 24 a 72 horas hábiles según volumen y disponibilidad de
                                     insumos. Urgencias: consúltanos.</div>
                             </div>
@@ -255,12 +256,11 @@
                     <div class="p-4 bg-white border rounded-4 h-100">
                         <h5 class="fw-semibold">Contacto</h5>
                         <ul class="list-unstyled text-secondary mb-4">
-                            <li>WhatsApp: <a href="https://wa.me/5215578868430">+52 5578868430</a></li>
-                            <li>Correo: <a href="mailto:contacto@tazasmx.com">contacto@tazasmx.com</a></li>
-                            <li>Instagram: <a href="#">tazasmx</a></li>
+                            <li>Correo: <a href="mailto:tazukysub@gmail.com">tazukysub@gmail.com</a></li>
+                            <li>Instagram: <a href="https://www.instagram.com/tazukysub/">TazukySub</a></li>
                         </ul>
                         <a class="btn btn-primary btn-lg w-100" target="_blank"
-                            href="https://wa.me/5215578868430?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Escríbenos
+                            href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Escríbenos
                             por WhatsApp</a>
                     </div>
                 </div>
@@ -387,7 +387,7 @@
                     `Cantidad: ${qty}%0A` +
                     (det ? `Detalles: ${encodeURIComponent(det)}%0A` : ``) +
                     `¿Me ayudas con el diseño y total?`;
-                const telefono = '5215578868430';
+                const telefono = '5215660776770';
                 waLink.href = `https://wa.me/${telefono}?text=${mensaje}`;
             }
 

@@ -59,15 +59,16 @@
     }
     
     // Plantilla para enviar los datos al frontend
-public class CartItemViewModel
-{
-    public int ProductId { get; set; }
-    public int SizeId { get; set; }
-    public string NombreProducto { get; set; }
-    public string NombreTamano { get; set; }
-    public string RutaVideo { get; set; }
-    public int Cantidad { get; set; }
-    public double PrecioUnitario { get; set; }
-    public double PrecioTotalItem { get; set; }
-}
+    public class CartItemViewModel
+    {
+        public int ProductId { get; set; }
+        public int SizeId { get; set; }
+        public string NombreProducto { get; set; }
+        public string NombreTamano { get; set; }
+        public string RutaVideo { get; set; }
+        public int Cantidad { get; set; }
+        public double PrecioUnitario { get; set; }
+        public double PrecioTotalItem { get; set; }
+        public double IvaProducto { get; set; }
+    }
 }

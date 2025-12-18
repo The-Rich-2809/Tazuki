@@ -114,8 +114,7 @@
               "RelativeToolTip": "Views\\Admin\\Index.cshtml",
               "ViewState": "AgIAADMAAAAAAAAAAAAAAEYAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-05T19:51:29.757Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-05T19:51:29.757Z"
             },
             {
               "$type": "Document",
@@ -125,7 +124,7 @@
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
               "ToolTip": "C:\\Users\\ricar\\Documents\\GitHub\\Tazuki\\Controllers\\AdminController.cs",
               "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAkwLQAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAALQAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-04T21:48:43.728Z",
               "EditorCaption": ""

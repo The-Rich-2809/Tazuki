@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Models\disenos.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Models\base_pruebas.sql" />
+    <Resource Include="Models\disenos.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MySql.Data" Version="9.4.0" />
   </ItemGroup>
 

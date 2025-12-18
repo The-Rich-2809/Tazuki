@@ -284,11 +284,9 @@ namespace Tazuki.Controllers
         }
         public IActionResult Confirmacion()
         {
-            return View();
-        }
-        
-        public IActionResult MisPedidos()
-        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+                
             return View();
         }
 

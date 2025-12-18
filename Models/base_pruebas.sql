@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS disenos_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+﻿CREATE DATABASE IF NOT EXISTS disenos_db_prueba DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-USE disenos_db;
+USE disenos_db_prueba;
 
 -- Se eliminan las tablas en orden inverso para evitar problemas de FK
 DROP TABLE IF EXISTS diseno_tags;

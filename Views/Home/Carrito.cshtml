@@ -16,6 +16,16 @@
     ViewData["Title"] = "Tu Carrito";
 }
 
+@*
+    CAMBIO HECHO AQUÍ:
+    Se quitó el <head> y se reemplazó por un @section Head
+    para inyectar el ícono en el layout principal.
+    También se corrigió la ruta con @Url.Content().
+*@
+@section Head {
+    <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
+}
+
 <style>
     .product-image {
         width: 100px;
@@ -87,7 +97,8 @@
                 </div>
                 <div class="card-footer bg-white border-0 p-3">
                     <a href="@Url.Action("DireccionPago", "Home", new { carrito = 0 })" class="btn btn-primary w-100 btn-lg">
-                        Ir a Pagar
+                        Solicitar Pedido
+                        @* Ir a pagar *@
                         <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>

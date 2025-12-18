@@ -5,6 +5,9 @@
         Layout = "_LayoutUsuario";
     }
 }
+@section Head {
+    <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
+}
 
 <head>
     <meta charset="UTF-8">
@@ -299,13 +302,14 @@
                         </div>
                     </div>
                     <div class="d-grid gap-2 mb-3">
-                        <a id="buy-now-link"
+                        <button class="btn btn-add-cart">Agregar al carrito</button>
+                        @* <a id="buy-now-link"
                            type="submit"
                            href="@Url.Action("DireccionPago", "Home", new { carrito = 1, Id_Tamano = initialId, Id_Taza = ViewBag.Taza[0], Cantidad = 1 })"
                            data-base-url="@Url.Action("DireccionPago", "Home")"
                            data-taza-id="@ViewBag.Taza[0]"
-                           class="btn btn-buy">Comprar ahora</a>
-                        <button class="btn btn-add-cart">Agregar al carrito</button>
+                           class="btn btn-buy">Comprar ahora</a> *@
+                        
                     </div>
 
                 </form>
