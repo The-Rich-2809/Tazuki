@@ -44,6 +44,7 @@
         public static string Email { get; set; } = string.Empty;
         public static string Nombre { get; set; } = string.Empty;
         public static string rol { get; set; } = string.Empty;
+        public static int compra { get; set; }
         
     }
     public class Carrito
@@ -52,6 +53,16 @@
         public int Id_Taza { get; set; }
         public int Id_Tamano { get; set; }
         public int Cantidad { get; set; }
+    }
+    public class Pedido
+    {
+        public string Id_Pedido { get; set; } = string.Empty;
+        public string Id_User { get; set; } = string.Empty;
+        public string Id_Taza { get; set; } = string.Empty;
+        public string Id_Tamano { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string Cantidad { get; set; } = string.Empty;
+        public double Precio { get; set; }
     }
     public static class CarritoCompra
     {
@@ -63,12 +74,12 @@
     {
         public int ProductId { get; set; }
         public int SizeId { get; set; }
-        public string NombreProducto { get; set; }
-        public string NombreTamano { get; set; }
-        public string RutaVideo { get; set; }
+        public string NombreProducto { get; set; } = string.Empty;
+        public string NombreTamano { get; set; } = string.Empty;
+        public string RutaVideo { get; set; } = string.Empty;
         public int Cantidad { get; set; }
         public double PrecioUnitario { get; set; }
         public double PrecioTotalItem { get; set; }
-        public double IvaProducto { get; set; }
+        public string PedidoId { get; set; } = string.Empty;
     }
 }

@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra con Selección de Dirección (Campos Completos)</title>
+    <title>@ViewData["Title"] Tazuky Pago Seguro</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -41,10 +41,6 @@
         }
 
         /* Estilos del Modal */
-        .modal-body .form-check {
-            padding-left: 0;
-        }
-
         .modal-body .form-check-label {
             display: block;
             padding: 1rem 1.25rem;
@@ -59,43 +55,15 @@
             float: left;
         }
 
-        .modal-body .list-group-item-action:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Clases para que el texto en los labels se vea bien */
-        .modal-body .form-check-label p {
-            margin-bottom: 0.25rem;
-        }
-
-        #direccion-activa-contenido p {
-            margin-bottom: 0.25rem;
-        }
-
-        /* ¡NUEVO! Estilos para los botones de pago con logo */
-        .btn-paypal {
-            background-color: #00457C;
-            /* Color oficial de PayPal */
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-        }
-
-        .btn-paypal:hover {
-            background-color: #003057;
-            color: white;
-        }
-
+        /* Botón de WhatsApp */
         .btn-whatsapp {
             background-color: #25D366;
-            /* Color oficial de WhatsApp */
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 500;
+            border: none;
         }
 
         .btn-whatsapp:hover {
@@ -114,11 +82,9 @@
         </div>
 
         <div class="row g-5">
-
             <div class="col-md-5 col-lg-4 order-md-last">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-primary">Tu Carrito</span>
-                    @* <span class="badge bg-primary rounded-pill">2</span> *@
                 </h4>
                 <ul class="list-group mb-3">
                     @{
@@ -151,10 +117,8 @@
                                                         }
                                                     </div>
                                                 </div>
-
                                                 <div class="text-end ms-2">
-                                                    <small class="text-muted d-block" style="white-space: nowrap;">$@row_tamano[2] x
-                                                        @row_carrito[3]</small>
+                                                    <small class="text-muted d-block">$@row_tamano[2] x @row_carrito[3]</small>
                                                     <span class="text-primary fw-bold">$@subtotal</span>
                                                 </div>
                                             </li>
@@ -168,43 +132,41 @@
                     }
                     else
                     {
+                        @* Lógica para compra directa *@
                         foreach (DataRow row_taza in ViewBag.Tazas.Rows)
+                        {
+                            if (ViewBag.CarritoCompra.Id_Taza.ToString() == row_taza[0].ToString())
                             {
-                                if (ViewBag.CarritoCompra.Id_Taza.ToString() == row_taza[0].ToString())
+                                foreach (DataRow row_tamano in ViewBag.Tamanos.Rows)
                                 {
-                                    foreach (DataRow row_tamano in ViewBag.Tamanos.Rows)
+                                    if (ViewBag.CarritoCompra.Id_Tamano.ToString() == row_tamano[0].ToString())
                                     {
-                                        if (ViewBag.CarritoCompra.Id_Tamano.ToString() == row_tamano[0].ToString())
-                                        {
-                                            <li class="list-group-item list-group-item-product">
-                                                <div class="product-info">
-                                                    <video class="product-video" autoplay loop muted playsinline>
-                                                        <source src="@Url.Content("~/" + row_taza[5].ToString())" type="video/mp4">
-                                                    </video>
-                                                    <div class="product-details lh-sm">
-                                                        <h6 class="my-0">@row_taza[1]</h6>
-                                                        <small class="text-muted">@row_tamano[1]</small>
-                                                        @{
-                                                            subtotal = Convert.ToDouble(row_tamano[2]) * Convert.ToDouble(ViewBag.CarritoCompra.Cantidad);
-                                                            total += subtotal;
-                                                        }
-                                                    </div>
+                                        <li class="list-group-item list-group-item-product">
+                                            <div class="product-info">
+                                                <video class="product-video" autoplay loop muted playsinline>
+                                                    <source src="@Url.Content("~/" + row_taza[5].ToString())" type="video/mp4">
+                                                </video>
+                                                <div class="product-details lh-sm">
+                                                    <h6 class="my-0">@row_taza[1]</h6>
+                                                    <small class="text-muted">@row_tamano[1]</small>
+                                                    @{
+                                                        subtotal = Convert.ToDouble(row_tamano[2]) * Convert.ToDouble(ViewBag.CarritoCompra.Cantidad);
+                                                        total += subtotal;
+                                                    }
                                                 </div>
-
-                                                <div class="text-end ms-2">
-                                                    <small class="text-muted d-block" style="white-space: nowrap;">$@row_tamano[2] x
-                                                        @ViewBag.CarritoCompra.Cantidad</small>
-                                                    <span class="text-primary fw-bold">$@subtotal</span>
-                                                </div>
-                                            </li>
-                                            break;
-                                        }
+                                            </div>
+                                            <div class="text-end ms-2">
+                                                <small class="text-muted d-block">$@row_tamano[2] x @ViewBag.CarritoCompra.Cantidad</small>
+                                                <span class="text-primary fw-bold">$@subtotal</span>
+                                            </div>
+                                        </li>
+                                        break;
                                     }
-                                    break;
                                 }
+                                break;
                             }
+                        }
                     }
-
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (MXN)</span>
                         <strong>$@total</strong>
@@ -213,45 +175,15 @@
             </div>
 
             <div class="col-md-7 col-lg-8">
-
-                @* <h4 class="mb-3">Información de Envío</h4>
-
-                <div class="card mb-3" id="direccion-seleccionada-card">
-                    <div class="card-body">
-                        <div id="direccion-activa-contenido">
-                            <strong>Ricardo M. (Mi Casa)</strong>
-                            <p class="card-text mb-1">Av. de los Insurgentes Sur 123, Colonia Roma, 06700</p>
-                            <p class="card-text mb-1">Cuauhtémoc, CDMX</p>
-                            <p class="card-text mb-0"><small class="text-muted">55 1234 5678</small></p>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                    data-bs-target="#modalDirecciones">
-                    Seleccionar otra dirección
-                </button>
-
-                <hr class="my-4"> *@
-
-                <h4 class="mb-3">Método de Envio y Pago</h4>
-                <form class="needs-validation" novalidate>
+                <h4 class="mb-3">Método de Envío y Pago</h4>
+                
+                <form asp-action="CrearIdPedido" asp-controller="Home" method="get" class="needs-validation" novalidate>
                     <div class="my-3">
-                        @* <div class="form-check">
-                            <input id="paypal" name="metodoPago" type="radio" class="form-check-input" required>
-                            <label class="form-check-label" for="paypal">PayPal</label>
-                        </div> *@
                         <div class="form-check">
                             <input id="whatsapp" name="metodoPago" type="radio" class="form-check-input" checked required>
                             <label class="form-check-label" for="whatsapp">WhatsApp</label>
                         </div>
                     </div>
-
-                    @* <div id="paypal-button-container" class="row gy-3" style="display: none;">
-                        <button class="w-100 btn btn-lg btn-paypal" type="submit">
-                            <i class="bi bi-paypal me-2"></i> Pagar con PayPal
-                        </button>
-                    </div> *@
 
                     <div id="whatsapp-button-container" class="row gy-3">
                         <button class="w-100 btn btn-lg btn-whatsapp" type="submit">
@@ -265,228 +197,35 @@
         </div>
     </div>
 
-
-    <div class="modal fade" id="modalDirecciones" tabindex="-1" aria-labelledby="modalDireccionesLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalDireccionesLabel">Selecciona una Dirección</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div id="lista-direcciones" class="list-group">
-                        <div class="form-check list-group-item list-group-item-action">
-                            <input class="form-check-input" type="radio" name="direccionGuardada" id="dir1" checked>
-                            <label class="form-check-label" for="dir1" data-bs-dismiss="modal">
-                                <strong>Ricardo M. (Mi Casa)</strong>
-                                <p class="card-text mb-1">Av. de los Insurgentes Sur 123, Colonia Roma, 06700</p>
-                                <p class="card-text mb-1">Cuauhtémoc, CDMX</p>
-                                <p class="card-text mb-0"><small class="text-muted">55 1234 5678</small></p>
-                            </label>
-                        </div>
-
-                        <div class="form-check list-group-item list-group-item-action">
-                            <input class="form-check-input" type="radio" name="direccionGuardada" id="dir2">
-                            <label class="form-check-label" for="dir2" data-bs-dismiss="modal">
-                                <strong>Ricardo M. (Oficina)</strong>
-                                <p class="card-text mb-1">Paseo de la Reforma 456, Int. 100, Colonia Juárez, 06600</p>
-                                <p class="card-text mb-1">Cuauhtémoc, CDMX</p>
-                                <p class="card-text mb-0"><small class="text-muted">55 9876 5432</small></p>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-link ps-0 mt-3" type="button" id="btn-mostrar-form-direccion">
-                        <i class="bi bi-plus-circle"></i> Agregar una nueva dirección
-                    </button>
-
-                    <form id="form-nueva-direccion" class="mt-3" style="display: none;">
-                        <h5>Nueva Dirección</h5>
-                        <div class="row g-3">
-                            <div class="col-sm-6">
-                                <label for="nuevo-nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nuevo-nombre" required>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="nuevo-apellidos" class="form-label">Apellidos</label>
-                                <input type="text" class="form-control" id="nuevo-apellidos" required>
-                            </div>
-
-                            <div class="col-sm-7">
-                                <label for="nuevo-calle" class="form-label">Calle</label>
-                                <input type="text" class="form-control" id="nuevo-calle" placeholder="Av. Principal"
-                                    required>
-                            </div>
-                            <div class="col-sm-5">
-                                <label for="nuevo-num-ext" class="form-label">Num. Exterior</label>
-                                <input type="text" class="form-control" id="nuevo-num-ext" placeholder="123" required>
-                            </div>
-
-                            <div class="col-sm-5">
-                                <label for="nuevo-num-int" class="form-label">Num. Interior <span
-                                        class="text-muted">(Opcional)</span></label>
-                                <input type="text" class="form-control" id="nuevo-num-int" placeholder="Depto 5B">
-                            </div>
-                            <div class="col-sm-7">
-                                <label for="nuevo-colonia" class="form-label">Colonia</label>
-                                <input type="text" class="form-control" id="nuevo-colonia" placeholder="Colonia Roma"
-                                    required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="nuevo-municipio" class="form-label">Municipio / Alcaldía</label>
-                                <input type="text" class="form-control" id="nuevo-municipio" placeholder="Cuauhtémoc"
-                                    required>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="nuevo-cp" class="form-label">C.P.</label>
-                                <input type="text" class="form-control" id="nuevo-cp" required>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="nuevo-estado" class="form-label">Estado</label>
-                                <select class="form-select" id="nuevo-estado" required>
-                                    <option>CDMX</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-7">
-                                <label for="nuevo-pais" class="form-label">País</label>
-                                <select class="form-select" id="nuevo-pais" required>
-                                    <option>México</option>
-                                </select>
-                            </div>
-                            <div class="col-md-5">
-                                <label for="nuevo-telefono" class="form-label">Teléfono de contacto</label>
-                                <input type="tel" class="form-control" id="nuevo-telefono" placeholder="55 1234 5678"
-                                    required>
-                            </div>
-
-                            <div class="col-12">
-                                <label for="nuevo-referencias" class="form-label">Referencias de entrega <span
-                                        class="text-muted">(Opcional)</span></label>
-                                <textarea class="form-control" id="nuevo-referencias" rows="2"
-                                    placeholder="Ej. Puerta verde, tocar intercom 101, entre calle X y Y..."></textarea>
-                            </div>
-
-                            <div class="col-12">
-                                <button type="button" class="btn btn-success mt-3" id="btn-guardar-nueva-dir">Guardar y
-                                    Usar esta dirección</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="modal fade" id="modalDirecciones" tabindex="-1" aria-hidden="true">
         </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Validación de Bootstrap
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            });
 
-            // --- Lógica para validación de formulario (sin cambios) ---
-            (function () {
-                'use strict'
-                var forms = document.querySelectorAll('.needs-validation')
-                Array.prototype.slice.call(forms)
-                    .forEach(function (form) {
-                        form.addEventListener('submit', function (event) {
-                            if (!form.checkValidity()) {
-                                event.preventDefault()
-                                event.stopPropagation()
-                            }
-                            form.classList.add('was-validated')
-                        }, false)
-                    })
-            })();
-
-            // --- ¡LÓGICA CORREGIDA! Para mostrar/ocultar botones de pago ---
-            const radioWhatsapp = document.getElementById('whatsapp'); // ID Corregido
-            const radioPaypal = document.getElementById('paypal');
-            const paypalButtonContainer = document.getElementById('paypal-button-container');
+            // Lógica de toggle simplificada (Evita errores si PayPal no existe)
+            const radioWhatsapp = document.getElementById('whatsapp');
             const whatsappButtonContainer = document.getElementById('whatsapp-button-container');
 
             function togglePaymentButtons() {
-                if (radioPaypal.checked) {
-                    paypalButtonContainer.style.display = 'block';
-                    whatsappButtonContainer.style.display = 'none';
-                } else if (radioWhatsapp.checked) {
-                    paypalButtonContainer.style.display = 'none';
-                    whatsappButtonContainer.style.display = 'block';
+                if (radioWhatsapp && radioWhatsapp.checked) {
+                    if (whatsappButtonContainer) whatsappButtonContainer.style.display = 'block';
                 }
             }
-
-            radioWhatsapp.addEventListener('change', togglePaymentButtons);
-            radioPaypal.addEventListener('change', togglePaymentButtons);
-
-            // Llamada inicial para establecer el estado correcto al cargar la página
-            togglePaymentButtons();
-
-
-            // --- Lógica para el Modal de Direcciones (sin cambios) ---
-
-            const modalDirecciones = document.getElementById('modalDirecciones');
-            const cardContenido = document.getElementById('direccion-activa-contenido');
-
-            // 1. Mostrar/Ocultar formulario de nueva dirección (sin cambios)
-            const btnMostrarForm = document.getElementById('btn-mostrar-form-direccion');
-            const formNuevaDir = document.getElementById('form-nueva-direccion');
-
-            btnMostrarForm.addEventListener('click', function () {
-                formNuevaDir.style.display = (formNuevaDir.style.display === 'none') ? 'block' : 'none';
-                this.textContent = (formNuevaDir.style.display === 'none') ? '+ Agregar una nueva dirección' : 'Cancelar';
-            });
-
-            // 2. Actualizar la dirección en la página principal al seleccionar una existente
-            modalDirecciones.addEventListener('click', function (event) {
-                const label = event.target.closest('.form-check-label');
-                if (label) {
-                    // Copiamos el HTML interno del label a la tarjeta de dirección
-                    cardContenido.innerHTML = label.innerHTML;
-                    // El data-bs-dismiss="modal" en el label se encarga de cerrar
-                }
-            });
-
-            // 3. Lógica para el botón "Guardar y Usar" del *nuevo* formulario (sin cambios)
-            document.getElementById('btn-guardar-nueva-dir').addEventListener('click', function () {
-                // Aquí iría tu lógica para guardar la nueva dirección en la base de datos (AJAX/Fetch)
-                // Y también deberías validar que los campos 'required' del nuevo formulario no estén vacíos
-
-                // Capturamos todos los nuevos valores
-                const nombre = document.getElementById('nuevo-nombre').value;
-                const apellidos = document.getElementById('nuevo-apellidos').value;
-                const calle = document.getElementById('nuevo-calle').value;
-                const numExt = document.getElementById('nuevo-num-ext').value;
-                const numInt = document.getElementById('nuevo-num-int').value;
-                const colonia = document.getElementById('nuevo-colonia').value;
-                const municipio = document.getElementById('nuevo-municipio').value;
-                const estado = document.getElementById('nuevo-estado').value;
-                const cp = document.getElementById('nuevo-cp').value;
-                const telefono = document.getElementById('nuevo-telefono').value;
-
-                // Formateamos el HTML para la tarjeta principal
-                const numIntHtml = numInt ? `, ${numInt}` : ''; // Agrega 'Depto 5B' solo si existe
-                const nombreCompleto = `${nombre} ${apellidos}`;
-
-                cardContenido.innerHTML = `
-                    <strong>${nombreCompleto} (Nueva)</strong>
-                    <p class="card-text mb-1">${calle} ${numExt}${numIntHtml}, ${colonia}, ${cp}</p>
-                    <p class="card-text mb-1">${municipio}, ${estado}</p>
-                    <p class="card-text mb-0"><small class="text-muted">${telefono}</small></p>
-                `;
-
-                // Cerramos el modal
-                const modalInstance = bootstrap.Modal.getInstance(modalDirecciones);
-                modalInstance.hide();
-
-                // Ocultamos y reseteamos el formulario
-                formNuevaDir.style.display = 'none';
-                formNuevaDir.reset(); // Limpia los campos
-                btnMostrarForm.textContent = '+ Agregar una nueva dirección';
-            });
-
+            if(radioWhatsapp) radioWhatsapp.addEventListener('change', togglePaymentButtons);
         });
     </script>
 </body>
-
 </html>

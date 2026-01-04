@@ -2,6 +2,9 @@
 using System.Data;
 using System.Diagnostics;
 using Tazuki.Models;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 
 namespace Tazuki.Controllers
 {
@@ -282,19 +285,167 @@ namespace Tazuki.Controllers
 
             return View();
         }
-        public IActionResult Confirmacion()
+
+        [HttpGet]
+        public IActionResult Confirmacion(string Id_Pedido)
         {
             if (!Cookies())
-                return RedirectToAction("ErrorUsuario", "Home");
-                
+                return RedirectToAction("InicioSesion", "Home");
+
+            if (Sesion.compra == 0)
+                return RedirectToAction("MisPedidos", "User");
+            
+            ViewBag.Id_Pedido = Id_Pedido;
+            double subtotal, total = 0;
+            
+            DataTable dtCarrito = Home_SQL.Mostrar_Carrito(Sesion.Id);
+            DataTable dtTaza = Admin_SQL.Mostrar_Tamanos_Tazas();
+
+            foreach(DataRow carrito in dtCarrito.Rows)
+            {
+                Pedido pedido = new Pedido();
+                Carrito carrito1 = new Carrito();
+
+                pedido.Id_Pedido = Id_Pedido;
+
+                pedido.Id_User = carrito[0].ToString()!;
+                carrito1.Id_User = Convert.ToInt32(carrito[0].ToString()!);
+
+                pedido.Id_Taza = carrito[1].ToString()!;
+                carrito1.Id_Taza = Convert.ToInt32(carrito[1].ToString()!);
+
+                pedido.Id_Tamano = carrito[2].ToString()!;
+                carrito1.Id_Tamano = Convert.ToInt32(carrito[2].ToString()!);
+
+                pedido.Cantidad = carrito[3].ToString()!;
+                carrito1.Cantidad = Convert.ToInt32(carrito[3].ToString()!);
+
+                pedido.Status = "En proceso";
+
+                foreach(DataRow taza in dtTaza.Rows)
+                {
+                    if(carrito[2].ToString() == taza[0].ToString())
+                    {
+                        subtotal = Convert.ToDouble(carrito[3]) * Convert.ToDouble(taza[2]);
+                        pedido.Precio = subtotal;
+                        total += subtotal;
+                        break;
+                    }
+                }
+
+                Home_SQL.Agregar_Pedido_Item(pedido);
+
+                Home_SQL.Eliminar_Carrito(carrito1);
+            }
+
+            Home_SQL.Agregar_Pedido(Id_Pedido, total);
+            
+            foreach(DataRow orden in Home_SQL.Mostrar_Pedido(Sesion.Id).Rows)
+            {
+                if(orden[1].ToString() == Id_Pedido)
+                {
+                    EnviarCorreoPedido(orden);
+                    break;
+                }
+            }
+
+            Sesion.compra = 0;
             return View();
+        }
+        [HttpGet]
+        public IActionResult CrearIdPedido()
+        {
+            if (!Cookies())
+                return RedirectToAction("InicioSesion", "Home");
+
+            if(Home_SQL.Contar_Items_Carrito() <= 0)
+                return RedirectToAction("InicioSesion", "Home");
+                
+            string Id_Pedido = "PED-";
+            Id_Pedido += DateTime.Now.ToString("yyMMddHHmmss");
+            Id_Pedido += "-" + Sesion.Id;
+            Sesion.compra = 1;
+
+            return RedirectToAction("Confirmacion", "Home", new { Id_Pedido = Id_Pedido });
+        }
+        public void EnviarCorreoPedido(DataRow orden)
+        {
+            DataTable tamanos = Home_SQL.Mostrar_Tazas();
+            DataTable tazas = Admin_SQL.Mostrar_Tamanos_Tazas();
+            DataTable items = Home_SQL.Mostrar_Pedido_Items();
+            string correoUsuario = Sesion.Email; 
+
+            try
+            {
+                // 1. Configuración del cliente SMTP (Usa los datos de tu servidor o Gmail)
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("ricardo7772005@gmail.com", "cmya ducv jfzq bvqt"),
+                    EnableSsl = true,
+                };
+
+                // 2. Construcción del cuerpo del correo en HTML
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;'>");
+                sb.Append($"<h2 style='color: #333;'>¡Gracias por tu pedido, #{orden[1]}!</h2>");
+                sb.Append($"<p>Fecha: {Convert.ToDateTime(orden[5]):dd/MM/yyyy HH:mm}</p>");
+                sb.Append("<table style='width: 100%; border-collapse: collapse; margin-top: 20px;'>");
+                sb.Append("<thead style='background-color: #f8f9fa;'><tr>");
+                sb.Append("<th style='padding: 10px; border-bottom: 1px solid #ddd; text-align: left;'>Producto</th>");
+                sb.Append("<th style='padding: 10px; border-bottom: 1px solid #ddd; text-align: center;'>Cant.</th>");
+                sb.Append("<th style='padding: 10px; border-bottom: 1px solid #ddd; text-align: right;'>Subtotal</th>");
+                sb.Append("</tr></thead><tbody>");
+
+                foreach (DataRow pedido in items.Rows)
+                {
+                    if (orden[1].ToString() == pedido[1].ToString())
+                    {
+                        // Buscamos los detalles (Misma lógica que en la vista)
+                        var taza = tazas.AsEnumerable().FirstOrDefault(t => (int)t[0] == (int)pedido[2]);
+                        var tamano = tamanos.AsEnumerable().FirstOrDefault(tt => (int)tt[0] == (int)pedido[3]);
+
+                        if (taza != null && tamano != null)
+                        {
+                            double subtotal = Convert.ToDouble(tamano[2]) * Convert.ToDouble(pedido[5]);
+                            sb.Append("<tr>");
+                            sb.Append($"<td style='padding: 10px; border-bottom: 1px solid #eee;'><strong>{taza[1]}</strong><br><small>{tamano[1]}</small></td>");
+                            sb.Append($"<td style='padding: 10px; border-bottom: 1px solid #eee; text-align: center;'>{pedido[5]}</td>");
+                            sb.Append($"<td style='padding: 10px; border-bottom: 1px solid #eee; text-align: right;'>${subtotal:N2}</td>");
+                            sb.Append("</tr>");
+                        }
+                    }
+                }
+
+                sb.Append("</tbody></table>");
+                sb.Append($"<div style='text-align: right; margin-top: 20px;'><h3>Total Pagado: ${Convert.ToDouble(orden[3]):N2}</h3></div>");
+                sb.Append("<p style='color: #777; font-size: 12px; margin-top: 30px;'>Este es un correo automático de Tazuki. No respondas a este mensaje.</p>");
+                sb.Append("</div>");
+
+                // 3. Configuración del mensaje
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("tu-correo@gmail.com", "Tazuki Tienda"),
+                    Subject = $"Confirmación de Pedido #{orden[1]}",
+                    Body = sb.ToString(),
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(correoUsuario);
+
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Loguear error
+                Console.WriteLine("Error al enviar correo: " + ex.Message);
+            }
         }
 
 
         public bool Cookies()
         {
             var miCookie = HttpContext.Request.Cookies["Tazuky2"];
-            if (Home_SQL.ComprobarCookie(miCookie))
+            if (Home_SQL.ComprobarCookie(miCookie!))
             {
                 ViewBag.Activo = "1";
                 ViewBag.Nombre = Sesion.Nombre;

@@ -1,106 +1,144 @@
+@using System.Data
+@section Head {
+    <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
 @{
-    if (ViewBag.Activo == "1")
-    {
-        Layout = "_LayoutUsuario";
-    }
+    if (ViewBag.Activo == "1") { Layout = "_LayoutUsuario"; }
 }
 
 <style>
-    /* Contenedor del video para que sea cuadrado y limpio */
     .video-container {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         overflow: hidden;
-        background-color: #f8f9fa; /* Color de fondo mientras carga */
+        background-color: #f8f9fa;
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: transform 0.2s;
     }
-
-    .video-container video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Esto hace que el video llene el cuadro sin deformarse */
-    }
-
-    /* Mejora el hover de las filas */
-    .table hover tbody tr:hover {
-        background-color: rgba(0,0,0,0.02);
-    }
+    .video-container:hover { transform: scale(1.05); }
+    .video-container video { width: 100%; height: 100%; object-fit: cover; }
+    .card-order { transition: all 0.3s ease; border-radius: 15px; }
+    .card-order:hover { box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
 </style>
 
 <div class="container my-5">
-    <div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-        
-        <div class="card-header bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
-            <div class="text-white">
-                <span class="fw-bold fs-5">Pedido #12345</span>
-                <span class="ms-3 opacity-75 small">15 de Octubre, 2023</span>
-            </div>
-            <span class="badge rounded-pill bg-warning text-dark fw-bold px-3 py-2">
-                EN PREPARACIÓN
-            </span>
-        </div>
+    <h2 class="mb-4 fw-bold"><i class="bi bi-bag-check-fill me-2"></i>Mis Pedidos</h2>
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4 py-3" style="width: 140px;">Vista Previa</th>
-                            <th>Producto</th>
-                            <th class="text-center">Cant.</th>
-                            <th>Precio</th>
-                            <th class="pe-4 text-end">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="ps-4">
-                                <div class="video-container rounded shadow-sm border">
-                                    <video autoplay loop muted playsinline>
-                                        <source src="/videos/taza_bulma.mp4" type="video/mp4">
-                                    </video>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-1 fw-bold">01 Bulma y Vegueta</h6>
-                                <p class="text-muted small mb-0">Taza personalizada 11oz</p>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-light text-dark border px-3 py-2 fs-6">4</span>
-                            </td>
-                            <td class="text-secondary">$50.00</td>
-                            <td class="pe-4 text-end fw-bold text-success">$200.00</td>
-                        </tr>
+    @foreach (DataRow orden in ViewBag.Orden.Rows)
+    {
+        if ((int)orden[2] != ViewBag.IdUser) { continue; }
 
-                        <tr>
-                            <td class="ps-4">
-                                <div class="video-container rounded shadow-sm border">
-                                    <video autoplay loop muted playsinline>
-                                        <source src="/videos/taza_goku.mp4" type="video/mp4">
-                                    </video>
-                                </div>
-                            </td>
-                            <td>
-                                <h6 class="mb-1 fw-bold">02 Goku Ultra Instinto</h6>
-                                <p class="text-muted small mb-0">Taza Mágica</p>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-light text-dark border px-3 py-2 fs-6">2</span>
-                            </td>
-                            <td class="text-secondary">$60.00</td>
-                            <td class="pe-4 text-end fw-bold text-success">$120.00</td>
-                        </tr>
-                    </tbody>
-                    <tfoot class="table-light border-top">
-                        <tr>
-                            <td colspan="4" class="text-end py-3 fw-bold fs-5">Total pagado:</td>
-                            <td class="pe-4 text-end py-3 fw-bold fs-4 text-dark">$320.00</td>
-                        </tr>
-                    </tfoot>
-                </table>
+        // Extraer y formatear la fecha de orden[5]
+        DateTime fechaOrden = Convert.ToDateTime(orden[5]);
+
+        <div class="card card-order shadow-sm border-0 mb-5 overflow-hidden">
+            @* Header de la Orden *@
+            <div class="card-header bg-dark py-3 px-4 d-flex justify-content-between align-items-center">
+                <div class="text-white">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <span class="text-uppercase small opacity-75 d-block">ID Transacción</span>
+                            <span class="fw-bold fs-5">#@orden[1].ToString()</span>
+                        </div>
+                        <div class="ms-4 ps-4 border-start border-secondary">
+                            <span class="text-uppercase small opacity-75 d-block">Fecha de pedido</span>
+                            <span class="fw-bold">@fechaOrden.ToString("dd MMM, yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <span class="badge rounded-pill bg-warning text-dark fw-bold px-3 py-2">
+                        <i class="bi bi-clock-history me-1"></i> EN PREPARACIÓN
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light text-secondary small text-uppercase">
+                            <tr>
+                                <th class="ps-4 py-3">Producto</th>
+                                <th>Detalles</th>
+                                <th class="text-center">Cant.</th>
+                                <th>Precio</th>
+                                <th class="pe-4 text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow pedido in ViewBag.Items.Rows)
+                            {
+                                if (orden[1].ToString() != pedido[1].ToString()) { continue; }
+
+                                DataRow taza = null!;
+                                DataRow tamano = null!;
+
+                                foreach (DataRow t in ViewBag.Tazas.Rows)
+                                {
+                                    if ((int)t[0] == (int)pedido[2]) { taza = t; break; }
+                                }
+
+                                foreach (DataRow tt in ViewBag.TamanosTaza.Rows)
+                                {
+                                    if ((int)tt[0] == (int)pedido[3]) { tamano = tt; break; }
+                                }
+
+                                if (taza != null && tamano != null)
+                                {
+                                    double precioUnitario = Convert.ToDouble(tamano[2]);
+                                    int cantidad = Convert.ToInt32(pedido[5]);
+                                    double subtotalFila = precioUnitario * cantidad;
+
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="video-container rounded shadow-sm border me-3">
+                                                    <video autoplay loop muted playsinline>
+                                                        <source src="@Url.Content("~/" + taza[5].ToString())" type="video/mp4">
+                                                    </video>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold">@taza[1].ToString()</h6>
+                                                    <small class="text-muted">Ref: @taza[0].ToString()</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light border text-dark fw-normal">
+                                                @tamano[1].ToString()
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="fw-bold text-dark">@cantidad</span>
+                                        </td>
+                                        <td class="text-muted">$@precioUnitario.ToString("N2")</td>
+                                        <td class="pe-4 text-end fw-bold text-primary">
+                                            $@subtotalFila.ToString("N2")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot class="bg-light border-top">
+                            <tr>
+                                <td colspan="4" class="text-end py-4 fw-bold fs-5">Total Pagado:</td>
+                                <td class="pe-4 text-end py-4">
+                                    <span class="fw-bold fs-3 text-dark">$@Convert.ToDouble(orden[3]).ToString("N2")</span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-white py-3 px-4 border-top-0 d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-dark btn-sm rounded-pill">
+                    <i class="bi bi-file-earmark-pdf me-1"></i> Descargar Recibo
+                </button>
+                <small class="text-muted">Pedido realizado a las @fechaOrden.ToString("HH:mm")</small>
             </div>
         </div>
-    </div>
+    }
 </div>

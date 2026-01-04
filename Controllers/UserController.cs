@@ -23,6 +23,16 @@ namespace Tazuki.Controllers
             if (!Cookies())
                 return RedirectToAction("InicioSesion", "Home");
 
+            DataTable dt = Home_SQL.Mostrar_Pedido(Sesion.Id);
+            ViewBag.Orden = dt;
+            dt = Home_SQL.Mostrar_Tazas();
+            ViewBag.Tazas = dt;
+            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.TamanosTaza = dt;
+            DataTable dt_items = Home_SQL.Mostrar_Pedido_Items();
+            ViewBag.Items = dt_items;
+            ViewBag.IdUser = Sesion.Id;
+
             return View();
         }
 

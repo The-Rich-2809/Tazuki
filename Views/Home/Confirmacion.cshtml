@@ -1,7 +1,17 @@
+@using System.Data
 @section Head {
     <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
+@{
+    if (ViewBag.Activo == "1")
+    {
+        Layout = "_LayoutUsuario";
+    }
+}
+<head>
+    <title>@ViewData["Title"] Tazuky confirmación</title>
+</head>
 
 <main class="container my-5">
     <div class="row justify-content-center">
@@ -20,7 +30,7 @@
                     </p>
 
                     <div class="alert alert-secondary my-4">
-                        <strong>Número de pedido:</strong> #12345-ABC
+                        <strong>Número de pedido:</strong> #@ViewBag.Id_Pedido
                     </div>
 
                     <div class="card border-0 bg-light my-4">

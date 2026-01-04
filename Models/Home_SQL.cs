@@ -352,6 +352,151 @@ namespace Tazuki.Models
             }
         }
 
+        public static int Contar_Items_Carrito()
+        {
+            int total = 0;
+            // Consulta para contar cuántos items tiene un usuario específico
+            string sql = "SELECT COUNT(*) FROM carrito_items WHERE usuario_id = @id_user;";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            
+            try
+            {
+                conexionBD.Open();
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("@id_user", Sesion.Id);
+
+                // ExecuteScalar devuelve la primera columna de la primera fila (el resultado del COUNT)
+                total = Convert.ToInt32(comando.ExecuteScalar());
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al contar registros: " + ex.Message;
+            }
+            finally
+            {
+                // El bloque finally asegura que la conexión se cierre incluso si hay un error
+                if (conexionBD.State == System.Data.ConnectionState.Open)
+                {
+                    conexionBD.Close();
+                }
+            }
+
+            return total;
+        }
+
+        public static DataTable Mostrar_Pedido(int id_user)
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From pedidos WHERE usuario_id = @id_user";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("id_user", id_user);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+
+        public static DataTable Mostrar_Pedido_Items()
+        {
+            Datos.Mensaje = "";
+            DataTable dt = new DataTable();
+            string sql;
+
+            sql = "SELECT * From pedido_items";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                dt.Load(comando.ExecuteReader());
+                conexionBD.Close();
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al buscar " + ex.Message;
+                conexionBD.Close();
+            }
+            return dt;
+        }
+
+        public static bool Agregar_Pedido_Item(Pedido pedido)
+        {
+            Datos.Mensaje = "";
+
+            string sql = "INSERT INTO pedido_items (pedido_id, diseno_id, tamano_taza_id, precio, cantidad) VALUES (@id_pedido, @id_taza, @id_tamano, @precio, @cantidad);";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("id_pedido", pedido.Id_Pedido);
+                comando.Parameters.AddWithValue("id_taza", pedido.Id_Taza);
+                comando.Parameters.AddWithValue("id_tamano", pedido.Id_Tamano);
+                comando.Parameters.AddWithValue("precio", pedido.Precio);
+                comando.Parameters.AddWithValue("cantidad", pedido.Cantidad);
+
+                comando.ExecuteNonQuery();
+                conexionBD.Close();
+                return true;
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al insertar " + ex.Message;
+                conexionBD.Close();
+                return false;
+            }
+        }
+        public static bool Agregar_Pedido(string pedido, double precio)
+        {
+            Datos.Mensaje = "";
+
+            string sql = "INSERT INTO pedidos (folio_pedido, usuario_id, monto_total, estatus, fecha_pedido) VALUES (@folio_pedido, @usuario_id, @monto_total, @estatus, @fecha_pedido);";
+
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand comando = new MySqlCommand(sql, conexionBD);
+                comando.Parameters.AddWithValue("folio_pedido", pedido);
+                comando.Parameters.AddWithValue("usuario_id", Sesion.Id);
+                comando.Parameters.AddWithValue("monto_total", precio);
+                comando.Parameters.AddWithValue("estatus", "pendiente");
+                comando.Parameters.AddWithValue("fecha_pedido", DateTime.Now);
+                comando.ExecuteNonQuery();
+                conexionBD.Close();
+                return true;
+
+            }
+            catch (MySqlException ex)
+            {
+                Datos.Mensaje = "Error al insertar " + ex.Message;
+                conexionBD.Close();
+                return false;
+            }
+        }
+
+
         public static bool ComprobarCookie(string miCookie)
         {
             DataTable data = Mostrar_Users();
