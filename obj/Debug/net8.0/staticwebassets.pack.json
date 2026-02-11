@@ -1,26 +1,6 @@
 {
   "Files": [
     {
-      "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/MP4/01bulmayvegueta.mp4",
-      "PackagePath": "staticwebassets/MP4/01bulmayvegueta.mp4"
-    },
-    {
-      "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/MP4/01diasdelasmadres.mp4",
-      "PackagePath": "staticwebassets/MP4/01diasdelasmadres.mp4"
-    },
-    {
-      "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/MP4/01frezzergokuyvegueta.mp4",
-      "PackagePath": "staticwebassets/MP4/01frezzergokuyvegueta.mp4"
-    },
-    {
-      "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/MP4/01gatos.mp4",
-      "PackagePath": "staticwebassets/MP4/01gatos.mp4"
-    },
-    {
-      "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/MP4/01gokutransformaciones.mp4",
-      "PackagePath": "staticwebassets/MP4/01gokutransformaciones.mp4"
-    },
-    {
       "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
@@ -283,6 +263,10 @@
     {
       "Id": "/home/rich/Documentos/GitHub/Tazuki/wwwroot/lib/jquery/dist/jquery.min.map",
       "PackagePath": "staticwebassets/lib/jquery/dist/jquery.min.map"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Tazuki.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Tazuki.Microsoft.AspNetCore.StaticWebAssets.props",

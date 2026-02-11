@@ -104,4 +104,7 @@ C:/Users/ricar/Documents/GitHub/Tazuki/obj/Debug/net8.0/ref/Tazuki.dll
 /home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Tazuki.props
 /home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Tazuki.props
 /home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/staticwebassets.pack.json
-/home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/Tazuki.csproj.CopyComplete
+/home/rich/Documentos/GitHub/Tazuki/bin/Debug/net8.0/Tazuki.staticwebassets.endpoints.json
+/home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/staticwebassets/msbuild.Tazuki.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+/home/rich/Documentos/GitHub/Tazuki/obj/Debug/net8.0/Tazuki.csproj.Up2Date

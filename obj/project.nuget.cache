@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "uATa0I1HwrdSzMJLkAbMJ0e/zGVc3xYSTMR34ahg8CzExxW9MIsmQ3orkmWI06+j0o/RujkVYs7VT8ywFin47g==",
+  "dgSpecHash": "BeXtOvhdErQ=",
   "success": true,
   "projectFilePath": "/home/rich/Documentos/GitHub/Tazuki/Tazuki.csproj",
   "expectedPackageFiles": [
@@ -33,7 +33,8 @@
     "/home/rich/.nuget/packages/system.threading.tasks.extensions/4.5.4/system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "/home/rich/.nuget/packages/system.windows.extensions/8.0.0/system.windows.extensions.8.0.0.nupkg.sha512",
     "/home/rich/.nuget/packages/zstdsharp.port/0.8.5/zstdsharp.port.0.8.5.nupkg.sha512",
-    "/home/rich/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512"
+    "/home/rich/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "/home/rich/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.22/microsoft.netcore.app.host.linux-x64.8.0.22.nupkg.sha512"
   ],
   "logs": []
 }
