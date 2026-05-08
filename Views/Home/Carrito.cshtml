@@ -14,20 +14,94 @@
 @section Head {
     <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
 }
-<head>
-    <title>@ViewData["Title"] Tazuky Carrito </title>
-</head>
-
 <style>
     .product-image {
         width: 100px;
         height: 100px;
         object-fit: cover;
         border-radius: 0.375rem;
+        flex-shrink: 0;
     }
-    
+
     .quantity-input {
         width: 70px;
+    }
+
+    /* ── Mobile: transform table into cards ── */
+    @@media (max-width: 767.98px) {
+        /* Hide the header row */
+        .table thead { display: none; }
+
+        /* Table and tbody become block containers */
+        .table, .table > tbody { display: block; width: 100%; }
+
+        /* Each row becomes a card */
+        .cart-item-row {
+            display: flex !important;
+            flex-wrap: wrap;
+            border: 1px solid var(--border, #e4e9f2) !important;
+            border-radius: .75rem;
+            margin-bottom: .75rem;
+            padding: .75rem;
+            background: var(--bg-card, #fff);
+        }
+
+        /* Product cell: full width, with separator below */
+        .cart-item-row > td:first-child {
+            width: 100%;
+            padding: 0 0 .75rem 0 !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border, #e4e9f2) !important;
+            margin-bottom: .6rem;
+        }
+
+        /* All other cells: inline, no border */
+        .cart-item-row > td:not(:first-child) {
+            display: flex !important;
+            align-items: center;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        /* Quantity cell: takes available space */
+        .cart-item-row > td:nth-child(2) {
+            flex: 1;
+        }
+
+        /* Unit price: muted, small */
+        .cart-item-row > td:nth-child(3) {
+            color: var(--text-muted, #8896aa);
+            font-size: .82rem;
+            margin-right: .5rem;
+        }
+
+        /* Item total: bold, pushed to right */
+        .cart-item-row > td:nth-child(4) {
+            font-weight: 700;
+            font-size: .95rem;
+            margin-right: .5rem;
+        }
+
+        /* Delete button: no extra margin needed */
+        .cart-item-row > td:nth-child(5) {
+            flex-shrink: 0;
+        }
+
+        /* Smaller thumbnail on mobile */
+        .product-image {
+            width: 72px;
+            height: 72px;
+        }
+
+        /* Quantity input narrower */
+        .quantity-input {
+            width: 60px;
+        }
+
+        /* Summary card: full width and compact */
+        #order-summary-card .card {
+            border-radius: .75rem;
+        }
     }
 </style>
 
