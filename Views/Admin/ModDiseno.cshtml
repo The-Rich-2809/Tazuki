@@ -1,315 +1,137 @@
-﻿@{
+@using System.Data
+@{
     Layout = "_LayoutAdmin";
 }
-@using System.Data;
 
-<!-- Google Fonts and modern CSS -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+@if (TempData["Message"] != null)
+{
+    <div class="alert @(TempData["Message"]!.ToString()!.StartsWith("Error") ? "alert-danger" : "alert-success") alert-dismissible fade show mb-4" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
-<style>
-    /* Variables for colors and fonts */
-    :root {
-        --primary-color: #4B92DB;
-        --primary-hover-color: #3a7cc0;
-        --background-color: #f0f2f5;
-        --container-bg-color: #ffffff;
-        --text-color: #495057;
-        --label-color: #333;
-        --border-color: #dee2e6;
-        --font-family: 'Poppins', sans-serif;
-    }
-
-    /* General styles */
-    body {
-        background-color: var(--background-color);
-        font-family: var(--font-family);
-        color: var(--text-color);
-    }
-
-    /* Main container */
-    .container {
-        max-width: 800px;
-        margin-top: 50px;
-        margin-bottom: 50px;
-        background-color: var(--container-bg-color);
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Titles */
-    h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    /* Form labels */
-    .form-label {
-        font-weight: 600;
-        color: var(--label-color);
-        margin-bottom: 8px;
-    }
-
-    /* Form controls */
-    .form-control,
-    .form-select {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 12px 15px;
-        font-size: 1rem;
-        width: 100%;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(75, 146, 219, 0.25);
-        outline: none;
-    }
-
-    textarea.form-control {
-        resize: vertical;
-        min-height: 120px;
-    }
-
-    /* Submit button */
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 8px;
-        margin-top: 20px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        width: 100%;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--primary-hover-color);
-        transform: translateY(-2px);
-    }
-
-    /* Checkbox group */
-    .checkbox-group {
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 15px;
-        margin-top: 10px;
-    }
-
-    .custom-control.custom-checkbox {
-        padding: 8px 10px;
-        border-radius: 5px;
-        transition: background-color 0.2s;
-    }
-
-    .custom-control.custom-checkbox:hover {
-        background-color: #f8f9fa;
-    }
-
-    /* Pagination */
-    #pagination {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    #pagination .btn {
-        margin: 0 4px;
-        font-size: 0.9rem;
-        border-radius: 5px;
-    }
-
-    #pagination .btn.active {
-        background-color: var(--primary-color);
-        color: white;
-        border-color: var(--primary-color);
-    }
-
-    /* Search input */
-    #search {
-        margin-bottom: 15px;
-    }
-
-    /* Video player */
-    .video-preview {
-        width: 100%;
-        border-radius: 8px;
-        margin-top: 10px;
-    }
-
-    /* Spacing */
-    .mb-4 {
-        margin-bottom: 1.5rem !important;
-    }
-</style>
-
-<div class="container">
-    <h1>Modificar Diseño</h1>
-
-    @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
-    {
-        <div class="alert alert-danger" role="alert">
-            @ViewBag.ErrorMessage
-        </div>
-    }
-
-    <form asp-controller="Admin" asp-action="ModDiseno" method="post" enctype="multipart/form-data">
-
-        <div class="mb-4">
-            <label for="nombre" class="form-label">Nombre del Diseño</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" value="@ViewBag.Taza[1]" placeholder="Ej: Taza de Gato" required>
-        </div>
-
-        <div class="mb-4">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Añade una descripción detallada del diseño" required>@ViewBag.Taza[4]</textarea>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" value="@ViewBag.Taza[2]" placeholder="Ej: 150.00" step="0.01" required>
-            </div>
-            <div class="col-md-6 mb-4">
-                <label for="tipoTaza" class="form-label">Tamaño de taza</label>
-                <select class="form-select" id="tipoTaza" name="tipoTaza" required>
-                    <option disabled value="">Elige un tamaño...</option>
-                    @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
-                    {
-                        if (ViewBag.Taza[3] == Convert.ToInt32(row_tamano[0]))
-                        {
-                            <option selected value="@row_tamano[0]">@row_tamano[1]</option>
-                        }
-                        else
-                        {
-                            <option value="@row_tamano[0]">@row_tamano[1]</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label for="search" class="form-label">Categorías del Diseño</label>
-            <input type="text" id="search" class="form-control" placeholder="Buscar categorías...">
-            
-            <div id="opciones" class="checkbox-group mt-2">
-                @{ int tagCounter = 0; }
-                @foreach (DataRow row_tag in ViewBag.Tags.Rows)
-                {
-                    bool isChecked = false;
-                    foreach (DataRow row_tt in ViewBag.TT.Rows)
-                    {
-                        if (row_tt[1].ToString() == row_tag[0].ToString())
-                        {
-                            isChecked = true;
-                            break;
-                        }
-                    }
-                    <div class="custom-control custom-checkbox">
-                        <input name="tags" type="checkbox" class="custom-control-input" id="tag-@tagCounter" value="@row_tag[0]" @(isChecked ? "checked" : "")>
-                        <label class="custom-control-label" for="tag-@tagCounter">@row_tag[1]</label>
-                    </div>
-                    tagCounter++;
-                }
-            </div>
-            <div id="pagination" class="btn-toolbar justify-content-center mt-2" role="toolbar">
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label for="formFileMultiple" class="form-label">Video del Diseño</label>
-            <input class="form-control" type="file" name="archivo" id="formFileMultiple" accept="video/*" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label">Vista Previa del Video</label>
-            <video class="video-preview" autoplay muted loop playsinline controls preload="metadata">
-                <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
-                Tu navegador no soporta video HTML5.
-            </video>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-
-    </form>
+<div class="adm-page-header">
+    <h1><i class="bi bi-pencil-square me-2"></i>Editar Diseño</h1>
+    <a asp-controller="Admin" asp-action="ListaDisenos" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Volver a la lista
+    </a>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+@if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+{
+    <div class="alert alert-danger mb-4">@ViewBag.ErrorMessage</div>
+}
+
+<div class="card">
+    <div class="card-body p-4">
+        <form asp-controller="Admin" asp-action="ModDiseno" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="Id" value="@ViewBag.Taza[0]" />
+
+            <!-- Modelo -->
+            <div class="mb-4">
+                <label class="form-label">
+                    Modelo
+                    <small class="text-muted fw-normal">(identificador único, ej. 00005)</small>
+                </label>
+                <input type="text" class="form-control" name="modelo"
+                       value="@ViewBag.Taza[8]" placeholder="Ej. 00005">
+            </div>
+
+            <!-- Nombre -->
+            <div class="mb-4">
+                <label class="form-label">Nombre del Diseño</label>
+                <input type="text" class="form-control" name="nombre"
+                       value="@ViewBag.Taza[1]" placeholder="Nombre del diseño" required>
+            </div>
+
+            <!-- Etiquetas existentes -->
+            <div class="mb-4">
+                <label class="form-label">Etiquetas</label>
+                <input type="text" id="buscarTag" class="form-control mb-2" placeholder="Filtrar etiquetas…">
+                <div id="contenedorTags" class="border rounded p-3" style="max-height:220px;overflow-y:auto;">
+                    @{ int tc = 0; }
+                    @foreach (DataRow tag in ViewBag.Tags.Rows)
+                    {
+                        bool marcado = false;
+                        foreach (DataRow tt in ViewBag.TT.Rows)
+                        {
+                            if (tt[1].ToString() == tag[0].ToString())
+                            { marcado = true; break; }
+                        }
+                        <div class="form-check tag-opcion">
+                            <input class="form-check-input" type="checkbox" name="tags"
+                                   id="tag-@tc" value="@tag[0]" @(marcado ? "checked" : "")>
+                            <label class="form-check-label tag-label" for="tag-@tc">@tag[1]</label>
+                        </div>
+                        tc++;
+                    }
+                </div>
+            </div>
+
+            <!-- Nuevas etiquetas -->
+            <div class="mb-4">
+                <label class="form-label">
+                    Agregar nuevas etiquetas
+                    <small class="text-muted fw-normal">(separadas por coma — se crean si no existen)</small>
+                </label>
+                <input type="text" class="form-control" name="nuevosTags"
+                       placeholder="Ej: navidad, animales, abstracto">
+            </div>
+
+            <!-- Video actual -->
+            <div class="mb-3">
+                <label class="form-label">Video actual</label>
+                <video class="w-100 rounded" style="max-height:260px;background:#000"
+                       autoplay muted loop playsinline controls preload="metadata">
+                    <source src="~/@ViewBag.Taza[5]" type="video/mp4" />
+                    Tu navegador no soporta video HTML5.
+                </video>
+            </div>
+
+            <!-- Reemplazar video -->
+            <div class="mb-4">
+                <label class="form-label">
+                    Reemplazar video
+                    <small class="text-muted fw-normal">(opcional — deja vacío para conservar el actual)</small>
+                </label>
+                <input class="form-control" type="file" name="archivo" id="nuevoVideo" accept="video/*">
+                <video id="prevNuevoVideo" class="w-100 rounded mt-2 d-none"
+                       style="max-height:220px;background:#000"
+                       autoplay muted loop playsinline controls></video>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>Guardar Cambios
+                </button>
+                <a asp-controller="Admin" asp-action="ListaDisenos" class="btn btn-outline-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const itemsPerPage = 10;
-        let currentPage = 1;
-        const optionsContainer = document.getElementById('opciones');
-        const allOptions = Array.from(optionsContainer.querySelectorAll('.custom-control.custom-checkbox'));
-        const paginationContainer = document.getElementById("pagination");
-        const searchInput = document.getElementById("search");
-
-        function showOptions(page, query = "") {
-            const lowerCaseQuery = query.toLowerCase();
-            
-            const filteredOptions = allOptions.filter(option => {
-                const label = option.querySelector('.custom-control-label');
-                return label && label.textContent.toLowerCase().includes(lowerCaseQuery);
-            });
-
-            allOptions.forEach(option => option.style.display = 'none');
-
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const paginatedOptions = filteredOptions.slice(start, end);
-
-            paginatedOptions.forEach(option => option.style.display = 'block');
-
-            updatePagination(filteredOptions.length, page);
-        }
-
-        function updatePagination(totalItems, page) {
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            paginationContainer.innerHTML = "";
-
-            if (totalPages <= 1) return;
-
-            const group = document.createElement("div");
-            group.classList.add("btn-group");
-
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.classList.add("btn", "btn-outline-secondary");
-                btn.textContent = i;
-                
-                btn.addEventListener('click', () => {
-                    currentPage = i;
-                    showOptions(currentPage, searchInput.value);
-                });
-
-                if (i === page) {
-                    btn.classList.add("active");
-                }
-                group.appendChild(btn);
-            }
-            paginationContainer.appendChild(group);
-        }
-
-        searchInput.addEventListener("input", function() {
-            currentPage = 1;
-            showOptions(currentPage, this.value);
+    // Filtro de etiquetas
+    document.getElementById('buscarTag').addEventListener('input', function () {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.tag-opcion').forEach(op => {
+            const label = op.querySelector('.tag-label')?.textContent.toLowerCase() ?? '';
+            op.style.display = label.includes(q) ? '' : 'none';
         });
+    });
 
-        // Initial load
-        showOptions(currentPage);
+    // Preview del nuevo video antes de guardar
+    document.getElementById('nuevoVideo').addEventListener('change', function () {
+        const prev = document.getElementById('prevNuevoVideo');
+        if (this.files && this.files[0]) {
+            prev.src = URL.createObjectURL(this.files[0]);
+            prev.classList.remove('d-none');
+        } else {
+            prev.src = '';
+            prev.classList.add('d-none');
+        }
     });
 </script>

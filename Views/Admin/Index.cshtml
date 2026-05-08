@@ -83,12 +83,16 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4 video-item">
                     <div class="video-card">
-                        <video poster="https://via.placeholder.com/400x225.png?text=Video" playsinline autoplay muted loop>
+                        <video playsinline muted loop preload="none">
                             <source src="@row_video[5]" type="video/mp4">
                             Tu navegador no soporta la etiqueta de video.
                         </video>
                         <div class="video-card-body">
-                            <h5 class="video-title mt-3">@row_video[1]</h5>
+                            @if (!string.IsNullOrWhiteSpace(row_video[8]?.ToString()))
+                            {
+                                <span class="badge bg-secondary mt-2 d-inline-block">Modelo: @row_video[8]</span>
+                            }
+                            <h5 class="video-title mt-1">@row_video[1]</h5>
                             @foreach (DataRow row_tamano in ViewBag.Tamano.Rows)
                             {
                                 if (row_tamano[0].ToString() == row_video[3].ToString())
@@ -117,8 +121,8 @@
                         </div>
                         <div class="actions mt-3 d-flex justify-content-between">
                             <div>
-                                @* <a href="@Url.Action("ModDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-primary">Editar</a> *@
-                                <a href="@Url.Action("EliminarDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="@Url.Action("ModDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="@Url.Action("EliminarDiseno", "Admin", new { Id = row_video[0] })" class="btn btn-sm btn-danger ms-1">Eliminar</a>
                             </div>
                             <div>
                                 <button class="btn btn-sm @(row_video[7].ToString() == "True" ? "btn-warning" : "btn-success") toggle-status-btn"
@@ -246,6 +250,7 @@
                         currentPage = page;
                         displayVideos();
                         setupPagination();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
                 }
             });
@@ -321,6 +326,21 @@
                 });
             });
             // --- FIN: SCRIPT ORIGINAL ---
+
+            // Lazy loading: carga y reproduce solo cuando entra al viewport
+            const lazyVideoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        if (video.readyState === 0) video.load();
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { rootMargin: '200px 0px', threshold: 0.1 });
+
+            document.querySelectorAll('#video-gallery video').forEach(v => lazyVideoObserver.observe(v));
         });
     </script>
 </body>

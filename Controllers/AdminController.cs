@@ -242,6 +242,23 @@ namespace Tazuki.Controllers
                     .Replace(".m4v", "", StringComparison.OrdinalIgnoreCase)
                     .Replace(".webm", "", StringComparison.OrdinalIgnoreCase);
 
+            // El primer segmento del nombre se guarda como modelo (ej. "00005")
+            string modelo = "";
+            if (frasesEnLista.Count > 1)
+            {
+                modelo = frasesEnLista[0].Trim();
+                frasesEnLista.RemoveAt(0);
+            }
+            Datos.Modelo = modelo;
+
+            // Validar que el modelo no exista ya en la BD
+            if (!string.IsNullOrWhiteSpace(modelo) && Admin_SQL.Existe_Modelo(modelo))
+            {
+                try { System.IO.File.Delete(tempPath); } catch { }
+                ViewBag.ErrorMessage = $"El modelo '{modelo}' ya existe. No se puede subir este diseño.";
+                return PartialView("_AlertaDiseno");
+            }
+
             List<string[]> tags = Admin_SQL.Buscar_TagsList(frasesEnLista);
 
             var nombresQueYaExisten = new HashSet<string>(tags.Select(dato => dato[1]));
@@ -267,6 +284,7 @@ namespace Tazuki.Controllers
             // Pasa token/ext (ideal: como hidden inputs; si sigues usando Datos.*, al menos setéalos una vez)
             ViewBag.MensajeConfirmacion = $"¿Estás seguro de agregar el diseño: {Datos.Nombre}?";
             ViewBag.Tags = tags;
+            ViewBag.Modelo = modelo;
             ViewBag.UploadToken = uploadToken;
             ViewBag.UploadExt = extension;
 
@@ -359,23 +377,40 @@ namespace Tazuki.Controllers
 
 
         [HttpGet]
+        public IActionResult ListaDisenos()
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            DataTable dt = Admin_SQL.Mostrar_Tazas();
+            ViewBag.Videos = dt;
+            dt = Admin_SQL.Mostrar_Tags();
+            ViewBag.Tags = dt;
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags();
+            ViewBag.Taza_Tags = TT;
+            dt = Admin_SQL.Mostrar_Tamanos_Tazas();
+            ViewBag.Tamano = dt;
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult ModDiseno(string Id)
         {
             if (!Cookies())
                 return RedirectToAction("ErrorUsuario", "Home");
-                
+
             ViewBag.ErrorMessage = Datos.Mensaje;
 
-            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas(); //Mostrar diseños de tazas
-            DataTable dt_Tags = Admin_SQL.Mostrar_Tags(); //Mostrar los tags (etiquetas)
+            DataTable dt_Tazas = Admin_SQL.Mostrar_Tazas();
+            DataTable dt_Tags = Admin_SQL.Mostrar_Tags();
             ViewBag.Tags = dt_Tags;
-            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas(); //Mostrar los tamaños de tazas
+            DataTable dt_Tamanos = Admin_SQL.Mostrar_Tamanos_Tazas();
             ViewBag.Tamano = dt_Tamanos;
 
-            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id); //Mostrar Tabla intermedia Tags y Diseños
+            DataTable TT = Admin_SQL.Mostrar_Tazas_Tags_Id(Id);
             ViewBag.TT = TT;
 
-            foreach (DataRow row_taza in dt_Tazas.Rows) //Permite buscar los datos del diseño
+            foreach (DataRow row_taza in dt_Tazas.Rows)
             {
                 if (row_taza[0].ToString() == Id)
                 {
@@ -388,12 +423,125 @@ namespace Tazuki.Controllers
         }
 
         [HttpPost]
-        public IActionResult ModDiseno(int Id)
+        public async Task<IActionResult> ModDiseno(int Id, string nombre, string modelo, string[] tags, string nuevosTags, IFormFile? archivo)
         {
             if (!Cookies())
                 return RedirectToAction("ErrorUsuario", "Home");
-                
-            return RedirectToAction("Index", "Admin");
+
+            // Validar que el modelo no lo tenga otro diseño distinto
+            if (!string.IsNullOrWhiteSpace(modelo) && Admin_SQL.Existe_Modelo(modelo, Id))
+            {
+                TempData["Message"] = $"Error: El modelo '{modelo}' ya pertenece a otro diseño.";
+                return RedirectToAction("ModDiseno", "Admin", new { Id });
+            }
+
+            Datos.Id = Id;
+            Datos.Nombre = nombre;
+            Datos.Modelo = modelo;
+            Admin_SQL.Mod_Diseno();
+
+            // Actualizar etiquetas: limpiar relaciones y re-agregar las seleccionadas
+            Admin_SQL.Eliminar_Diseno_Tags();
+
+            foreach (var tagId in tags ?? Array.Empty<string>())
+                if (!string.IsNullOrWhiteSpace(tagId))
+                    Admin_SQL.Agregar_Diseno_Tags(tagId);
+
+            // Nuevas etiquetas escritas en el campo de texto (separadas por coma)
+            if (!string.IsNullOrWhiteSpace(nuevosTags))
+            {
+                var tagNames = nuevosTags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var tagNombre in tagNames)
+                {
+                    // Buscar si ya existe; si no existe crearla (nunca eliminar la etiqueta original)
+                    DataTable existingTag = Admin_SQL.Buscar_Tags(tagNombre);
+                    string tagId;
+                    if (existingTag.Rows.Count > 0)
+                        tagId = existingTag.Rows[0][0].ToString()!;
+                    else
+                    {
+                        Datos.Nombre = tagNombre;
+                        tagId = Admin_SQL.Agregar_Tags().ToString();
+                    }
+                    Admin_SQL.Agregar_Diseno_Tags(tagId);
+                }
+            }
+
+            // Actualizar video si se proporcionó uno nuevo
+            if (archivo != null && archivo.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
+
+                var extension = Path.GetExtension(archivo.FileName);
+                var allowedExt = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                    { ".mp4", ".mov", ".m4v", ".webm" };
+
+                if (!allowedExt.Contains(extension) ||
+                    archivo.ContentType?.StartsWith("video/", StringComparison.OrdinalIgnoreCase) != true)
+                {
+                    TempData["Message"] = "Error: El archivo seleccionado no es un video válido.";
+                    return RedirectToAction("ListaDisenos", "Admin");
+                }
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                // Obtener ruta actual del diseño
+                DataTable dt = Admin_SQL.Mostrar_Tazas();
+                string oldRuta = "";
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0].ToString() == Id.ToString())
+                    { oldRuta = row[5].ToString() ?? ""; break; }
+                }
+
+                static string Slugify(string s)
+                {
+                    var normalized = s.Normalize(NormalizationForm.FormD);
+                    var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
+                    var clean = new string(chars.ToArray());
+                    clean = Regex.Replace(clean, @"[^a-zA-Z0-9\s\-_]+", "");
+                    clean = Regex.Replace(clean, @"\s{2,}", " ").Trim();
+                    if (string.IsNullOrEmpty(clean)) clean = "diseno";
+                    return clean.Length > 50 ? clean[..50] : clean;
+                }
+
+                var safeName = Slugify(nombre).ToLowerInvariant();
+                var newFileName = $"{safeName}{extension}";
+                var newFilePath = Path.Combine(uploadsFolder, newFileName);
+                var oldFilePath = string.IsNullOrWhiteSpace(oldRuta)
+                    ? "" : Path.Combine(_webHostEnvironment.WebRootPath, oldRuta);
+
+                bool isSameFile = newFilePath.Equals(oldFilePath, StringComparison.OrdinalIgnoreCase);
+
+                if (!isSameFile && System.IO.File.Exists(newFilePath))
+                {
+                    TempData["Message"] = $"Error: Ya existe un archivo llamado '{newFileName}'.";
+                    return RedirectToAction("ListaDisenos", "Admin");
+                }
+
+                try
+                {
+                    var mode = isSameFile ? FileMode.Create : FileMode.CreateNew;
+                    await using var stream = new FileStream(newFilePath, mode, FileAccess.Write, FileShare.None);
+                    await archivo.CopyToAsync(stream);
+                }
+                catch (Exception ex)
+                {
+                    TempData["Message"] = $"Error al guardar el archivo: {ex.Message}";
+                    return RedirectToAction("ListaDisenos", "Admin");
+                }
+
+                if (!isSameFile && !string.IsNullOrWhiteSpace(oldFilePath) && System.IO.File.Exists(oldFilePath))
+                    try { System.IO.File.Delete(oldFilePath); } catch { }
+
+                Datos.Id = Id;
+                Datos.rutaDiseno = $"MP4/{newFileName}";
+                Admin_SQL.Mod_Diseno_Video();
+            }
+
+            TempData["Message"] = "Diseño actualizado correctamente.";
+            return RedirectToAction("ListaDisenos", "Admin");
         }
         [HttpGet]
         public IActionResult EliminarDiseno(string Id)

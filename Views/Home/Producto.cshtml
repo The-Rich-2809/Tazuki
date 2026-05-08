@@ -191,6 +191,10 @@
                     }
 
                     <input name="Id_Tamano" type="hidden" id="product-id" value="@initialId" />
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.Taza[8]?.ToString()))
+                    {
+                        <span class="badge bg-secondary mb-2 d-inline-block">Modelo: @ViewBag.Taza[8]</span>
+                    }
                     <h1 class="product-title mb-2">@ViewBag.Taza[1]</h1>
 
                     <div class="mb-3">

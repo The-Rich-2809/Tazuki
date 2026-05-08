@@ -240,9 +240,9 @@ namespace Tazuki.Models
         public static bool Agregar_Diseno()
         {
             Datos.Mensaje = "";
-            string sql = @"INSERT INTO disenos 
-                   (nombre, precio, tamano_taza_id, ruta_diseno, fecha_creacion, publicado) 
-                   VALUES (@nombre, @precio, @tamano_taza_id, @ruta_diseno, @fecha_creacion, @publicado);";
+            string sql = @"INSERT INTO disenos
+                   (nombre, modelo, precio, tamano_taza_id, ruta_diseno, fecha_creacion, publicado)
+                   VALUES (@nombre, @modelo, @precio, @tamano_taza_id, @ruta_diseno, @fecha_creacion, @publicado);";
 
             using (MySqlConnection conexionBD = Conexion.conexion())
             {
@@ -253,6 +253,7 @@ namespace Tazuki.Models
                     using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
                     {
                         comando.Parameters.AddWithValue("@nombre", Datos.Nombre);
+                        comando.Parameters.AddWithValue("@modelo", string.IsNullOrWhiteSpace(Datos.Modelo) ? (object)DBNull.Value : Datos.Modelo);
                         comando.Parameters.AddWithValue("@precio", Datos.precio);
                         comando.Parameters.AddWithValue("@tamano_taza_id", Datos.tamanoTaza);
                         comando.Parameters.AddWithValue("@ruta_diseno", Datos.rutaDiseno);
@@ -601,7 +602,84 @@ namespace Tazuki.Models
             }
             return dt;
         }
-        
+        public static bool Existe_Modelo(string modelo, int excludeId = 0)
+        {
+            Datos.Mensaje = "";
+            string sql = excludeId > 0
+                ? "SELECT COUNT(*) FROM disenos WHERE modelo = @modelo AND id != @id"
+                : "SELECT COUNT(*) FROM disenos WHERE modelo = @modelo";
+
+            using (MySqlConnection conexionBD = Conexion.conexion())
+            {
+                try
+                {
+                    conexionBD.Open();
+                    using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
+                    {
+                        comando.Parameters.AddWithValue("@modelo", modelo);
+                        if (excludeId > 0)
+                            comando.Parameters.AddWithValue("@id", excludeId);
+                        return Convert.ToInt32(comando.ExecuteScalar()) > 0;
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Datos.Mensaje = "Error al verificar modelo: " + ex.Message;
+                    return false;
+                }
+            }
+        }
+
+        public static bool Mod_Diseno()
+        {
+            Datos.Mensaje = "";
+            string sql = "UPDATE disenos SET nombre = @nombre, modelo = @modelo WHERE id = @id;";
+            using (MySqlConnection conexionBD = Conexion.conexion())
+            {
+                conexionBD.Open();
+                try
+                {
+                    using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
+                    {
+                        comando.Parameters.AddWithValue("@nombre", Datos.Nombre);
+                        comando.Parameters.AddWithValue("@modelo", string.IsNullOrWhiteSpace(Datos.Modelo) ? (object)DBNull.Value : Datos.Modelo);
+                        comando.Parameters.AddWithValue("@id", Datos.Id);
+                        comando.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Datos.Mensaje = "Error al actualizar diseño: " + ex.Message;
+                    return false;
+                }
+            }
+        }
+
+        public static bool Mod_Diseno_Video()
+        {
+            Datos.Mensaje = "";
+            string sql = "UPDATE disenos SET ruta_diseno = @ruta_diseno WHERE id = @id;";
+            using (MySqlConnection conexionBD = Conexion.conexion())
+            {
+                conexionBD.Open();
+                try
+                {
+                    using (MySqlCommand comando = new MySqlCommand(sql, conexionBD))
+                    {
+                        comando.Parameters.AddWithValue("@ruta_diseno", Datos.rutaDiseno);
+                        comando.Parameters.AddWithValue("@id", Datos.Id);
+                        comando.ExecuteNonQuery();
+                        return true;
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Datos.Mensaje = "Error al actualizar video: " + ex.Message;
+                    return false;
+                }
+            }
+        }
 
     }
 }

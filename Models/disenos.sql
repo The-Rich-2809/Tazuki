@@ -53,10 +53,11 @@ CREATE TABLE disenos (
   ruta_diseno VARCHAR(512) NULL,
   fecha_creacion DATE NOT NULL,
   publicado BOOLEAN NOT NULL DEFAULT FALSE,
+  modelo VARCHAR(50) NULL,
   PRIMARY KEY (id),
   UNIQUE INDEX ruta_diseno_UNIQUE (ruta_diseno ASC),
   CONSTRAINT fk_disenos_tamanos_taza
-    FOREIGN KEY (tamano_taza_defecto_id)
+    FOREIGN KEY (tamano_taza_id)
     REFERENCES tamanos_taza (id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE
@@ -144,7 +145,7 @@ CREATE TABLE pedidos (
 -- -----------------------------------------------------
 CREATE TABLE pedido_items (
   id INT NOT NULL AUTO_INCREMENT,
-  pedido_id VARCHAR(100) NOT NULL,
+  pedido_id INT NOT NULL,
   diseno_id INT NOT NULL,
   tamano_taza_id INT NOT NULL,
   precio DECIMAL(10, 2) NOT NULL, -- Precio al que se vendió en ese momento

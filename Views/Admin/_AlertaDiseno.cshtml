@@ -1,20 +1,10 @@
 @{
-    // --- ESTA PARTE SE MANTIENE IGUAL ---
     var mensaje = ViewBag.MensajeConfirmacion as string;
     var nombre = ViewBag.Nombre as string;
-    var tags = ViewBag.Tags as string[,]; // Esta variable ya no la usaremos en la tabla
     var error = ViewBag.ErrorMessage as string;
-
-    // --- ¡AÑADIR ESTO! ---
-    // Recuperamos el Token y la Extensión para pasarlos al siguiente formulario
     var uploadToken = ViewBag.UploadToken as string;
     var uploadExt = ViewBag.UploadExt as string;
-
-    // Tamaño y precio (Tu lógica original)
-    var tamanoNombre = ViewBag.TamanoNombre as string; 
-    object precioObj = ViewBag.Precio;
-    
-    // (Tu lógica de formateo de precio está bien)
+    var modelo = ViewBag.Modelo as string;
 }
 @* La declaración del modelo es correcta para recibir una List<string[]> *@
 @model List<string[]>
@@ -29,9 +19,13 @@ else
         @* --- ESTA PARTE SE MANTIENE IGUAL --- *@
         <h3 class="fw-semibold text-primary mb-3">@mensaje</h3>
         <div class="row text-start g-2">
+            @if (!string.IsNullOrWhiteSpace(modelo))
+            {
+                <div class="col-12"><strong>Modelo:</strong> <span class="badge bg-secondary ms-1">@modelo</span></div>
+            }
             <div class="col-12"><strong>Nombre del diseño:</strong> @(!string.IsNullOrWhiteSpace(nombre) ? nombre : "—")</div>
-            <div class="col-12 col-md-6"><strong>Tamaño de taza: Taza de 11oz </strong> </div>
-            <div class="col-12 col-md-6"><strong>Precio: $50.00</strong> </div>
+            <div class="col-12 col-md-6"><strong>Tamaño de taza:</strong> Taza de 11oz</div>
+            <div class="col-12 col-md-6"><strong>Precio:</strong> $50.00</div>
         </div>
 
         @* --- ESTA SECCIÓN ESTÁ PERFECTA --- *@

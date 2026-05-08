@@ -432,6 +432,16 @@
 
             <ul class="adm-links">
                 <li>
+                    <a class="@(act=="Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">
+                        <i class="bi bi-play-circle"></i>Galería
+                    </a>
+                </li>
+                <li>
+                    <a class="@(act=="ListaDisenos" ? "active" : "")" asp-controller="Admin" asp-action="ListaDisenos">
+                        <i class="bi bi-table"></i>Diseños
+                    </a>
+                </li>
+                <li>
                     <a class="@(act=="AgregarDiseno" ? "active" : "")" asp-controller="Admin" asp-action="AgregarDiseno">
                         <i class="bi bi-plus-circle"></i>Agregar
                     </a>
@@ -477,6 +487,12 @@
 
     <!-- Mobile drawer -->
     <nav class="adm-drawer" id="mobileDrawer">
+        <a class="@(act=="Index" ? "active" : "")" asp-controller="Admin" asp-action="Index">
+            <i class="bi bi-play-circle"></i>Galería
+        </a>
+        <a class="@(act=="ListaDisenos" ? "active" : "")" asp-controller="Admin" asp-action="ListaDisenos">
+            <i class="bi bi-table"></i>Diseños (tabla)
+        </a>
         <a class="@(act=="AgregarDiseno" ? "active" : "")" asp-controller="Admin" asp-action="AgregarDiseno">
             <i class="bi bi-plus-circle"></i>Agregar Diseño
         </a>

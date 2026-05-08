@@ -176,14 +176,12 @@ namespace Tazuki.Controllers
 
                                     itemsViewModel.Add(new CartItemViewModel
                                     {
-                                        // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-                                        // Usamos tazas[0] como nos indicaste.
                                         ProductId = Convert.ToInt32(tazas[0]),
-                                        // ----------------------------------
                                         SizeId = Convert.ToInt32(carrito[2]),
                                         NombreProducto = tazas[1].ToString(),
                                         NombreTamano = tamanos[1].ToString(),
                                         RutaVideo = tazas["ruta_diseno"].ToString(),
+                                        Modelo = tazas["modelo"]?.ToString() ?? "",
                                         Cantidad = cantidad,
                                         PrecioUnitario = precioUnitario,
                                         PrecioTotalItem = precioUnitario * cantidad

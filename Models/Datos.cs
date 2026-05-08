@@ -12,6 +12,7 @@
         public static string rutaDiseno { get; set; } = string.Empty;
         public static string[,] Etiquetas { get; set; }
         public static List<string[]> TagsList { get; set; } = new List<string[]>();
+        public static string Modelo { get; set; } = string.Empty;
         public static string UploadToken { get; set; } = string.Empty;
         public static string UploadExt { get; set; } = string.Empty;
         public static int Cantidad { get; set; }
@@ -77,6 +78,7 @@
         public string NombreProducto { get; set; } = string.Empty;
         public string NombreTamano { get; set; } = string.Empty;
         public string RutaVideo { get; set; } = string.Empty;
+        public string Modelo { get; set; } = string.Empty;
         public int Cantidad { get; set; }
         public double PrecioUnitario { get; set; }
         public double PrecioTotalItem { get; set; }

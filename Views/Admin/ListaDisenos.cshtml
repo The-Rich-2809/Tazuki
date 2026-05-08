@@ -1,0 +1,131 @@
+@using System.Data
+@{
+    Layout = "_LayoutAdmin";
+    var videosTable = (DataTable)ViewBag.Videos;
+    var videosOrdenados = videosTable.AsEnumerable().OrderBy(r => r.Field<string>(1));
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert @(TempData["Message"]!.ToString()!.StartsWith("Error") ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="adm-page-header">
+    <h1><i class="bi bi-grid-3x3-gap me-2"></i>Diseños</h1>
+    <div class="d-flex gap-2">
+        <a asp-controller="Admin" asp-action="AgregarDiseno" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle me-1"></i>Agregar Diseño
+        </a>
+        <a asp-controller="Admin" asp-action="AgregarDisenoArchivo" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-upload me-1"></i>Subir Archivo
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="mb-3">
+            <input type="text" id="busqueda" class="form-control" placeholder="Buscar por nombre o etiqueta…">
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="tablaDisenos">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:50px">#</th>
+                        <th style="width:100px">Modelo</th>
+                        <th>Nombre</th>
+                        <th>Etiquetas</th>
+                        <th style="width:100px">Estado</th>
+                        <th style="width:160px" class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow row in videosOrdenados)
+                    {
+                        <tr class="fila-diseno">
+                            <td class="text-muted small">@row[0]</td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(row[8]?.ToString()))
+                                {
+                                    <span class="badge bg-secondary">@row[8]</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="fw-600 nombre-diseno">@row[1]</span>
+                            </td>
+                            <td class="etiquetas-celda">
+                                @foreach (DataRow tt in ViewBag.Taza_Tags.Rows)
+                                {
+                                    if (tt[0].ToString() == row[0].ToString())
+                                    {
+                                        foreach (DataRow tag in ViewBag.Tags.Rows)
+                                        {
+                                            if (tag[0].ToString() == tt[1].ToString())
+                                            {
+                                                <span class="badge badge-brand me-1 etiqueta-texto">@tag[1]</span>
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (row[7].ToString() == "True")
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a href="@Url.Action("ModDiseno", "Admin", new { Id = row[0] })"
+                                   class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="@Url.Action("EliminarDiseno", "Admin", new { Id = row[0] })"
+                                   class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!videosTable.Rows.Cast<DataRow>().Any())
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                No hay diseños registrados aún.
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .fw-600 { font-weight: 600; }
+    tr.oculta { display: none; }
+</style>
+
+<script>
+    document.getElementById('busqueda').addEventListener('input', function () {
+        const q = this.value.toLowerCase().trim();
+        document.querySelectorAll('#tablaDisenos .fila-diseno').forEach(row => {
+            const nombre = row.querySelector('.nombre-diseno')?.textContent.toLowerCase() ?? '';
+            const etiquetas = [...row.querySelectorAll('.etiqueta-texto')]
+                .map(b => b.textContent.toLowerCase()).join(' ');
+            row.classList.toggle('oculta', q !== '' && !nombre.includes(q) && !etiquetas.includes(q));
+        });
+    });
+</script>
