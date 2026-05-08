@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/rich/Documentos/GitHub/Tazuki/Tazuki.csproj": {}
+    "/Users/macmini/Documents/GitHub/Tazuki/Tazuki.csproj": {}
   },
   "projects": {
-    "/home/rich/Documentos/GitHub/Tazuki/Tazuki.csproj": {
+    "/Users/macmini/Documents/GitHub/Tazuki/Tazuki.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/rich/Documentos/GitHub/Tazuki/Tazuki.csproj",
+        "projectUniqueName": "/Users/macmini/Documents/GitHub/Tazuki/Tazuki.csproj",
         "projectName": "Tazuki",
-        "projectPath": "/home/rich/Documentos/GitHub/Tazuki/Tazuki.csproj",
-        "packagesPath": "/home/rich/.nuget/packages/",
-        "outputPath": "/home/rich/Documentos/GitHub/Tazuki/obj/",
+        "projectPath": "/Users/macmini/Documents/GitHub/Tazuki/Tazuki.csproj",
+        "packagesPath": "/Users/macmini/.nuget/packages/",
+        "outputPath": "/Users/macmini/Documents/GitHub/Tazuki/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/rich/.nuget/NuGet/NuGet.Config"
+          "/Users/macmini/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -60,16 +60,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.22, 8.0.22]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[8.0.22, 8.0.22]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -78,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.112/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

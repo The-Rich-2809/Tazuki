@@ -159,6 +159,7 @@
             <div class="modal-footer">
                 <form asp-controller="Admin" asp-action="EliminarDiseno" method="post">
                     <input type="hidden" name="Id" value="@ViewBag.Taza[0]" />
+                    <input type="hidden" name="RutaDiseno" value="@ViewBag.Taza[5]" />
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
                 </form>

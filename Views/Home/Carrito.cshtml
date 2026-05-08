@@ -87,12 +87,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card-footer bg-white border-0 p-3">
-                    <a href="@Url.Action("DireccionPago", "Home", new { carrito = 0 })" class="btn btn-primary w-100 btn-lg">
+                <div class="card-footer bg-white border-0 p-3 d-flex flex-column gap-2">
+                    <!--<a href="@Url.Action("DireccionPago", "Home", new { carrito = 0 })" class="btn btn-primary w-100 btn-lg">
                         Solicitar Pedido
-                        @* Ir a pagar *@
                         <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
+                    </a>-->
+                    <button id="btnWhatsapp" onclick="pedirPorWhatsapp()" class="btn btn-success w-100 btn-lg">
+                        <i class="bi bi-whatsapp me-2"></i>Pedir por WhatsApp
+                    </button>
                 </div>
             </div>
         </div>
@@ -101,6 +103,38 @@
 
 @section Scripts {
     <script>
+        var cartDataGlobal = @Html.Raw(Json.Serialize(ViewBag.CartItems));
+
+        function pedirPorWhatsapp() {
+            if (!cartDataGlobal || cartDataGlobal.length === 0) {
+                alert('Tu carrito está vacío.');
+                return;
+            }
+
+            var lineas = [];
+            var total = 0;
+
+            cartDataGlobal.forEach(function (item) {
+                // Leer la cantidad actual del DOM por si el usuario la modificó
+                var $row = $('[data-product-id="' + item.productId + '"][data-size-id="' + item.sizeId + '"]');
+                var cantidad = ($row.length > 0)
+                    ? parseInt($row.find('.quantity-input').val()) || item.cantidad
+                    : item.cantidad;
+                var subtotal = cantidad * item.precioUnitario;
+                total += subtotal;
+                lineas.push('• *' + item.nombreProducto + '* - ' + item.nombreTamano
+                    + ' x' + cantidad + ' = $' + subtotal.toFixed(2));
+            });
+
+            var mensaje = '¡Hola! Me gustaría realizar el siguiente pedido:\n\n'
+                + '🛒 *Pedido Tazuky*\n\n'
+                + lineas.join('\n')
+                + '\n\n💰 *Total: $' + total.toFixed(2) + '*'
+                + '\n\n¿Me pueden confirmar disponibilidad y envío? 😊';
+
+            window.open('https://wa.me/5215660776770?text=' + encodeURIComponent(mensaje), '_blank');
+        }
+
         $(document).ready(function () {
             
             var token = $('input[name="__RequestVerificationToken"]').val();

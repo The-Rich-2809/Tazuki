@@ -1,7 +1,6 @@
 @{
     Layout = "_LayoutAdmin";
 }
-@using System.Data;
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,9 +40,7 @@
         text-align: center;
     }
 
-    .form-label {
-        font-weight: 600;
-    }
+    .form-label { font-weight: 600; }
 
     .form-control {
         border-radius: 8px;
@@ -63,18 +60,46 @@
         transition: background-color 0.3s;
     }
 
-    .btn-primary:hover {
-        background-color: var(--primary-hover-color);
+    .btn-primary:hover { background-color: var(--primary-hover-color); }
+
+    /* Overlay de carga */
+    #loadingOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
     }
 
-    /* Alerta flotante */
-    .confirm-alert {
+    #loadingOverlay .spinner-border {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-width: 0.4em;
+    }
+
+    #loadingText {
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        max-width: 320px;
+    }
+
+    #loadingSubtext {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.7);
+        margin-top: 0.25rem;
+    }
+
+    /* Overlay de confirmación */
+    #confirmOverlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
         display: none;
         align-items: center;
         justify-content: center;
@@ -83,173 +108,218 @@
 
     .confirm-box {
         background: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        max-width: 500px;
-        width: 90%;
-        text-align: center;
+        padding: 32px;
+        border-radius: 12px;
+        max-width: 600px;
+        width: 92%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
 
-    .confirm-buttons {
-        margin-top: 20px;
-        display: flex;
-        justify-content: space-around;
+    .confirm-box h5 {
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .file-counter {
+        font-size: 0.82rem;
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
     }
 </style>
+
+<!-- Overlay de carga -->
+<div id="loadingOverlay">
+    <div class="spinner-border text-light" role="status"></div>
+    <p id="loadingText">Procesando...</p>
+    <p id="loadingSubtext"></p>
+</div>
+
+<!-- Overlay de confirmación -->
+<div id="confirmOverlay">
+    <div class="confirm-box">
+        <p id="fileCounter" class="file-counter"></p>
+        <div id="alertContent"></div>
+        <div class="d-flex gap-2 mt-4">
+            <button id="btnSaltar" class="btn btn-secondary flex-fill">Saltar</button>
+            <button id="btnGuardar" class="btn btn-primary flex-fill mt-0">Guardar Diseño</button>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <h1>Agregar Nuevo Diseño</h1>
 
-    @if (ViewBag.ErrorMessage != null && !string.IsNullOrEmpty(ViewBag.ErrorMessage))
-    {
-        <div class="alert alert-danger" role="alert">
-            @ViewBag.ErrorMessage
-        </div>
-    }
+    <div id="mensajesResultado"></div>
 
-    <form id="formAgregarDiseno" enctype="multipart/form-data">
-        @* <div class="mb-4">
-            <label for="nombre" class="form-label">Nombre del Diseño</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej: Taza de Gato" required>
-        </div> *@
-
+    <form id="uploadForm">
         <div class="mb-4">
-            <label class="form-label">Video del Diseño</label>
-            <input class="form-control" type="file" name="archivo" accept="video/*" required>
+            <label class="form-label">Video(s) del Diseño</label>
+            <input class="form-control" type="file" id="archivoInput" accept="video/*" multiple required>
+            <small class="text-muted mt-1 d-block">Puedes seleccionar varios videos a la vez. Se procesarán uno por uno.</small>
         </div>
-
-        <button type="submit" class="btn btn-primary">Analizar Diseño</button>
-        <div id="progressContainer" style="display:none;">
-        <p>Subiendo video, por favor espera...</p>
-        <div class="progress">
-            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
-                aria-valuemin="0" aria-valuemax="100">0%</div>
-        </div>
-    </div>
-
-    <div id="resultadoAlerta">
-    </div>
-
+        <button type="submit" id="btnAnalizar" class="btn btn-primary">Analizar Diseño(s)</button>
     </form>
 </div>
 
-<!-- Alerta flotante -->
-<div class="confirm-alert" id="confirmAlert">
-    <div class="confirm-box">
-        <div id="alertContent"></div>
-        <div class="confirm-buttons">
-            <button class="btn btn-secondary" onclick="cerrarAlerta()">Cancelar</button>
-            <form id="formAgregarDiseno" action="@Url.Action("GuardarDisenoConfirmado", "Admin")" method="post"
-                enctype="multipart/form-data">
-                <button type="submit" class="btn btn-primary">Guardar Diseño</button>
-            </form>
-        </div>
-    </div>
-</div>
-
 <script>
-    const form = document.getElementById("formAgregarDiseno");
-    const alertDiv = document.getElementById("confirmAlert");
-    const alertContent = document.getElementById("alertContent");
+    const uploadForm      = document.getElementById('uploadForm');
+    const archivoInput    = document.getElementById('archivoInput');
+    const loadingOverlay  = document.getElementById('loadingOverlay');
+    const loadingText     = document.getElementById('loadingText');
+    const loadingSubtext  = document.getElementById('loadingSubtext');
+    const confirmOverlay  = document.getElementById('confirmOverlay');
+    const alertContent    = document.getElementById('alertContent');
+    const fileCounter     = document.getElementById('fileCounter');
+    const mensajes        = document.getElementById('mensajesResultado');
+    const btnGuardar      = document.getElementById('btnGuardar');
+    const btnSaltar       = document.getElementById('btnSaltar');
 
-    form.addEventListener("submit", async function (e) {
-        e.preventDefault();
+    let fileQueue    = [];
+    let currentIndex = 0;
+    let savedCount   = 0;
+    let skippedCount = 0;
 
-        const formData = new FormData(form);
+    // ── Utilidades ──────────────────────────────────────────────
 
-        const response = await fetch('@Url.Action("AgregarDisenoArchivo", "Admin")', {
-            method: 'POST',
-            body: formData
-        });
-
-        const html = await response.text();
-        alertContent.innerHTML = html; // Inserta el HTML generado por Razor
-        alertDiv.style.display = "flex";
-    });
-
-    function cerrarAlerta() {
-        alertDiv.style.display = "none";
-        alertContent.innerHTML = "";
+    function showLoading(texto, subtexto = '') {
+        loadingText.textContent    = texto;
+        loadingSubtext.textContent = subtexto;
+        loadingOverlay.style.display = 'flex';
     }
 
-    async function confirmarEnvio() {
-        cerrarAlerta();
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
+    }
 
-        const formData = new FormData(document.getElementById("formAgregarDiseno"));
+    function showConfirm(html) {
+        const total = fileQueue.length;
+        fileCounter.textContent = total > 1
+            ? `Archivo ${currentIndex + 1} de ${total}: ${fileQueue[currentIndex].name}`
+            : fileQueue[currentIndex].name;
+        alertContent.innerHTML = html;
+        confirmOverlay.style.display = 'flex';
+    }
 
-        const response = await fetch('@Url.Action("GuardarDisenoConfirmado", "Admin")', {
-            method: "POST",
-            body: formData
-        });
+    function hideConfirm() {
+        confirmOverlay.style.display = 'none';
+        alertContent.innerHTML = '';
+    }
 
-        const result = await response.json();
-        if (result.redirectUrl) {
-            window.location.href = result.redirectUrl;
+    function addMensaje(tipo, texto) {
+        mensajes.insertAdjacentHTML('beforeend',
+            `<div class="alert alert-${tipo} mt-2">${texto}</div>`);
+    }
+
+    // ── Cola de archivos ─────────────────────────────────────────
+
+    function avanzar() {
+        currentIndex++;
+        if (currentIndex < fileQueue.length) {
+            processFile(currentIndex);
         } else {
-            alert("❌ Error: " + (result.error || "No se pudo guardar."));
+            terminar();
         }
     }
 
-    $(document).ready(function () {
-    $("#uploadForm").on('submit', function (e) {
-        e.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+    function terminar() {
+        hideConfirm();
+        if (fileQueue.length > 1) {
+            addMensaje('success',
+                `Proceso completado: <strong>${savedCount}</strong> guardado(s), <strong>${skippedCount}</strong> saltado(s).`);
+        }
+        uploadForm.reset();
+        fileQueue    = [];
+        currentIndex = 0;
+        savedCount   = 0;
+        skippedCount = 0;
+    }
 
-        var formData = new FormData(this);
-        var $progressBar = $("#progressBar");
-        var $progressContainer = $("#progressContainer");
-        var $resultadoAlerta = $("#resultadoAlerta");
+    async function processFile(index) {
+        const file  = fileQueue[index];
+        const total = fileQueue.length;
 
-        // Validar que se seleccionó un archivo (opcional, pero recomendado)
-        if ($('#archivoInput').get(0).files.length === 0) {
-            $resultadoAlerta.html("<div class='alert alert-danger'>Debes seleccionar un archivo.</div>");
-            return;
+        showLoading(
+            `Analizando video${total > 1 ? ` (${index + 1} de ${total})` : ''}...`,
+            file.name
+        );
+
+        const formData = new FormData();
+        formData.append('archivo', file);
+
+        try {
+            const response = await fetch('@Url.Action("AgregarDisenoArchivo", "Admin")', {
+                method: 'POST',
+                body: formData
+            });
+
+            const html = await response.text();
+            hideLoading();
+
+            if (!response.ok) {
+                addMensaje('danger', `Error del servidor al analizar "${file.name}".`);
+                avanzar();
+                return;
+            }
+
+            showConfirm(html);
+
+        } catch (err) {
+            hideLoading();
+            addMensaje('danger', `Error de red al analizar "${file.name}": ${err.message}`);
+            avanzar();
+        }
+    }
+
+    // ── Eventos ──────────────────────────────────────────────────
+
+    uploadForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        fileQueue = Array.from(archivoInput.files);
+        if (fileQueue.length === 0) return;
+
+        currentIndex = 0;
+        savedCount   = 0;
+        skippedCount = 0;
+        mensajes.innerHTML = '';
+
+        processFile(0);
+    });
+
+    btnGuardar.addEventListener('click', async function () {
+        const file = fileQueue[currentIndex];
+        hideConfirm();
+        showLoading('Guardando diseño...', file.name);
+
+        try {
+            const response = await fetch('@Url.Action("GuardarDisenoConfirmado", "Admin")', {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+            hideLoading();
+
+            if (result.success) {
+                savedCount++;
+                addMensaje('success', `"${file.name}" guardado correctamente.`);
+            } else {
+                addMensaje('danger', `Error al guardar "${file.name}": ${result.message}`);
+            }
+
+        } catch (err) {
+            hideLoading();
+            addMensaje('danger', `Error al guardar "${file.name}": ${err.message}`);
         }
 
-        // Mostrar el progreso y limpiar resultados anteriores
-        $progressContainer.show();
-        $progressBar.width('0%').attr('aria-valuenow', 0).text('0%');
-        $resultadoAlerta.html(''); // Limpia alertas previas
-
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            data: formData,
-            processData: false, // Importante para FormData
-            contentType: false, // Importante para FormData
-            
-            // --- ¡Aquí está la magia del progreso! ---
-            xhr: function () {
-                var xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener("progress", function (evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = Math.round((evt.loaded / evt.total) * 100);
-                        $progressBar.width(percentComplete + '%')
-                                    .attr('aria-valuenow', percentComplete)
-                                    .text(percentComplete + '%');
-                    }
-                }, false);
-                return xhr;
-            },
-            // --- Fin de la magia ---
-
-            success: function (response) {
-                // 'response' es el HTML de tu _AlertaDiseno
-                // El 100% se muestra aquí para asegurar que termine
-                $progressBar.width('100%').attr('aria-valuenow', 100).text('100% - Procesando...');
-                $resultadoAlerta.html(response);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Manejar errores del servidor
-                $resultadoAlerta.html("<div class='alert alert-danger'>Error al subir el archivo: " + errorThrown + "</div>");
-            },
-            complete: function () {
-                // Ocultar la barra de progreso después de un momento
-                setTimeout(function() {
-                    $progressContainer.hide();
-                }, 3000); // Oculta después de 3 segundos
-            }
-        });
+        avanzar();
     });
-});
 
+    btnSaltar.addEventListener('click', function () {
+        skippedCount++;
+        hideConfirm();
+        avanzar();
+    });
 </script>

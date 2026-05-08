@@ -284,44 +284,31 @@ namespace Tazuki.Controllers
         public async Task<IActionResult> GuardarDisenoConfirmado()
         {
             if (!Cookies())
-                return RedirectToAction("ErrorUsuario", "Home");
-                
+                return Json(new { success = false, message = "Sin autorización." });
+
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "MP4");
             var tempFolder = Path.Combine(_webHostEnvironment.WebRootPath, "_tmp");
 
             Directory.CreateDirectory(uploadsFolder);
             Directory.CreateDirectory(tempFolder);
 
-            // Validación de token/extensión generados en el paso previo (subida temporal)
             if (string.IsNullOrWhiteSpace(Datos.UploadToken) || string.IsNullOrWhiteSpace(Datos.UploadExt))
-            {
-                TempData["Message"] = "Error: Archivo temporal no encontrado o expirado.";
-                return RedirectToAction("Index", "Admin");
-            }
+                return Json(new { success = false, message = "Archivo temporal no encontrado o expirado." });
 
             var tempPath = Path.Combine(tempFolder, Datos.UploadToken + Datos.UploadExt);
             if (!System.IO.File.Exists(tempPath))
-            {
-                TempData["Message"] = "Error: El archivo temporal ya no existe.";
-                return RedirectToAction("Index", "Admin");
-            }
+                return Json(new { success = false, message = "El archivo temporal ya no existe." });
 
-            // Nombre base (desde la UI previa) — caer en 'diseno' si viene vacío
             var baseName = string.IsNullOrWhiteSpace(Datos.Nombre) ? "diseno" : Datos.Nombre;
 
-            // Slugify que CONSERVA espacios (no convierte a '-'), y elimina caracteres inválidos
             static string Slugify(string s)
             {
                 var sinExt = Path.GetFileNameWithoutExtension(s);
                 var normalized = sinExt.Normalize(NormalizationForm.FormD);
                 var chars = normalized.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark);
                 var clean = new string(chars.ToArray());
-
-                // Permite letras, números, ESPACIOS, guion y guion bajo; elimina lo demás
                 clean = Regex.Replace(clean, @"[^a-zA-Z0-9\s\-_]+", "");
-                // Colapsa espacios múltiples y recorta extremos
                 clean = Regex.Replace(clean, @"\s+", "").Trim();
-
                 if (string.IsNullOrEmpty(clean)) clean = "diseno";
                 return clean.Length > 50 ? clean[..50] : clean;
             }
@@ -332,37 +319,27 @@ namespace Tazuki.Controllers
 
             if (System.IO.File.Exists(finalPath))
             {
-                TempData["Message"] = $"Error: Ya existe un archivo llamado {uniqueFileName}.";
-                Datos.Mensaje = "El diseño ya existe " + uniqueFileName;
-                try { System.IO.File.Delete(tempPath); } catch { /* best-effort */ }
-                return RedirectToAction("AgregarDisenoArchivo", "Admin");
+                try { System.IO.File.Delete(tempPath); } catch { }
+                return Json(new { success = false, message = $"Ya existe un archivo llamado '{uniqueFileName}'." });
             }
 
-            // Mover de temporal a definitivo (misma unidad → operación atómica)
             try
             {
                 System.IO.File.Move(tempPath, finalPath);
             }
             catch (Exception ex)
             {
-                TempData["Message"] = $"Error al mover el archivo final: {ex.Message}";
-                return Ok();
+                return Json(new { success = false, message = $"Error al mover el archivo: {ex.Message}" });
             }
 
-            // ------ Inserción en BD ------
-            // Si aún no manejas estos campos desde la UI previa, usa valores por defecto.
-            if (Datos.precio <= 0) Datos.precio = 50.00; // TODO: reemplazar por el valor real desde la UI
+            if (Datos.precio <= 0) Datos.precio = 50.00;
             Datos.tamanoTaza = "1";
+            Datos.rutaDiseno = $"MP4/{uniqueFileName}";
 
-            var rutaRelativa = $"MP4/{uniqueFileName}";
-            Datos.rutaDiseno = rutaRelativa;
-
-            // Intento de registrar el diseño; si falla, revertimos el archivo movido.
             if (!Admin_SQL.Agregar_Diseno())
             {
-                try { System.IO.File.Delete(finalPath); } catch { /* best-effort */ }
-                TempData["Message"] = "Error al registrar el diseño en la BD. No se han guardado cambios.";
-                return RedirectToAction("AgregarDisenoArchivo", "Admin");
+                try { System.IO.File.Delete(finalPath); } catch { }
+                return Json(new { success = false, message = "Error al registrar el diseño en la base de datos." });
             }
 
             foreach (var tag in Datos.TagsList)
@@ -373,13 +350,11 @@ namespace Tazuki.Controllers
                     tag[0] = Convert.ToString(Admin_SQL.Agregar_Tags());
                     tag[2] = "Encontrado";
                 }
-
                 if (tag[2] == "Encontrado")
                     Admin_SQL.Agregar_Diseno_Tags(tag[0]);
             }
 
-            TempData["Message"] = $"Diseño confirmado y guardado: {uniqueFileName}";
-           return RedirectToAction("Index", "Admin");
+            return Json(new { success = true, message = $"Diseño guardado: {uniqueFileName}" });
         }
 
 
@@ -440,7 +415,6 @@ namespace Tazuki.Controllers
                 if (row_taza[0].ToString() == Id)
                 {
                     ViewBag.Taza = row_taza;
-                    Datos.rutaDiseno = row_taza[5].ToString().Remove(0, 4);
                     break;
                 }
             }
@@ -458,45 +432,39 @@ namespace Tazuki.Controllers
                 }
             }
 
-
             ViewBag.Tags_Taza = Tags;
 
             return View();
         }
         [HttpPost]
-        public IActionResult EliminarDiseno(int Id)
+        public IActionResult EliminarDiseno(int Id, string RutaDiseno)
         {
             if (!Cookies())
                 return RedirectToAction("ErrorUsuario", "Home");
-                
+
             Datos.Id = Id;
             Admin_SQL.Eliminar_Diseno();
             Admin_SQL.Eliminar_Diseno_Tags();
 
-            try
+            if (!string.IsNullOrWhiteSpace(RutaDiseno))
             {
-
-                // --- 3. Construir la ruta completa y segura ---
-                // Combina la carpeta de uploads (ej. wwwroot/imagenes/uploads) con el nombre del archivo.
-                var carpetaUploads = Path.Combine(_webHostEnvironment.WebRootPath, "mp4");
-                var rutaCompleta = Path.Combine(carpetaUploads, Datos.rutaDiseno);
-
-                // --- 4. Verificar si el archivo existe antes de borrar ---
-                if (System.IO.File.Exists(rutaCompleta))
+                try
                 {
-                    // --- 5. Eliminar el archivo ---
-                    System.IO.File.Delete(rutaCompleta);
-                    TempData["Exito"] = $"El archivo '{Datos.rutaDiseno}' fue eliminado correctamente.";
+                    var rutaCompleta = Path.Combine(_webHostEnvironment.WebRootPath, RutaDiseno);
+                    if (System.IO.File.Exists(rutaCompleta))
+                    {
+                        System.IO.File.Delete(rutaCompleta);
+                        TempData["Exito"] = $"El archivo '{RutaDiseno}' fue eliminado correctamente.";
+                    }
+                    else
+                    {
+                        TempData["Error"] = $"Registro eliminado, pero el archivo '{RutaDiseno}' no fue encontrado en disco.";
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    TempData["Error"] = $"El archivo '{Datos.rutaDiseno}' no existe.";
+                    TempData["Error"] = "Registro eliminado, pero ocurrió un error al borrar el archivo del disco.";
                 }
-            }
-            catch (Exception ex)
-            {
-                // Es una buena práctica registrar el error (ex.Message)
-                TempData["Error"] = "Ocurrió un error inesperado al eliminar el archivo.";
             }
 
             return RedirectToAction("Index", "Admin");
