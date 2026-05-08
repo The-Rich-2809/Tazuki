@@ -14,8 +14,7 @@
     <!-- No-flash theme init -->
     <script>
         (function () {
-            var t = localStorage.getItem('tz-theme') ||
-                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            var t = localStorage.getItem('tz-theme') || 'light';
             document.documentElement.setAttribute('data-theme', t);
         })();
     </script>

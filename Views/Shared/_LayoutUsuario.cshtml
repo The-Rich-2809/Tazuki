@@ -15,8 +15,7 @@
     <!-- No-flash theme init (runs before first paint) -->
     <script>
         (function () {
-            var t = localStorage.getItem('tz-theme') ||
-                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            var t = localStorage.getItem('tz-theme') || 'light';
             document.documentElement.setAttribute('data-theme', t);
         })();
     </script>
@@ -109,6 +108,12 @@
         .text-primary   { color: var(--brand)      !important; }
         a               { color: var(--brand); text-decoration: none; }
         a:hover         { color: var(--brand-dark); }
+        hr              { border-color: var(--border); }
+
+        /* Bootstrap utility class overrides for dark mode */
+        html[data-theme="dark"] .bg-light   { background-color: var(--bg-input) !important; }
+        html[data-theme="dark"] .text-dark  { color: var(--text) !important; }
+        html[data-theme="dark"] .text-muted { color: var(--text-muted) !important; }
 
         /* ============================================================
            NAVBAR

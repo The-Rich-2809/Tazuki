@@ -1,32 +1,227 @@
-﻿@RenderSection("Head", required: false)
+@RenderSection("Head", required: false)
 @{
-    Layout = null; 
+    Layout = null;
 }
-
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
+    <link rel="icon" href="~/img/tazukilogo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+
+    <!-- No-flash theme init -->
+    <script>
+        (function () {
+            var t = localStorage.getItem('tz-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
     <style>
-        html, body {
-            height: 100%;
+        :root {
+            --bg:           #f4f6fb;
+            --bg-card:      #ffffff;
+            --bg-input:     #ffffff;
+            --text:         #1a2035;
+            --text-2:       #4a5568;
+            --text-muted:   #8896aa;
+            --border:       #e4e9f2;
+            --brand:        #3bbfad;
+            --brand-dark:   #2ea796;
+            --brand-light:  rgba(59,191,173,0.12);
+            --brand-rgb:    59,191,173;
+            --sh-lg:        0 8px 24px rgba(0,0,0,.08), 0 20px 50px rgba(0,0,0,.12);
+            --r-sm:         .5rem;
+            --r:            .75rem;
+            --r-lg:         1.25rem;
+            --ease:         .22s cubic-bezier(.4,0,.2,1);
         }
+
+        html[data-theme="dark"] {
+            --bg:           #0d1117;
+            --bg-card:      #161c2d;
+            --bg-input:     #1e2640;
+            --text:         #e8edf5;
+            --text-2:       #a0aec0;
+            --text-muted:   #6b7a99;
+            --border:       #253052;
+            --brand:        #4dd0c4;
+            --brand-dark:   #3bbfad;
+            --brand-light:  rgba(77,208,196,0.14);
+            --brand-rgb:    77,208,196;
+            --sh-lg:        0 8px 24px rgba(0,0,0,.5), 0 20px 50px rgba(0,0,0,.55);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
         body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color var(--ease), color var(--ease);
+        }
+
+        h1,h2,h3,h4,h5,h6 { color: var(--text); font-weight: 700; }
+        p { color: var(--text-2); }
+        a { color: var(--brand); text-decoration: none; }
+        a:hover { color: var(--brand-dark); }
+        hr { border-color: var(--border); }
+
+        /* ── Header ── */
+        .vacio-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: .9rem 1.5rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            transition: background-color var(--ease), border-color var(--ease);
+        }
+
+        .vacio-brand {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .vacio-brand img { height: 34px; object-fit: contain; }
+        .vacio-brand:hover { color: var(--brand-dark); }
+
+        .vacio-ibtn {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
-            background-color: #f8f9fa;
+            color: var(--text-2);
+            font-size: .95rem;
+            cursor: pointer;
+            transition: background var(--ease), color var(--ease), border-color var(--ease);
+        }
+
+        .vacio-ibtn:hover {
+            background: var(--brand-light);
+            color: var(--brand);
+            border-color: var(--brand);
+        }
+
+        .ic-sun  { display: none; }
+        .ic-moon { display: inline-block; }
+        html[data-theme="dark"] .ic-sun  { display: inline-block; }
+        html[data-theme="dark"] .ic-moon { display: none; }
+
+        /* ── Content ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: var(--sh-lg) !important;
+            border-radius: var(--r-lg) !important;
+            transition: background-color var(--ease), border-color var(--ease);
+        }
+
+        .card-body { color: var(--text); }
+
+        /* ── Forms ── */
+        .form-label { color: var(--text); font-weight: 500; }
+
+        .form-control {
+            background-color: var(--bg-input) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+            border-radius: var(--r-sm) !important;
+            transition: border-color var(--ease), background-color var(--ease);
+        }
+
+        .form-control:focus {
+            border-color: var(--brand) !important;
+            box-shadow: 0 0 0 3px rgba(var(--brand-rgb),.2) !important;
+            background-color: var(--bg-input) !important;
+            color: var(--text) !important;
+        }
+
+        .form-control::placeholder { color: var(--text-muted); }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            background-color: var(--brand) !important;
+            border-color: var(--brand) !important;
+            color: #fff !important;
+            font-weight: 600;
+            border-radius: var(--r-sm) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-dark) !important;
+            border-color: var(--brand-dark) !important;
+            box-shadow: 0 4px 14px rgba(var(--brand-rgb),.35) !important;
+        }
+
+        .btn-success, .btn-secondary {
+            font-weight: 600;
+            border-radius: var(--r-sm) !important;
+        }
+
+        /* ── Alerts ── */
+        .alert-danger {
+            background: rgba(239,68,68,.1) !important;
+            border-color: rgba(239,68,68,.3) !important;
+            color: #ef4444 !important;
         }
     </style>
 </head>
-<body class="text-center">
+<body>
 
-    @RenderBody()
+    <header class="vacio-header">
+        <a href="/" class="vacio-brand">
+            <img src="~/img/tazukylogo.jpg" alt="Tazuki">
+            Tazuki
+        </a>
+        <button class="vacio-ibtn" id="themeToggle" aria-label="Cambiar tema">
+            <i class="bi bi-sun-fill ic-sun"></i>
+            <i class="bi bi-moon-fill ic-moon"></i>
+        </button>
+    </header>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <main>
+        @RenderBody()
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeBtn = document.getElementById('themeToggle');
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('tz-theme', t);
+        }
+        themeBtn?.addEventListener('click', () => {
+            setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

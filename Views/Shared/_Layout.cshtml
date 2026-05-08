@@ -1,402 +1,764 @@
-﻿<!doctype html>
-<html lang="es" data-bs-theme="light">
-
+<!doctype html>
+<html lang="es" data-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="img/tazukilogo.png">
-    <meta name="description"
-        content="Tazas y regalos sublimados personalizados. Compra fácil y recibe en todo México." />
+    <meta name="description" content="Tazas y regalos sublimados personalizados. Fabricación rápida, envíos a todo México." />
+    <link rel="icon" href="~/img/tazukilogo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+    @await RenderSectionAsync("Head", required: false)
+
+    <!-- No-flash theme init (runs before first paint) -->
+    <script>
+        (function () {
+            var t = localStorage.getItem('tz-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
     <style>
+        /* ============================================================
+           DESIGN SYSTEM — CSS VARIABLES
+           ============================================================ */
         :root {
-            --brand: #3bbfad;
-            /* Verde del logo como principal */
-            --brand-2: #fd7e14;
-            /* Acento secundario */
-            --ink: #212529;
-            /* Texto */
-            --paper: #ffffff;
-            /* Fondo */
-            --soft: #f8fafc;
-            /* Secciones suaves */
-            --muted: #6c757d;
-            /* Texto tenue */
+            --bg:           #f4f6fb;
+            --bg-card:      #ffffff;
+            --bg-nav:       rgba(255,255,255,0.94);
+            --bg-input:     #ffffff;
+            --bg-hover:     #f0f9f8;
+            --text:         #1a2035;
+            --text-2:       #4a5568;
+            --text-muted:   #8896aa;
+            --border:       #e4e9f2;
+            --brand:        #3bbfad;
+            --brand-dark:   #2ea796;
+            --brand-light:  rgba(59,191,173,0.12);
+            --brand-rgb:    59,191,173;
+            --accent:       #f97316;
+            --danger:       #ef4444;
+            --success:      #22c55e;
+            --sh-sm:        0 1px 4px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.06);
+            --sh-md:        0 4px 12px rgba(0,0,0,.06), 0 10px 30px rgba(0,0,0,.08);
+            --sh-lg:        0 8px 24px rgba(0,0,0,.08), 0 20px 50px rgba(0,0,0,.12);
+            --r-sm:         .5rem;
+            --r:            .75rem;
+            --r-lg:         1.25rem;
+            --nav-h:        64px;
+            --bnav-h:       62px;
+            --ease:         .22s cubic-bezier(.4,0,.2,1);
         }
 
-        html,
+        html[data-theme="dark"] {
+            --bg:           #0d1117;
+            --bg-card:      #161c2d;
+            --bg-nav:       rgba(13,17,23,0.96);
+            --bg-input:     #1e2640;
+            --bg-hover:     #1e2640;
+            --text:         #e8edf5;
+            --text-2:       #a0aec0;
+            --text-muted:   #6b7a99;
+            --border:       #253052;
+            --brand:        #4dd0c4;
+            --brand-dark:   #3bbfad;
+            --brand-light:  rgba(77,208,196,0.14);
+            --brand-rgb:    77,208,196;
+            --sh-sm:        0 1px 4px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.35);
+            --sh-md:        0 4px 12px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.45);
+            --sh-lg:        0 8px 24px rgba(0,0,0,.5), 0 20px 50px rgba(0,0,0,.55);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
         body {
-            height: 100%
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-top: var(--nav-h);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
-            color: var(--ink);
-            padding-top: 72px;
-            /* Compensa navbar fixed */
+        @@media (max-width: 991.98px) {
+            body { padding-bottom: var(--bnav-h); }
         }
 
-        /* --------- NAVBAR --------- */
-        .navbar {
-            background: rgba(255, 255, 255, .95);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 2px 14px rgba(0, 0, 0, .06);
-            z-index: 1100
+        body, .card, .tz-navbar, .tz-footer,
+        .form-control, .form-select, .input-group-text,
+        .accordion-button, .accordion-body, .list-group-item,
+        .modal-content, .dropdown-menu {
+            transition: background-color var(--ease), border-color var(--ease), color var(--ease);
         }
 
-        .navbar-brand img {
-            height: 60px;
-            object-fit: contain
+        /* ── Typography ── */
+        h1,h2,h3,h4,h5,h6 { color: var(--text); font-weight: 700; }
+        p { color: var(--text-2); }
+        .text-secondary { color: var(--text-muted) !important; }
+        .text-primary   { color: var(--brand)      !important; }
+        a               { color: var(--brand); text-decoration: none; }
+        a:hover         { color: var(--brand-dark); }
+        hr              { border-color: var(--border); }
+
+        /* Bootstrap dark-mode class overrides */
+        html[data-theme="dark"] .bg-light  { background-color: var(--bg-input) !important; }
+        html[data-theme="dark"] .text-dark { color: var(--text) !important; }
+        html[data-theme="dark"] .text-muted { color: var(--text-muted) !important; }
+
+        /* ── Navbar ── */
+        .tz-navbar {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1100;
+            height: var(--nav-h);
+            background: var(--bg-nav);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .nav-link.active,
-        .nav-link:hover {
-            color: var(--brand) !important
+        .tz-navbar .tz-inner {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
-        /* --------- HERO --------- */
-        .hero {
-            background: radial-gradient(80% 80% at 0% 0%, rgba(59, 191, 173, .12), transparent 50%), radial-gradient(60% 60% at 100% 20%, rgba(253, 126, 20, .10), transparent 60%), linear-gradient(180deg, #ffffff, #f4f7fe);
-            border-bottom: 1px solid #eef1f6;
+        .tz-brand img { height: 44px; object-fit: contain; display: block; }
+
+        .tz-links {
+            display: flex;
+            align-items: center;
+            gap: .15rem;
+            list-style: none;
+            margin: 0; padding: 0;
         }
 
-        .hero-badge {
+        .tz-links a {
+            display: flex; align-items: center; gap: .4rem;
+            padding: .45rem .85rem;
+            border-radius: var(--r-sm);
+            color: var(--text-2);
+            font-size: .875rem;
+            font-weight: 500;
+            transition: color var(--ease), background var(--ease);
+        }
+
+        .tz-links a:hover, .tz-links a.active {
             color: var(--brand);
-            background: rgba(59, 191, 173, .12);
-            border: 1px solid rgba(59, 191, 173, .3)
+            background: var(--brand-light);
         }
 
-        /* --------- BOTONES / COLORES MARCA --------- */
-        .text-primary {
-            color: var(--brand) !important
+        @@media (max-width: 991.98px) { .tz-links { display: none; } }
+
+        .tz-ibtn {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-2);
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background var(--ease), color var(--ease), border-color var(--ease);
+            flex-shrink: 0;
         }
 
+        .tz-ibtn:hover {
+            background: var(--brand-light);
+            color: var(--brand);
+            border-color: var(--brand);
+        }
+
+        .tz-right { display: flex; align-items: center; gap: .5rem; }
+
+        .ic-sun  { display: none; }
+        .ic-moon { display: inline-block; }
+        html[data-theme="dark"] .ic-sun  { display: inline-block; }
+        html[data-theme="dark"] .ic-moon { display: none; }
+
+        /* Hamburger */
+        .tz-ham {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            width: 38px; height: 38px;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+
+        .tz-ham span { display: block; height: 2px; background: var(--text-2); border-radius: 2px; transition: all .3s; }
+
+        @@media (max-width: 991.98px) { .tz-ham { display: flex; } }
+
+        /* Mobile drawer */
+        .tz-drawer {
+            display: none;
+            position: fixed;
+            top: var(--nav-h);
+            left: 0; right: 0;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--sh-lg);
+            z-index: 1090;
+            padding: .75rem;
+            flex-direction: column;
+            gap: .15rem;
+            max-height: calc(100vh - var(--nav-h));
+            overflow-y: auto;
+        }
+
+        .tz-drawer.open { display: flex; }
+
+        .tz-drawer a {
+            display: flex; align-items: center; gap: .75rem;
+            padding: .75rem 1rem;
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-size: .95rem;
+            font-weight: 500;
+            transition: background var(--ease), color var(--ease);
+        }
+
+        .tz-drawer a:hover { background: var(--brand-light); color: var(--brand); }
+        .tz-drawer .dd { border-color: var(--border); margin: .35rem 0; }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: var(--sh-sm) !important;
+            border-radius: var(--r) !important;
+        }
+
+        .card:hover {
+            box-shadow: var(--sh-md) !important;
+            transform: translateY(-2px);
+            transition: box-shadow var(--ease), transform var(--ease);
+        }
+
+        .card-header, .card-footer {
+            background: var(--bg-card) !important;
+            border-color: var(--border) !important;
+        }
+
+        /* ── Buttons ── */
         .btn-primary {
-            background-color: var(--brand);
-            border-color: var(--brand)
+            background-color: var(--brand)  !important;
+            border-color: var(--brand)      !important;
+            color: #fff !important;
+            font-weight: 600;
         }
 
-        .btn-primary:hover {
-            background-color: #2ea796;
-            border-color: #2ea796
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--brand-dark) !important;
+            border-color: var(--brand-dark)     !important;
+            box-shadow: 0 4px 16px rgba(var(--brand-rgb),.35) !important;
         }
 
         .btn-outline-primary {
-            color: var(--brand);
-            border-color: var(--brand)
+            color: var(--brand) !important;
+            border-color: var(--brand) !important;
         }
 
         .btn-outline-primary:hover {
-            background-color: var(--brand);
-            color: #fff
+            background: var(--brand) !important;
+            color: #fff !important;
         }
 
-        .form-range::-webkit-slider-thumb {
-            background: var(--brand)
+        .btn-success { font-weight: 600; }
+
+        /* ── Forms ── */
+        .form-control, .form-select {
+            background-color: var(--bg-input) !important;
+            border-color: var(--border)       !important;
+            color: var(--text)                !important;
+            border-radius: var(--r-sm)        !important;
         }
 
-        .form-range::-moz-range-thumb {
-            background: var(--brand)
+        .form-control:focus, .form-select:focus {
+            border-color: var(--brand)    !important;
+            box-shadow: 0 0 0 3px rgba(var(--brand-rgb),.2) !important;
+            background-color: var(--bg-input) !important;
+            color: var(--text) !important;
         }
 
-        /* --------- PASTILLAS DE CATEGORÍA --------- */
-        .category-pill input {
-            display: none
+        .form-control::placeholder { color: var(--text-muted); }
+
+        .input-group-text {
+            background: var(--bg-input) !important;
+            border-color: var(--border) !important;
+            color: var(--text-muted)    !important;
         }
 
-        .category-pill label {
-            cursor: pointer;
-            user-select: none;
-            border: 1px solid #e8ecf3;
-            background: #fff;
-            color: #0b1b35
-        }
-
-        .category-pill input:checked+label {
-            background: var(--brand);
-            color: #fff;
-            border-color: var(--brand)
-        }
-
-        /* --------- CARDS --------- */
-        .card {
-            border: 1px solid #eef1f6;
-            box-shadow: 0 6px 24px rgba(33, 37, 41, .06)
-        }
-
-        .card-img-top {
-            object-fit: cover;
-            height: 200px
-        }
-
+        /* ── Badge precio ── */
         .badge-price {
-            background: rgba(59, 191, 173, .10);
+            background: var(--brand-light) !important;
+            color: var(--brand) !important;
+            border: 1px solid rgba(var(--brand-rgb),.25) !important;
+            font-weight: 600;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background:
+                radial-gradient(ellipse 70% 60% at 0% 0%, rgba(var(--brand-rgb),.1) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 50% at 100% 20%, rgba(249,115,22,.07) 0%, transparent 60%),
+                var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--brand-light);
             color: var(--brand);
-            border: 1px solid rgba(59, 191, 173, .25)
+            border: 1px solid rgba(var(--brand-rgb),.3);
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .35rem .9rem;
+            border-radius: 2rem;
+            margin-bottom: 1.25rem;
         }
 
-        .rating i {
-            color: #ffc107
-        }
-
-        /* --------- SECCIONES --------- */
+        /* ── Section soft ── */
         .section-soft {
-            background: var(--soft);
-            border-top: 1px solid #eef1f6;
-            border-bottom: 1px solid #eef1f6
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
-        .shadow-soft {
-            box-shadow: 0 10px 30px rgba(33, 37, 41, .08)
+        /* ── Accordion ── */
+        .accordion-item {
+            background: transparent !important;
+            border-color: var(--border) !important;
         }
 
-        /* --------- FOOTER --------- */
-        .footer a {
-            color: #6c757d
+        .accordion-button {
+            background: var(--bg-card) !important;
+            color: var(--text) !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
         }
+
+        .accordion-button:not(.collapsed) {
+            color: var(--brand) !important;
+            background: var(--brand-light) !important;
+        }
+
+        html[data-theme="dark"] .accordion-button::after { filter: invert(1) brightness(1.5); }
+
+        .accordion-body { background: var(--bg-card); color: var(--text-2); }
+
+        /* ── Tables ── */
+        .table {
+            color: var(--text) !important;
+            border-color: var(--border) !important;
+        }
+
+        .table > :not(caption) > * > * {
+            background-color: transparent !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        .table-light, .table-light th, .table-light td {
+            background: var(--brand-light) !important;
+            color: var(--text) !important;
+        }
+
+        /* ── List group ── */
+        .list-group-item {
+            background: var(--bg-card) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+        }
+
+        /* ── Modals ── */
+        .modal-content {
+            background: var(--bg-card) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+            border-radius: var(--r-lg) !important;
+        }
+
+        .modal-header, .modal-footer { border-color: var(--border) !important; }
+        .btn-close { filter: invert(0); }
+        html[data-theme="dark"] .btn-close { filter: invert(1); }
+
+        /* ── Alerts ── */
+        .alert-danger {
+            background: rgba(239,68,68,.1) !important;
+            border-color: rgba(239,68,68,.3) !important;
+            color: #ef4444 !important;
+        }
+
+        .alert-success {
+            background: rgba(var(--brand-rgb),.1) !important;
+            border-color: rgba(var(--brand-rgb),.3) !important;
+            color: var(--brand) !important;
+        }
+
+        /* ── Dropdown ── */
+        .dropdown-menu {
+            background: var(--bg-card)  !important;
+            border-color: var(--border) !important;
+            box-shadow: var(--sh-lg)    !important;
+            border-radius: var(--r)     !important;
+        }
+
+        .dropdown-item { color: var(--text) !important; border-radius: var(--r-sm); }
+        .dropdown-item:hover { background: var(--brand-light) !important; color: var(--brand) !important; }
+        .dropdown-divider { border-color: var(--border) !important; }
+
+        /* ── Footer ── */
+        .tz-footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: .875rem;
+            padding: 3rem 0 2rem;
+        }
+
+        .tz-footer .ft-brand { font-size: 1.15rem; font-weight: 700; color: var(--brand); margin-bottom: .75rem; display: block; }
+        .tz-footer a { color: var(--text-muted); transition: color var(--ease); }
+        .tz-footer a:hover { color: var(--brand); }
+        .tz-footer h6 { color: var(--text); font-weight: 600; }
+        .tz-footer ul { padding: 0; list-style: none; }
+        .tz-footer ul li { margin-bottom: .45rem; }
+        .tz-footer ul li a { display: flex; align-items: center; gap: .4rem; }
+        .ft-divider { border-color: var(--border); margin: 2rem 0 1.25rem; }
+
+        /* ── Mobile bottom nav ── */
+        .tz-bnav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: var(--bnav-h);
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            z-index: 1080;
+            box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+        }
+
+        .tz-bnav-inner { display: flex; height: 100%; }
+
+        .tz-bnav a {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-size: .67rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--ease);
+            letter-spacing: .02em;
+        }
+
+        .tz-bnav a i { font-size: 1.25rem; line-height: 1; }
+        .tz-bnav a.active, .tz-bnav a:hover { color: var(--brand); }
+
+        @@media (max-width: 991.98px) { .tz-bnav { display: block; } }
+
+        /* ── WA Button ── */
+        .btn-whatsapp {
+            background: #25d366 !important;
+            border-color: #25d366 !important;
+            color: #fff !important;
+            font-weight: 600;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1db954 !important;
+            border-color: #1db954 !important;
+            box-shadow: 0 4px 14px rgba(37,211,102,.35) !important;
+        }
+
+        .shadow-soft { box-shadow: var(--sh-md) !important; }
     </style>
-    @await RenderSectionAsync("Head", required: false)
 </head>
-
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" asp-action="Index"
-                asp-controller="Home">
-                <!-- Coloca el archivo del logo junto al HTML con este mismo nombre -->
-                <img src="~/img/tazukylogo.jpg" alt="Tazuki Remix Logo"> <span></span>
+
+    <!-- ═══ NAVBAR ═══ -->
+    <header class="tz-navbar">
+        <div class="container tz-inner">
+
+            <a class="tz-brand" asp-action="Index" asp-controller="Home">
+                <img src="~/img/tazukylogo.jpg" alt="Tazuki">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
-                aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="nav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" asp-action="Catalogo"
-                            asp-controller="Home">Catálogo</a></li>
-                    <li class="nav-item"><a class="nav-link active"
-                            href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Pedir
-                            por WhatsApp</a></li>
-                    <li class="nav-item ms-lg-2"><a class="btn btn-primary"
-                            href="@Url.Action("InicioSesion", "Home")">Iniciar Sesión</a></li>
-                </ul>
+
+            <ul class="tz-links">
+                <li><a asp-action="Catalogo" asp-controller="Home"><i class="bi bi-grid-3x3-gap"></i> Catálogo</a></li>
+                <li>
+                    <a href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n" target="_blank">
+                        <i class="bi bi-whatsapp"></i> WhatsApp
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tz-right">
+                <button class="tz-ibtn" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="bi bi-sun-fill ic-sun"></i>
+                    <i class="bi bi-moon-fill ic-moon"></i>
+                </button>
+
+                <a class="tz-ibtn" asp-controller="Home" asp-action="Carrito" aria-label="Carrito">
+                    <i class="bi bi-bag"></i>
+                </a>
+
+                <a class="tz-ibtn" asp-controller="Home" asp-action="InicioSesion" aria-label="Iniciar sesión" title="Iniciar sesión">
+                    <i class="bi bi-person"></i>
+                </a>
+
+                <button class="tz-ham" id="hamBtn" aria-label="Menú">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
+    </header>
+
+    <!-- Mobile drawer -->
+    <nav class="tz-drawer" id="mobileDrawer">
+        <a asp-action="Index" asp-controller="Home"><i class="bi bi-house"></i>Inicio</a>
+        <a asp-action="Catalogo" asp-controller="Home"><i class="bi bi-grid-3x3-gap"></i>Catálogo</a>
+        <a asp-action="Carrito" asp-controller="Home"><i class="bi bi-bag"></i>Mi Carrito</a>
+        <a href="https://wa.me/5215660776770?text=Hola" target="_blank"><i class="bi bi-whatsapp"></i>WhatsApp</a>
+        <hr class="dd" />
+        <a asp-controller="Home" asp-action="InicioSesion"><i class="bi bi-box-arrow-in-right"></i>Iniciar Sesión</a>
+        <a asp-controller="Home" asp-action="Registro"><i class="bi bi-person-plus"></i>Crear Cuenta</a>
     </nav>
+
+    <!-- ═══ MAIN ═══ -->
     <main>
         @RenderBody()
     </main>
 
-
-
-    <!-- FAQ -->
+    <!-- ═══ FAQ ═══ -->
     <section id="faq" class="section-soft py-5">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4 align-items-start">
                 <div class="col-lg-6">
-                    <h3 class="fw-semibold">Preguntas frecuentes</h3>
-                    <div class="accordion mt-3" id="faqAcc">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#q1">¿Tiempo de elaboración?</button></h2>
-                            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
-                                <div class="accordion-body">De 24 a 72 horas hábiles según volumen y disponibilidad de
-                                    insumos. Urgencias: consúltanos.</div>
+                    <h3 class="fw-bold mb-1">Preguntas frecuentes</h3>
+                    <p class="mb-4" style="color:var(--text-muted)">Todo lo que necesitas saber antes de pedir.</p>
+                    <div class="accordion" id="faqAcc">
+                        <div class="accordion-item border-0 mb-2 rounded-3 overflow-hidden" style="border:1px solid var(--border)!important">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                                    ¿Cuánto tardan en elaborar mi pedido?
+                                </button>
+                            </h2>
+                            <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc">
+                                <div class="accordion-body">De 24 a 72 horas hábiles según volumen y disponibilidad. Para urgencias, consúltanos por WhatsApp.</div>
                             </div>
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#q2">¿Descuentos por mayoreo?</button>
+                        <div class="accordion-item border-0 mb-2 rounded-3 overflow-hidden" style="border:1px solid var(--border)!important">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                                    ¿Hay descuentos por mayoreo?
+                                </button>
                             </h2>
                             <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
-                                <div class="accordion-body">Sí, a partir de 12, 24 y 50 piezas. También hacemos
-                                    cotizaciones para eventos y empresas.</div>
+                                <div class="accordion-body">Sí, a partir de 12, 24 y 50 piezas. También hacemos cotizaciones para eventos y empresas.</div>
                             </div>
                         </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header"><button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#q3">¿Cómo envío mi diseño?</button></h2>
+                        <div class="accordion-item border-0 rounded-3 overflow-hidden" style="border:1px solid var(--border)!important">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3">
+                                    ¿Cómo envío mi diseño?
+                                </button>
+                            </h2>
                             <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqAcc">
-                                <div class="accordion-body">Puedes adjuntarlo por WhatsApp o correo. Aceptamos PNG, JPG,
-                                    PDF, AI, PSD. Te confirmamos vista previa antes de imprimir.</div>
+                                <div class="accordion-body">Por WhatsApp o correo. Aceptamos PNG, JPG, PDF, AI y PSD. Te confirmamos vista previa antes de imprimir.</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="p-4 bg-white border rounded-4 h-100">
-                        <h5 class="fw-semibold">Contacto</h5>
-                        <ul class="list-unstyled text-secondary mb-4">
-                            <li>Correo: <a href="mailto:tazukysub@gmail.com">tazukysub@gmail.com</a></li>
-                            <li>Instagram: <a href="https://www.instagram.com/tazukysub/">TazukySub</a></li>
+                    <div class="p-4 rounded-4 h-100" style="background:var(--bg);border:1px solid var(--border)">
+                        <h5 class="fw-bold mb-1">Contacto directo</h5>
+                        <p style="color:var(--text-muted)" class="mb-4 small">Respondemos en menos de 30 minutos en horario hábil.</p>
+                        <ul class="list-unstyled" style="color:var(--text-2)">
+                            <li class="mb-2 d-flex align-items-center gap-2">
+                                <i class="bi bi-envelope" style="color:var(--brand)"></i>
+                                <a href="mailto:tazukysub@gmail.com">tazukysub@gmail.com</a>
+                            </li>
+                            <li class="mb-3 d-flex align-items-center gap-2">
+                                <i class="bi bi-instagram" style="color:var(--brand)"></i>
+                                <a href="https://www.instagram.com/tazukysub/" target="_blank">@@tazukysub</a>
+                            </li>
                         </ul>
-                        <a class="btn btn-primary btn-lg w-100" target="_blank"
-                            href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">Escríbenos
-                            por WhatsApp</a>
+                        <a class="btn btn-whatsapp w-100 btn-lg rounded-3" target="_blank"
+                           href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sublimaci%C3%B3n">
+                            <i class="bi bi-whatsapp me-2"></i>Escribir por WhatsApp
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="py-4 footer">
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="tz-footer">
         <div class="container">
-            <div class="border-top pt-3 d-flex justify-content-between small text-secondary">
-                <span>© <span id="year"></span> Tazuki Remix</span>
+            <div class="row g-4">
+                <div class="col-sm-6 col-lg-4">
+                    <span class="ft-brand">☕ Tazuki</span>
+                    <p>Tazas y regalos sublimados personalizados. Fabricación rápida y envíos a todo México.</p>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <h6>Contacto</h6>
+                    <ul>
+                        <li><a href="https://wa.me/5215660776770"><i class="bi bi-whatsapp"></i>+52 566 077 6770</a></li>
+                        <li><a href="mailto:tazukysub@gmail.com"><i class="bi bi-envelope"></i>tazukysub@gmail.com</a></li>
+                        <li><a href="https://www.instagram.com/tazukysub/" target="_blank"><i class="bi bi-instagram"></i>tazukysub</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6>Información</h6>
+                    <p class="mb-3">Facturamos compras dentro del mes. Precios sujetos a cambio sin previo aviso.</p>
+                    <a class="btn btn-whatsapp btn-sm rounded-pill px-3" href="https://wa.me/5215660776770?text=Hola" target="_blank">
+                        <i class="bi bi-whatsapp me-1"></i>Escribir ahora
+                    </a>
+                </div>
+            </div>
+            <hr class="ft-divider">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2" style="color:var(--text-muted)">
+                <span>© <span id="year"></span> Tazuki. Todos los derechos reservados.</span>
+                <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:var(--text-muted)">
+                    <i class="bi bi-arrow-up-short fs-5"></i>Subir
+                </a>
             </div>
         </div>
     </footer>
 
-    <!-- MODAL PERSONALIZA -->
+    <!-- Mobile bottom nav -->
+    <nav class="tz-bnav">
+        <div class="tz-bnav-inner">
+            <a asp-action="Index" asp-controller="Home"><i class="bi bi-house-fill"></i>Inicio</a>
+            <a asp-action="Catalogo" asp-controller="Home"><i class="bi bi-grid-fill"></i>Catálogo</a>
+            <a asp-action="Carrito" asp-controller="Home"><i class="bi bi-bag-fill"></i>Carrito</a>
+            <a asp-controller="Home" asp-action="InicioSesion"><i class="bi bi-person-fill"></i>Ingresar</a>
+        </div>
+    </nav>
+
+    <!-- Modal Personaliza -->
     <div class="modal fade" id="modalPersonaliza" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Personalizar producto</h5>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Personalizar producto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body pt-2">
                     <form id="formPersonaliza">
                         <div class="mb-3">
-                            <label class="form-label">Producto</label>
+                            <label class="form-label fw-semibold small">Producto</label>
                             <input id="pNombre" type="text" class="form-control" readonly>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Detalles del diseño</label>
+                            <label class="form-label fw-semibold small">Detalles del diseño</label>
                             <textarea id="pDetalles" class="form-control" rows="3"
                                 placeholder="Ej: nombres, colores, frase, logo, foto…"></textarea>
                         </div>
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Cantidad</label>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Cantidad</label>
                                 <input id="pCantidad" type="number" class="form-control" min="1" value="1">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Precio aprox.</label>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold small">Precio aprox.</label>
                                 <input id="pPrecio" type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancelar</button>
-                    <a id="waLink" class="btn btn-primary" target="_blank" href="#">Enviar por WhatsApp</a>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="waLink" class="btn btn-whatsapp rounded-pill px-4" target="_blank" href="#">
+                        <i class="bi bi-whatsapp me-1"></i>Enviar por WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.js"></script>
+
     <script>
-        // Año dinámico (Esto es seguro)
-        const yearSpan = document.getElementById('year');
-        if (yearSpan) {
-            yearSpan.textContent = new Date().getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // ── Tema ──
+        const themeBtn = document.getElementById('themeToggle');
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('tz-theme', t);
         }
+        themeBtn?.addEventListener('click', () => {
+            setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
 
-        // --- Lógica de Filtros (Segura) ---
-        const grid = document.getElementById('gridProductos');
+        // ── Hamburger ──
+        const hamBtn = document.getElementById('hamBtn');
+        const drawer = document.getElementById('mobileDrawer');
+        hamBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            drawer.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!drawer?.contains(e.target) && !hamBtn?.contains(e.target))
+                drawer?.classList.remove('open');
+        });
 
-        if (grid) {
-            const cards = [...grid.querySelectorAll('.producto')];
-            const buscador = document.getElementById('buscador');
-            const rango = document.getElementById('rangoPrecio');
-            const lblPrecio = document.getElementById('lblPrecio');
-
-            if (rango && lblPrecio) {
-                rango.value = 300;
-                lblPrecio.textContent = '$' + rango.value;
-                rango.addEventListener('input', () => { lblPrecio.textContent = '$' + rango.value; filtrar(); });
-            }
-            if (buscador) {
-                buscador.addEventListener('input', filtrar);
-            }
-
-            document.addEventListener('change', (e) => { if (e.target.name === 'cat') filtrar(); });
-
-            function filtrar() {
-                const q = buscador.value.toLowerCase().trim();
-                const max = parseInt(rango.value, 10);
-                const cat = document.querySelector('input[name="cat"]:checked')?.value || 'all';
-                cards.forEach(card => {
-                    const tags = (card.dataset.tags || '').toLowerCase();
-                    const precio = parseInt(card.dataset.precio || '0', 10);
-                    const c = card.dataset.cat || '';
-                    const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-                    const visible = ((!q || tags.includes(q) || title.includes(q)) && (precio <= max || !precio) && (cat === 'all' || c === cat));
-                    card.style.display = visible ? '' : 'none';
-                });
-            }
-        } // --- Fin 'if (grid)'
-
-
-        // --- Lógica del Modal (Ahora también es segura) ---
-        const modal = document.getElementById('modalPersonaliza');
-
-        // Solo ejecutamos esto SI el modal existe en la página
-        if (modal) {
-
-            // Función segura: verifica que los elementos existan DENTRO de la función
+        // ── Modal Personaliza ──
+        const modalPersonaliza = document.getElementById('modalPersonaliza');
+        if (modalPersonaliza) {
             function actualizarWA() {
-                const pNombre = document.getElementById('pNombre');
-                const pDetalles = document.getElementById('pDetalles');
-                const pCantidad = document.getElementById('pCantidad');
+                const nombre = document.getElementById('pNombre')?.value || '';
+                const det    = document.getElementById('pDetalles')?.value.trim() || '';
+                const qty    = document.getElementById('pCantidad')?.value || '1';
                 const waLink = document.getElementById('waLink');
-
-                // Si alguno falta, no hacemos nada para evitar el crash
-                if (!pNombre || !pDetalles || !pCantidad || !waLink) {
-                    return;
-                }
-
-                const nombre = pNombre.value;
-                const det = pDetalles.value.trim();
-                const qty = pCantidad.value;
-                const mensaje = `Hola, quiero personalizar: ${nombre}%0A` +
-                    `Cantidad: ${qty}%0A` +
-                    (det ? `Detalles: ${encodeURIComponent(det)}%0A` : ``) +
-                    `¿Me ayudas con el diseño y total?`;
-                const telefono = '5215660776770';
-                waLink.href = `https://wa.me/${telefono}?text=${mensaje}`;
+                const msg    = `Hola, quiero personalizar: ${nombre}%0ACantidad: ${qty}%0A` +
+                               (det ? `Detalles: ${encodeURIComponent(det)}%0A` : '') +
+                               `¿Me ayudas con el diseño y total?`;
+                if (waLink) waLink.href = `https://wa.me/5215660776770?text=${msg}`;
             }
 
-            // Asignar el listener al modal
-            modal.addEventListener('show.bs.modal', (ev) => {
-                const btn = ev.relatedTarget;
+            modalPersonaliza.addEventListener('show.bs.modal', (ev) => {
+                const btn    = ev.relatedTarget;
                 const nombre = btn?.getAttribute('data-producto') || 'Producto';
                 const precio = btn?.getAttribute('data-precio') || '';
-
-                const pNombreEl = document.getElementById('pNombre');
-                const pPrecioEl = document.getElementById('pPrecio');
-                const pCantidadEl = document.getElementById('pCantidad');
-                const pDetallesEl = document.getElementById('pDetalles');
-
-                if (pNombreEl) pNombreEl.value = nombre;
-                if (pPrecioEl) pPrecioEl.value = precio ? `$${precio} MXN` : 'A cotizar';
-                if (pCantidadEl) pCantidadEl.value = 1;
-                if (pDetallesEl) pDetallesEl.value = '';
-
-                actualizarWA(); // Llamamos a la función segura
+                const n = document.getElementById('pNombre');
+                const p = document.getElementById('pPrecio');
+                const c = document.getElementById('pCantidad');
+                const d = document.getElementById('pDetalles');
+                if (n) n.value = nombre;
+                if (p) p.value = precio ? `$${precio} MXN` : 'A cotizar';
+                if (c) c.value = 1;
+                if (d) d.value = '';
+                actualizarWA();
             });
 
-            // Asignar listeners a los inputs
-            ['pDetalles', 'pCantidad'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', actualizarWA);
-                }
-            });
-
-        } // --- Fin 'if (modal)'
+            ['pDetalles', 'pCantidad'].forEach(id =>
+                document.getElementById(id)?.addEventListener('input', actualizarWA)
+            );
+        }
     </script>
-</body>
-@await RenderSectionAsync("Scripts", required: false)
 
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
 </html>
