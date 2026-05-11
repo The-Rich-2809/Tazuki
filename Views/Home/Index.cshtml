@@ -1,265 +1,351 @@
-﻿@using System.Data
+@using System.Data
 @{
-    // Convertimos la colección de filas a un tipo enumerable
-    var rows = ((DataTable)ViewBag.Videos).Rows.Cast<DataRow>();
+    var secciones          = ViewBag.Secciones as DataTable;
+    var seccionDisenos     = ViewBag.SeccionDisenos as DataTable;
+    var disenosAleatorios  = ViewBag.DisenosAleatorios as DataTable;
 
-    // Creamos una nueva colección ordenada de forma aleatoria (barajada)
-    var shuffledRows = rows.OrderBy(r => Guid.NewGuid());
+    Layout = "_LayoutUsuario";
 }
 @section Head {
     <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 }
-
-@{
-    if (ViewBag.Activo == "1")
-    {
-        Layout = "_LayoutUsuario";
-    }
-}
 <head>
-    <title>@ViewData["Title"] Tazuky</title>
+    <title>Tazuki – Tazas sublimadas personalizadas</title>
 </head>
-<header id="inicio" class="hero py-5 py-lg-6">
-    <div class="container py-3">
+
+<style>
+    /* ── Hero ── */
+    .idx-hero {
+        background:
+            radial-gradient(ellipse 70% 60% at 0% 0%, rgba(var(--brand-rgb),.12) 0%, transparent 55%),
+            radial-gradient(ellipse 55% 45% at 100% 20%, rgba(249,115,22,.08) 0%, transparent 60%),
+            var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 4rem 0 3.5rem;
+    }
+    .idx-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--brand-light);
+        color: var(--brand);
+        border: 1px solid rgba(var(--brand-rgb),.3);
+        font-size: .78rem;
+        font-weight: 600;
+        padding: .3rem .9rem;
+        border-radius: 2rem;
+        margin-bottom: 1.25rem;
+    }
+    .idx-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.2; }
+
+    /* ── Sections ── */
+    .idx-section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .idx-section:last-child { border-bottom: none; }
+    .idx-section-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+    .idx-section-header h2 { font-size: 1.4rem; margin: 0; }
+    .idx-ver-todo {
+        color: var(--text-muted);
+        font-size: .85rem;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        transition: color .18s;
+    }
+    .idx-ver-todo:hover { color: var(--brand); }
+
+    /* ── Design Cards ── */
+    .idx-card-wrap {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r) var(--r) 0 0;
+        background: #111;
+        aspect-ratio: 3/4;
+    }
+    .idx-card-wrap video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .idx-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background .22s;
+    }
+    .idx-card-wrap:hover .idx-card-overlay { background: rgba(0,0,0,.42); }
+    .idx-card-overlay-text {
+        color: #fff;
+        font-size: .85rem;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity .22s, transform .22s;
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+    }
+    .idx-card-wrap:hover .idx-card-overlay-text { opacity: 1; transform: translateY(0); }
+
+    .badge-price {
+        background: var(--brand-light) !important;
+        color: var(--brand) !important;
+        border: 1px solid rgba(var(--brand-rgb),.25) !important;
+        font-weight: 600;
+        font-size: .75rem;
+    }
+
+    /* ── CTA Band ── */
+    .idx-cta-band {
+        background: var(--brand);
+        color: #fff;
+        padding: 3rem 0;
+        text-align: center;
+    }
+    .idx-cta-band h2 { color: #fff; font-size: 1.6rem; }
+    .idx-cta-band p { color: rgba(255,255,255,.82); }
+    .idx-cta-band .btn-light {
+        background: #fff;
+        color: var(--brand);
+        font-weight: 700;
+        border: none;
+    }
+    .idx-cta-band .btn-light:hover { background: rgba(255,255,255,.9); }
+</style>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="idx-hero">
+    <div class="container">
         <div class="row align-items-center g-4">
-            <div class="col-lg-6">
-                <span class="badge rounded-pill hero-badge mb-3">Personaliza desde 1 pieza</span>
-                <h1 class="display-5 fw-bold">Tazas y regalos sublimados <span class="text-primary">listos para
-                        regalar</span></h1>
-                <p class="lead text-secondary mb-4">Diseños a tu medida para eventos, marcas y ocasiones especiales.
-                    Fabricación rápida y envíos a todo México.</p>
-                <div class="d-flex gap-2">
-                    <a href="@Url.Action("Catalogo", "Home")" class="btn btn-primary btn-lg" >Ver catálogo</a>
-                    <a href="#personaliza" class="btn btn-outline-primary btn-lg">Sube tu diseño</a>
+            <div class="col-lg-6 order-lg-1">
+                <div class="idx-hero-badge">
+                    <i class="bi bi-stars"></i> Personaliza desde 1 pieza
                 </div>
-                <div class="d-flex gap-4 mt-4 text-secondary small">
-                    <div>✓ Entrega 24–72 h</div>
-                    <div>✓ Facturamos</div>
-                    <div>✓ Descuento por volumen</div>
+                <h1 class="fw-bold mb-3">
+                    Tazas sublimadas <span style="color:var(--brand)">listas para regalar</span>
+                </h1>
+                <p class="lead mb-4" style="color:var(--text-2)">
+                    Diseños a tu medida para eventos, marcas y ocasiones especiales.
+                    Fabricación rápida y envíos a todo México.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="@Url.Action("Catalogo", "Home")" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-grid-3x3-gap me-1"></i>Ver catálogo
+                    </a>
+                    <a href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20informaci%C3%B3n" target="_blank"
+                       class="btn btn-outline-primary btn-lg px-4">
+                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                    </a>
+                </div>
+                <div class="d-flex gap-4 mt-4 small" style="color:var(--text-muted)">
+                    <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Entrega 24–72 h</div>
+                    <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Facturamos</div>
+                    <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Mayoreo</div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <img class="img-fluid rounded-4 shadow-soft" alt="Tazas sublimadas coloridas" src="~/img/taza2.jpg" />
+            <div class="col-lg-6 order-lg-2">
+                <img class="img-fluid rounded-4 shadow-soft" alt="Tazas sublimadas" src="~/img/taza2.jpg" />
             </div>
         </div>
     </div>
 </header>
 
-<section id="catalogo" class="pb-5">
-    <div class="container">
-        <div class="d-flex align-items-end justify-content-between mb-3">
-            <div>
-                <h2 class="fw-semibold">Catálogo</h2>
-                <p class="text-secondary mb-0">Precios orientativos. Personaliza y cotiza al instante por WhatsApp.</p>
+<!-- ═══════════════════ DISEÑOS ALEATORIOS ═══════════════════ -->
+@if (disenosAleatorios != null && disenosAleatorios.Rows.Count > 0)
+{
+    <section class="idx-section">
+        <div class="container">
+            <div class="idx-section-header">
+                <h2 class="fw-bold">Descubre más diseños</h2>
+                <a href="@Url.Action("Catalogo", "Home")" class="idx-ver-todo">
+                    Ver catálogo completo <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
-            <div class="input-group" style="max-width: 320px;">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input id="buscador" type="search" class="form-control" placeholder="Buscar: foto, mágica, pareja…">
-            </div>
-        </div>
-        <div class="row g-4" id="gridProductos">
-            @if (ViewBag.Videos != null && ViewBag.Videos.Rows.Count > 0)
-            {
-                // Creamos una nueva colección ordenada de forma aleatoria Y TOMAMOS SOLO 6
-                var randomSixRows = rows.OrderBy(r => Guid.NewGuid()).Take(6);
-
-                foreach (DataRow row_video in randomSixRows)
+            <div class="row g-3">
+                @foreach (DataRow diseno in disenosAleatorios.Rows)
                 {
-                    <div class="col-sm-6 col-lg-4 producto" data-tags="taza cerámica blanca 11oz" data-cat="taza" data-precio="@row_video[2]">
+                    string dId      = diseno["id"].ToString()!;
+                    string dNombre  = diseno["nombre"]?.ToString() ?? "";
+                    string dPrecio  = diseno["precio"]?.ToString() ?? "";
+                    string dRuta    = diseno["ruta_diseno"]?.ToString() ?? "";
+                    string dModelo  = diseno["modelo"]?.ToString() ?? "";
+                    string dTags    = diseno["tags_nombres"] != DBNull.Value ? diseno["tags_nombres"].ToString()! : "";
+                    var    tagArr   = dTags.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                    string url      = Url.Action("Producto", "Home", new { Id = dId })!;
+
+                    <div class="col-6 col-md-4 col-lg-3">
                         <div class="card h-100">
-                            
-                            <div class="video-container">
-                                <video class="card-img-bottom" muted loop playsinline preload="none">
-                                    <source src="@Url.Content(row_video[5].ToString())" type="video/mp4" />
-                                    Tu navegador no soporta video HTML5.
-                                </video>
-                                <div class="video-overlay">
-                                    <i class="bi bi-arrows-fullscreen"></i>
+                            <div class="idx-card-wrap">
+                                <a href="@url">
+                                    <video class="idx-card-video" muted loop playsinline preload="none">
+                                        <source src="@Url.Content("~/" + dRuta)" type="video/mp4" />
+                                    </video>
+                                </a>
+                                <div class="idx-card-overlay" style="pointer-events:none">
+                                    <span class="idx-card-overlay-text">
+                                        <i class="bi bi-eye-fill"></i> Ver diseño
+                                    </span>
                                 </div>
-                                </div>
-                            <div class="card-body d-flex flex-column">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        @if (!string.IsNullOrWhiteSpace(row_video[8]?.ToString()))
+                            </div>
+                            <div class="card-body d-flex flex-column py-2 px-3">
+                                @if (!string.IsNullOrWhiteSpace(dModelo))
+                                {
+                                    <span class="badge bg-secondary mb-1" style="font-size:.65rem;width:fit-content">Mod. @dModelo</span>
+                                }
+                                <a href="@url" class="text-decoration-none text-reset">
+                                    <h6 class="fw-bold mb-1" style="font-size:.85rem;line-height:1.3">@dNombre</h6>
+                                </a>
+                                @if (tagArr.Length > 0)
+                                {
+                                    <div class="mb-2">
+                                        @foreach (var tag in tagArr.Take(3))
                                         {
-                                            <span class="badge bg-secondary mb-1 d-inline-block" style="font-size:.7rem">Mod. @row_video[8]</span>
+                                            <span class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1" style="font-size:.65rem">@tag.Trim()</span>
                                         }
-                                        <h5 class="card-title mb-0">@row_video[1]</h5>
                                     </div>
-                                    <span class="badge rounded-pill badge-price">Desde $@row_video[2]</span>
-                                </div>
-                                <div class="rating mb-2" aria-label="Calificación 5 de 5">
-                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                </div>
-                                <div class="mt-auto d-flex gap-2">
-                                    <a class="btn btn-primary w-100" href="@Url.Action("Producto", "Home", new { Id = row_video[0] })">Comprar</a>
+                                }
+                                <div class="mt-auto d-flex align-items-center justify-content-between gap-2">
+                                    <span class="badge rounded-pill badge-price">Desde $@dPrecio</span>
+                                    <a href="@url" class="btn btn-primary btn-sm px-3">Comprar</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 }
-            }
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-<section id="personaliza" class="py-5">
+<!-- ═══════════════════ SECCIONES DINÁMICAS ═══════════════════ -->
+@if (secciones != null && secciones.Rows.Count > 0)
+{
+    foreach (DataRow seccion in secciones.Rows)
+    {
+        string seccionId = seccion["id"].ToString()!;
+        var disenos = seccionDisenos!.AsEnumerable()
+            .Where(r => r["seccion_id"].ToString() == seccionId)
+            .ToList();
+
+        if (disenos.Count == 0) continue;
+
+        <section class="idx-section">
+            <div class="container">
+                <div class="idx-section-header">
+                    <h2 class="fw-bold">@seccion["nombre"]</h2>
+                    <a href="@Url.Action("Catalogo", "Home")" class="idx-ver-todo">
+                        Ver catálogo completo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="row g-3" id="sec-grid-@seccionId">
+                    @foreach (var diseno in disenos)
+                    {
+                        string dId   = diseno["diseno_id"].ToString()!;
+                        string dNombre = diseno["nombre"]?.ToString() ?? "";
+                        string dPrecio = diseno["precio"]?.ToString() ?? "";
+                        string dRuta   = diseno["ruta_diseno"]?.ToString() ?? "";
+                        string dModelo = diseno["modelo"]?.ToString() ?? "";
+                        string dTags   = diseno["tags_nombres"] != DBNull.Value
+                            ? diseno["tags_nombres"].ToString()! : "";
+                        var tagArr = dTags.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                        string productoUrl = Url.Action("Producto", "Home", new { Id = dId })!;
+
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card h-100">
+                                <div class="idx-card-wrap">
+                                    <a href="@productoUrl">
+                                        <video class="idx-card-video" muted loop playsinline preload="none">
+                                            <source src="@Url.Content("~/" + dRuta)" type="video/mp4" />
+                                        </video>
+                                    </a>
+                                    <div class="idx-card-overlay" style="pointer-events:none">
+                                        <span class="idx-card-overlay-text">
+                                            <i class="bi bi-eye-fill"></i> Ver diseño
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column py-2 px-3">
+                                    @if (!string.IsNullOrWhiteSpace(dModelo))
+                                    {
+                                        <span class="badge bg-secondary mb-1" style="font-size:.65rem;width:fit-content">Mod. @dModelo</span>
+                                    }
+                                    <a href="@productoUrl" class="text-decoration-none text-reset">
+                                        <h6 class="fw-bold mb-1" style="font-size:.85rem;line-height:1.3">@dNombre</h6>
+                                    </a>
+                                    @if (tagArr.Length > 0)
+                                    {
+                                        <div class="mb-2">
+                                            @foreach (var tag in tagArr.Take(3))
+                                            {
+                                                <span class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1" style="font-size:.65rem">@tag.Trim()</span>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="mt-auto d-flex align-items-center justify-content-between gap-2">
+                                        <span class="badge rounded-pill badge-price">Desde $@dPrecio</span>
+                                        <a href="@productoUrl" class="btn btn-primary btn-sm px-3">Comprar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+}
+else
+{
+    <!-- Sin secciones configuradas: sólo se muestra el hero con link al catálogo -->
+    <section class="py-5 text-center">
+        <div class="container">
+            <p class="text-secondary mb-4">Próximamente habrá diseños de temporada disponibles aquí.</p>
+            <a href="@Url.Action("Catalogo", "Home")" class="btn btn-primary btn-lg px-5">
+                <i class="bi bi-grid-3x3-gap me-2"></i>Ver catálogo completo
+            </a>
+        </div>
+    </section>
+}
+
+<!-- ═══════════════════ BANDA CTA ═══════════════════ -->
+<div class="idx-cta-band">
     <div class="container">
-        <div class="row align-items-center g-4">
-            <div class="col-lg-6">
-                <img alt="Personaliza tu diseño" class="img-fluid rounded-4 shadow-soft" src="~/img/taza1.jpg" />
-            </div>
-            <div class="col-lg-6">
-                <h2 class="fw-bold">¿Tienes un diseño? <span class="text-primary">Nosotros lo imprimimos</span></h2>
-                <p class="text-secondary">Cuéntanos qué necesitas: cantidades, colores, nombres, logotipo, fotografías o
-                    frases. Podemos sugerirte opciones de empaque y acabado.</p>
-                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalPersonaliza"
-                    data-producto="Pedido personalizado" data-precio="">Personalizar ahora</button>
-            </div>
-        </div>
+        <h2 class="fw-bold mb-2">¿Tienes un diseño propio?</h2>
+        <p class="mb-4">Cuéntanos cantidades, colores y frases. Hacemos sublimación a tu medida.</p>
+        <a href="https://wa.me/5215660776770?text=Hola%2C%20quiero%20personalizar%20una%20taza" target="_blank"
+           class="btn btn-light btn-lg px-5 rounded-pill">
+            <i class="bi bi-whatsapp me-2"></i>Escribir por WhatsApp
+        </a>
     </div>
-</section>
-
-<div id="custom-fullscreen-overlay">
-    <video id="custom-fullscreen-video" loop controls controlsList="nodownload"></video>
-    <button id="custom-fullscreen-close-btn">&times;</button>
 </div>
 
-<style>
-    #custom-fullscreen-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #000;
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-    }
-    #custom-fullscreen-overlay.visible {
-        display: flex;
-    }
-    #custom-fullscreen-video {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-    }
-    #custom-fullscreen-close-btn {
-        position: absolute;
-        top: 15px;
-        right: 25px;
-        font-size: 40px;
-        font-weight: bold;
-        color: white;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        text-shadow: 0 0 5px black;
-    }
-    .producto video {
-        cursor: pointer;
-    }
-
-    /* === INICIO CSS AÑADIDO (para Modificación 2) === */
-    .video-container {
-        position: relative; /* Necesario para posicionar el overlay */
-    }
-
-    /* INICIO: CSS MODIFICADO (Posición y tamaño) */
-    .video-overlay {
-        position: absolute;
-        bottom: 10px; /* Posición desde abajo */
-        right: 10px; /* MODIFICADO: Posición desde la derecha */
-        /* left: 50%; (Eliminado) */
-        /* transform: translateX(-50%); (Eliminado) */
-        background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-        color: white;
-        padding: 6px 14px; /* MODIFICADO: Un poco más grande */
-        border-radius: 20px; /* Bordes redondeados (píldora) */
-        font-size: 0.95rem; /* MODIFICADO: Un poco más grande */
-        font-weight: 500;
-        z-index: 10;
-        pointer-events: none; /* MUY IMPORTANTE: deja que el click "atraviese" el texto y llegue al video */
-        white-space: nowrap; /* Evita que el texto se parta en dos líneas */
-    }
-    /* FIN: CSS MODIFICADO */
-    /* === FIN CSS AÑADIDO === */
-
-</style>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const isIphone = /iPhone/i.test(navigator.userAgent);
-        if (isIphone) {
-            return;
-        }
-
-        const originalVideos = document.querySelectorAll('.producto video');
-        const overlay = document.getElementById('custom-fullscreen-overlay');
-        const overlayVideo = document.getElementById('custom-fullscreen-video');
-        const closeBtn = document.getElementById('custom-fullscreen-close-btn');
-
-        function openCustomFullscreen(videoElement) {
-            const source = videoElement.querySelector('source').src;
-            overlayVideo.src = source;
-            overlay.classList.add('visible');
-            overlayVideo.muted = false;
-            overlayVideo.play();
-            // Añadimos una entrada en el historial del navegador
-            history.pushState(null, '', '#video');
-        }
-
-        function closeCustomFullscreen() {
-            overlay.classList.remove('visible');
-            overlayVideo.pause();
-            overlayVideo.src = "";
-        }
-
-        // --- AÑADIMOS LOS EVENTOS ---
-
-        originalVideos.forEach(video => {
-            video.addEventListener('click', function (event) {
-                event.preventDefault();
-                openCustomFullscreen(this);
-            });
-        });
-
-        // El botón 'X' ahora simplemente simula un clic en "atrás"
-        closeBtn.addEventListener('click', () => {
-            history.back();
-        });
-
-        // La tecla 'Escape' también simula un clic en "atrás"
-        document.addEventListener('keydown', function (event) {
-            if (event.key === "Escape" && overlay.classList.contains('visible')) {
-                history.back();
+document.addEventListener('DOMContentLoaded', function () {
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const v = entry.target;
+            if (entry.isIntersecting) {
+                if (v.readyState === 0) v.load();
+                v.play().catch(() => {});
+            } else {
+                v.pause();
             }
         });
+    }, { rootMargin: '200px 0px', threshold: 0.1 });
 
-        // Este es el nuevo evento clave: escucha cuando el usuario presiona "atrás"
-        window.addEventListener('popstate', function(event) {
-            // Si el evento "atrás" sucede y nuestra capa está visible, la cerramos.
-            if (overlay.classList.contains('visible')) {
-                closeCustomFullscreen();
-            }
-        });
-
-        // Lazy loading: carga y reproduce solo cuando entra al viewport
-        const lazyVideoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target;
-                if (entry.isIntersecting) {
-                    if (video.readyState === 0) video.load();
-                    video.play().catch(() => {});
-                } else {
-                    video.pause();
-                }
-            });
-        }, { rootMargin: '200px 0px', threshold: 0.1 });
-
-        document.querySelectorAll('#gridProductos video').forEach(v => lazyVideoObserver.observe(v));
-    });
+    document.querySelectorAll('.idx-card-video').forEach(v => obs.observe(v));
+});
 </script>

@@ -74,19 +74,19 @@ namespace Tazuki.Controllers
         public IActionResult Index()
         {
             Cookies();
-            DataTable dt = Home_SQL.Mostrar_Tazas();
-            ViewBag.Videos = dt;
+            var (secciones, seccionDisenos) = Home_SQL.Mostrar_Secciones_Home();
+            ViewBag.Secciones = secciones;
+            ViewBag.SeccionDisenos = seccionDisenos;
+            ViewBag.DisenosAleatorios = Home_SQL.Mostrar_Tazas_Aleatorias(8);
             return View();
         }
         public IActionResult Catalogo()
         {
             Cookies();
-            DataTable dt = Home_SQL.Mostrar_Tazas();
-            ViewBag.Videos = dt;
-            dt = Home_SQL.Mostrar_Tags();
-            ViewBag.Tags = dt;
-            dt = Home_SQL.Mostrar_Tazas_Tags();
-            ViewBag.DisenoTags = dt;
+            var (tazas, tags, disenoTags) = Home_SQL.Mostrar_Datos_Catalogo();
+            ViewBag.Videos = tazas;
+            ViewBag.Tags = tags;
+            ViewBag.DisenoTags = disenoTags;
             return View();
         }
         public IActionResult Producto(string id)
@@ -125,6 +125,7 @@ namespace Tazuki.Controllers
             }
 
             ViewBag.Tags_Taza = Tags;
+            ViewBag.Sugerencias = Home_SQL.Mostrar_Tazas_Relacionadas(id);
 
             return View();
         }

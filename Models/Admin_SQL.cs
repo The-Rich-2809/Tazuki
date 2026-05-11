@@ -681,5 +681,137 @@ namespace Tazuki.Models
             }
         }
 
+        public static DataTable Mostrar_Secciones()
+        {
+            DataTable dt = new DataTable();
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                string sql = @"
+                    SELECT s.*,
+                           (SELECT COUNT(*) FROM seccion_home_disenos shd
+                            WHERE shd.seccion_id = s.id) AS total_disenos
+                    FROM secciones_home s
+                    ORDER BY s.orden ASC, s.id ASC";
+                MySqlCommand cmd = new MySqlCommand(sql, conexionBD);
+                dt.Load(cmd.ExecuteReader());
+            }
+            catch (MySqlException ex) { Datos.Mensaje = "Error: " + ex.Message; }
+            finally { conexionBD.Close(); }
+            return dt;
+        }
+
+        public static bool Agregar_Seccion(string nombre)
+        {
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(
+                    "INSERT INTO secciones_home (nombre, orden, activo) VALUES (@nombre, 0, 1)", conexionBD);
+                cmd.Parameters.AddWithValue("nombre", nombre);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException ex) { Datos.Mensaje = "Error: " + ex.Message; return false; }
+            finally { conexionBD.Close(); }
+        }
+
+        public static bool Eliminar_Seccion(int id)
+        {
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(
+                    "DELETE FROM secciones_home WHERE id = @id", conexionBD);
+                cmd.Parameters.AddWithValue("id", id);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException ex) { Datos.Mensaje = "Error: " + ex.Message; return false; }
+            finally { conexionBD.Close(); }
+        }
+
+        public static bool Toggle_Seccion(int id, bool activo)
+        {
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(
+                    "UPDATE secciones_home SET activo = @activo WHERE id = @id", conexionBD);
+                cmd.Parameters.AddWithValue("activo", activo ? 1 : 0);
+                cmd.Parameters.AddWithValue("id", id);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException ex) { Datos.Mensaje = "Error: " + ex.Message; return false; }
+            finally { conexionBD.Close(); }
+        }
+
+        public static DataTable Mostrar_Disenos_De_Seccion(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand(
+                    "SELECT diseno_id FROM seccion_home_disenos WHERE seccion_id = @id ORDER BY orden ASC",
+                    conexionBD);
+                cmd.Parameters.AddWithValue("id", id);
+                dt.Load(cmd.ExecuteReader());
+            }
+            catch (MySqlException ex) { Datos.Mensaje = "Error: " + ex.Message; }
+            finally { conexionBD.Close(); }
+            return dt;
+        }
+
+        public static bool Guardar_Disenos_Seccion(int seccionId, string nombre, int orden, int[] disenoIds)
+        {
+            MySqlConnection conexionBD = Conexion.conexion();
+            conexionBD.Open();
+            MySqlTransaction tx = conexionBD.BeginTransaction();
+            try
+            {
+                var cmdUpdate = new MySqlCommand(
+                    "UPDATE secciones_home SET nombre = @nombre, orden = @ord WHERE id = @id",
+                    conexionBD, tx);
+                cmdUpdate.Parameters.AddWithValue("nombre", nombre);
+                cmdUpdate.Parameters.AddWithValue("ord", orden);
+                cmdUpdate.Parameters.AddWithValue("id", seccionId);
+                cmdUpdate.ExecuteNonQuery();
+
+                var cmdDelete = new MySqlCommand(
+                    "DELETE FROM seccion_home_disenos WHERE seccion_id = @sid",
+                    conexionBD, tx);
+                cmdDelete.Parameters.AddWithValue("sid", seccionId);
+                cmdDelete.ExecuteNonQuery();
+
+                for (int i = 0; i < disenoIds.Length; i++)
+                {
+                    var cmdInsert = new MySqlCommand(
+                        "INSERT INTO seccion_home_disenos (seccion_id, diseno_id, orden) VALUES (@s, @d, @o)",
+                        conexionBD, tx);
+                    cmdInsert.Parameters.AddWithValue("s", seccionId);
+                    cmdInsert.Parameters.AddWithValue("d", disenoIds[i]);
+                    cmdInsert.Parameters.AddWithValue("o", i);
+                    cmdInsert.ExecuteNonQuery();
+                }
+
+                tx.Commit();
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                tx.Rollback();
+                Datos.Mensaje = "Error: " + ex.Message;
+                return false;
+            }
+            finally { conexionBD.Close(); }
+        }
+
     }
 }

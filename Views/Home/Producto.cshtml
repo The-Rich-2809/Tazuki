@@ -162,6 +162,149 @@
             background-color: var(--brand, #3bbfad) !important;
             color: white !important;
         }
+
+        /* ── Carrusel de sugerencias ── */
+        .sugerencias-section {
+            padding-bottom: 3rem;
+        }
+
+        .sugerencias-wrapper {
+            position: relative;
+        }
+
+        .sugerencias-track {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 0.5rem 0.25rem 1rem;
+            scroll-behavior: smooth;
+        }
+
+        .sugerencias-track::-webkit-scrollbar { display: none; }
+
+        /* ── Tarjeta de sugerencia (igual al catálogo) ── */
+        .sug-card-wrap {
+            flex: 0 0 calc(33.333% - 0.667rem);
+            scroll-snap-align: start;
+            min-width: 0;
+        }
+
+        .sug-card-wrap video.card-img-top {
+            height: 200px;
+            object-fit: contain;
+            background-color: var(--bg, #f8f9fa);
+        }
+
+        /* Overlay de hover igual al catálogo */
+        .video-card-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--r, .75rem) var(--r, .75rem) 0 0;
+        }
+
+        .video-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .25s ease;
+            pointer-events: none;
+        }
+
+        .video-card-wrap:hover .video-card-overlay { opacity: 1; }
+
+        .video-card-overlay-text {
+            color: #fff;
+            font-weight: 600;
+            font-size: .95rem;
+            background: rgba(255,255,255,.15);
+            border: 1.5px solid rgba(255,255,255,.75);
+            padding: .5rem 1.4rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-ver-diseno {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            width: 100%;
+            padding: .5rem 1rem;
+            font-size: .875rem;
+            font-weight: 600;
+            color: var(--brand, #4DB6AC);
+            border: 1.5px solid var(--brand, #4DB6AC);
+            background: transparent;
+            border-radius: var(--r-sm, .5rem);
+            text-decoration: none;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .btn-ver-diseno:hover {
+            background: var(--brand, #4DB6AC);
+            color: #fff;
+        }
+
+        .tag-filter-btn {
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .tag-filter-btn:hover {
+            background-color: var(--brand, #4DB6AC) !important;
+            color: white !important;
+        }
+
+        /* ── Flechas del carrusel ── */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-60%);
+            z-index: 10;
+            background: var(--bg-card, #fff);
+            border: 1.5px solid var(--border, #ddd);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand, #3bbfad);
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            line-height: 1;
+            padding: 0;
+        }
+
+        .carousel-arrow:hover {
+            background: var(--brand, #3bbfad);
+            color: #fff;
+            border-color: var(--brand, #3bbfad);
+        }
+
+        .carousel-arrow.left { left: -22px; }
+        .carousel-arrow.right { right: -22px; }
+
+        @@media (max-width: 768px) {
+            .sug-card-wrap { flex: 0 0 calc(50% - 0.5rem); }
+            .carousel-arrow { display: none; }
+        }
+
+        @@media (max-width: 480px) {
+            .sug-card-wrap { flex: 0 0 calc(80% - 0.5rem); }
+        }
     </style>
 </head>
 
@@ -245,6 +388,71 @@
         </div>
     </div>
 
+    @if (ViewBag.Sugerencias != null && ((DataTable)ViewBag.Sugerencias).Rows.Count > 0)
+    {
+        <section class="sugerencias-section container">
+            <h4 class="fw-bold mb-3">También te puede gustar</h4>
+            <div class="sugerencias-wrapper">
+                <button class="carousel-arrow left" id="arrow-left" disabled>&#8249;</button>
+
+                <div class="sugerencias-track" id="sugerencias-track">
+                    @foreach (System.Data.DataRow sug in ((DataTable)ViewBag.Sugerencias).Rows)
+                    {
+                        var sugUrl = Url.Action("Producto", "Home", new { Id = sug["id"] });
+                        var sugTags = (sug["tags_nombres"] != DBNull.Value ? sug["tags_nombres"].ToString() : "").Split('|', StringSplitOptions.RemoveEmptyEntries);
+
+                        <div class="sug-card-wrap">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="video-card-wrap">
+                                    <a href="@sugUrl">
+                                        <video class="card-img-top" muted loop playsinline preload="none">
+                                            <source src="@Url.Content("~/" + sug["ruta_diseno"].ToString())" type="video/mp4" />
+                                        </video>
+                                    </a>
+                                    <div class="video-card-overlay">
+                                        <span class="video-card-overlay-text">
+                                            <i class="bi bi-eye-fill"></i> Ver diseño
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <div>
+                                            @if (!string.IsNullOrWhiteSpace(sug["modelo"]?.ToString()))
+                                            {
+                                                <span class="badge bg-secondary mb-1 d-inline-block" style="font-size:.7rem">Mod. @sug["modelo"]</span>
+                                            }
+                                            <a href="@sugUrl" class="text-decoration-none text-reset">
+                                                <h5 class="card-title fw-bold mb-0">@sug["nombre"]</h5>
+                                            </a>
+                                        </div>
+                                        <span class="badge rounded-pill badge-price fs-6">$@sug["precio"]</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        @foreach (var tag in sugTags)
+                                        {
+                                            <a href="@Url.Action("Catalogo", "Home")?tag=@tag.ToLower().Trim()"
+                                               class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1 text-decoration-none tag-filter-btn">
+                                                @tag.Trim()
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="mt-auto pt-1">
+                                        <a href="@sugUrl" class="btn-ver-diseno">
+                                            <i class="bi bi-bag-plus"></i> Ver diseño
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button class="carousel-arrow right" id="arrow-right">&#8250;</button>
+            </div>
+        </section>
+    }
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const video = document.getElementById('product-video');
@@ -318,6 +526,79 @@
             minusBtn.addEventListener('click', () => {
                 if (parseInt(quantityInput.value) > 1) quantityInput.value = parseInt(quantityInput.value) - 1;
             });
+
+            // ── Carrusel infinito de sugerencias ──
+            (function () {
+                const track = document.getElementById('sugerencias-track');
+                const btnL  = document.getElementById('arrow-left');
+                const btnR  = document.getElementById('arrow-right');
+                if (!track || !btnL || !btnR) return;
+
+                const origCards = Array.from(track.querySelectorAll('.sug-card-wrap'));
+                const n = origCards.length;
+                if (n < 2) return;
+
+                // Construir: [clonesIzq][originales][clonesder]
+                const fragIzq = document.createDocumentFragment();
+                const fragDer = document.createDocumentFragment();
+                origCards.forEach(c => fragDer.appendChild(c.cloneNode(true)));
+                origCards.forEach(c => fragIzq.appendChild(c.cloneNode(true)));
+                track.insertBefore(fragIzq, track.firstChild);
+                track.appendChild(fragDer);
+
+                // Lazy load para todos los videos (originales + clones)
+                const videoObs = new IntersectionObserver((entries) => {
+                    entries.forEach(e => {
+                        const v = e.target;
+                        if (e.isIntersecting) { if (v.readyState === 0) v.load(); v.play().catch(() => {}); }
+                        else v.pause();
+                    });
+                }, { rootMargin: '100px 0px', threshold: 0.1 });
+                track.querySelectorAll('video').forEach(v => videoObs.observe(v));
+
+                const gap   = 16;
+                const cardW = () => origCards[0].offsetWidth + gap;
+                const setW  = () => cardW() * n;
+
+                // Posicionar en los originales (saltar los clones izquierdos)
+                track.style.scrollBehavior = 'auto';
+                track.scrollLeft = setW();
+                requestAnimationFrame(() => { track.style.scrollBehavior = 'smooth'; });
+
+                let busy = false;
+
+                function reposicionar() {
+                    const sl = track.scrollLeft;
+                    const sw = setW();
+                    // Si entró en el área de clones izquierdos → saltar al espejo en originales
+                    if (sl < sw * 0.5) {
+                        track.style.scrollBehavior = 'auto';
+                        track.scrollLeft = sl + sw;
+                        requestAnimationFrame(() => { track.style.scrollBehavior = 'smooth'; });
+                    }
+                    // Si entró en el área de clones derechos → saltar al espejo en originales
+                    else if (sl > sw * 1.5) {
+                        track.style.scrollBehavior = 'auto';
+                        track.scrollLeft = sl - sw;
+                        requestAnimationFrame(() => { track.style.scrollBehavior = 'smooth'; });
+                    }
+                    busy = false;
+                }
+
+                btnR.addEventListener('click', () => {
+                    if (busy) return;
+                    busy = true;
+                    track.scrollBy({ left: cardW(), behavior: 'smooth' });
+                    setTimeout(reposicionar, 380);
+                });
+
+                btnL.addEventListener('click', () => {
+                    if (busy) return;
+                    busy = true;
+                    track.scrollBy({ left: -cardW(), behavior: 'smooth' });
+                    setTimeout(reposicionar, 380);
+                });
+            })();
         });
     </script>
 </body>

@@ -750,6 +750,82 @@ namespace Tazuki.Controllers
             Admin_SQL.Mod_Tipo_Usuario(email, user);
             return RedirectToAction("Usuarios", "Admin");
         }
+        [HttpGet]
+        public IActionResult SeccionesHome()
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            ViewBag.Secciones = Admin_SQL.Mostrar_Secciones();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AgregarSeccion(string nombre)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            if (!string.IsNullOrWhiteSpace(nombre))
+                Admin_SQL.Agregar_Seccion(nombre.Trim());
+
+            return RedirectToAction("SeccionesHome", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult EditarSeccion(int id)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            DataTable secciones = Admin_SQL.Mostrar_Secciones();
+            DataRow? seccion = null;
+            foreach (DataRow row in secciones.Rows)
+            {
+                if (Convert.ToInt32(row[0]) == id) { seccion = row; break; }
+            }
+
+            if (seccion == null)
+                return RedirectToAction("SeccionesHome", "Admin");
+
+            ViewBag.Seccion = seccion;
+            ViewBag.TodosLosDisenos = Admin_SQL.Mostrar_Tazas();
+            ViewBag.DisenosSeleccionados = Admin_SQL.Mostrar_Disenos_De_Seccion(id);
+            ViewBag.Tags = Admin_SQL.Mostrar_Tags();
+            ViewBag.Taza_Tags = Admin_SQL.Mostrar_Tazas_Tags();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult EditarSeccion(int id, string nombre, int orden, int[]? disenoIds)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            Admin_SQL.Guardar_Disenos_Seccion(id, nombre ?? "", orden, disenoIds ?? Array.Empty<int>());
+            return RedirectToAction("SeccionesHome", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult ToggleSeccion(int id, bool activo)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            Admin_SQL.Toggle_Seccion(id, activo);
+            return RedirectToAction("SeccionesHome", "Admin");
+        }
+
+        [HttpGet]
+        public IActionResult EliminarSeccion(int id)
+        {
+            if (!Cookies())
+                return RedirectToAction("ErrorUsuario", "Home");
+
+            Admin_SQL.Eliminar_Seccion(id);
+            return RedirectToAction("SeccionesHome", "Admin");
+        }
+
         public bool Cookies()
         {
             var miCookie = HttpContext.Request.Cookies["Tazuky2"];

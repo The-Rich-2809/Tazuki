@@ -466,6 +466,11 @@
                         <i class="bi bi-people"></i>Usuarios
                     </a>
                 </li>
+                <li>
+                    <a class="@(act=="SeccionesHome" ? "active" : "")" asp-controller="Admin" asp-action="SeccionesHome">
+                        <i class="bi bi-layout-text-window-reverse"></i>Secciones Inicio
+                    </a>
+                </li>
             </ul>
 
             <div class="adm-right">
@@ -507,6 +512,9 @@
         </a>
         <a class="@(act=="Usuarios" ? "active" : "")" asp-controller="Admin" asp-action="Usuarios">
             <i class="bi bi-people"></i>Usuarios
+        </a>
+        <a class="@(act=="SeccionesHome" ? "active" : "")" asp-controller="Admin" asp-action="SeccionesHome">
+            <i class="bi bi-layout-text-window-reverse"></i>Secciones Inicio
         </a>
         <hr />
         <a asp-controller="Home" asp-action="Index">

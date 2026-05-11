@@ -155,3 +155,19 @@ CREATE TABLE pedido_items (
   CONSTRAINT fk_items_diseno FOREIGN KEY (diseno_id) REFERENCES disenos (id) ON DELETE RESTRICT,
   CONSTRAINT fk_items_tamano FOREIGN KEY (tamano_taza_id) REFERENCES tamanos_taza (id) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
+
+CREATE TABLE secciones_home (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(255) NOT NULL,
+      orden INT DEFAULT 0,
+      activo TINYINT(1) DEFAULT 1
+  );
+
+  CREATE TABLE seccion_home_disenos (
+      seccion_id INT NOT NULL,
+      diseno_id INT NOT NULL,
+      orden INT DEFAULT 0,
+      PRIMARY KEY (seccion_id, diseno_id),
+      FOREIGN KEY (seccion_id) REFERENCES secciones_home(id) ON DELETE CASCADE,
+      FOREIGN KEY (diseno_id) REFERENCES disenos(id) ON DELETE CASCADE
+  );

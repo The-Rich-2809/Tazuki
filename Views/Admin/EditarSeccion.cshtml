@@ -1,0 +1,336 @@
+@using System.Data
+@using System.Linq
+@{
+    Layout = "_LayoutAdmin";
+    var seccion      = (DataRow)ViewBag.Seccion;
+    var todosDisenos = (DataTable)ViewBag.TodosLosDisenos;
+    var selDt        = (DataTable)ViewBag.DisenosSeleccionados;
+    var dtTags       = (DataTable)ViewBag.Tags;
+    var dtTazaTags   = (DataTable)ViewBag.Taza_Tags;
+
+    var seleccionados = new HashSet<string>(
+        selDt.AsEnumerable().Select(r => r["diseno_id"].ToString()!)
+    );
+
+    var disenosOrdenados = todosDisenos.AsEnumerable().OrderBy(r => r.Field<string>(1));
+
+    // JSON array de strings para inicializar el Set de JS
+    string idsJson = "[" + string.Join(",", seleccionados.Select(s => "\"" + s + "\"")) + "]";
+}
+
+@section Styles {
+<style>
+    .video-card {
+        border: 2px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        background-color: var(--bg-card);
+        box-shadow: var(--sh-sm);
+        transition: transform .2s, border-color .15s, box-shadow .15s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        position: relative;
+        user-select: none;
+    }
+    .video-card:hover { transform: scale(1.02); }
+    .video-card.selected {
+        border-color: #22c55e !important;
+        box-shadow: 0 0 0 3px rgba(34,197,94,.25) !important;
+    }
+    .video-card video {
+        width: 100%;
+        border-radius: 0.25rem;
+        pointer-events: none;
+    }
+    .video-card-body { flex-grow: 1; }
+    .categories .badge { font-size: 0.75em; }
+
+    /* Checkmark badge */
+    .sel-badge {
+        position: absolute;
+        top: .6rem; right: .6rem;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: #22c55e;
+        color: #fff;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: .9rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,.35);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .video-card.selected .sel-badge { display: flex; }
+
+    .video-item { display: none; }
+    .pagination .page-link { cursor: pointer; }
+</style>
+}
+
+<div class="adm-page-header">
+    <div>
+        <a asp-action="SeccionesHome" asp-controller="Admin"
+           class="text-muted small d-inline-flex align-items-center gap-1 mb-1">
+            <i class="bi bi-arrow-left"></i> Secciones
+        </a>
+        <h1>Editar sección</h1>
+    </div>
+</div>
+
+<form id="formSeccion" method="post" action="@Url.Action("EditarSeccion", "Admin")">
+    <input type="hidden" name="id" value="@seccion["id"]" />
+    <div id="selectionStore"></div>
+
+    <!-- Nombre y Orden -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">Nombre de la sección</label>
+                    <input type="text" name="nombre" class="form-control"
+                           value="@seccion["nombre"]" required placeholder="Ej: Diseños de Navidad" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        Orden <span class="text-muted fw-normal">(menor = arriba)</span>
+                    </label>
+                    <input type="number" name="orden" class="form-control"
+                           value="@seccion["orden"]" min="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería de selección -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+                <h6 class="fw-semibold mb-0">
+                    Selecciona los diseños
+                    <span id="contadorSel" class="badge ms-1" style="background:var(--brand)">
+                        @seleccionados.Count seleccionados
+                    </span>
+                </h6>
+                <div class="d-flex gap-2 align-items-center">
+                    <input type="search" id="searchInput" class="form-control form-control-sm"
+                           placeholder="Buscar por título o etiqueta…" style="max-width:240px">
+                    <button type="button" id="btnDeselAll"
+                            class="btn btn-sm btn-outline-secondary text-nowrap">
+                        Desmarcar todos
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" id="video-gallery">
+                @foreach (DataRow diseno in disenosOrdenados)
+                {
+                    string did    = diseno[0].ToString()!;
+                    string nombre = diseno[1]?.ToString() ?? "";
+                    string ruta   = diseno[5]?.ToString() ?? "";
+                    string modelo = diseno[8]?.ToString() ?? "";
+                    bool   esSel  = seleccionados.Contains(did);
+
+                    // Recoger etiquetas de este diseño
+                    var tagsDeEste = new List<string>();
+                    foreach (DataRow tt in dtTazaTags.Rows)
+                    {
+                        if (tt[0].ToString() == did)
+                        {
+                            foreach (DataRow tag in dtTags.Rows)
+                            {
+                                if (tag[0].ToString() == tt[1].ToString())
+                                {
+                                    tagsDeEste.Add(tag[1].ToString()!);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    string tagsTexto = string.Join(" ", tagsDeEste).ToLower();
+
+                    <div class="col-lg-4 col-md-6 mb-4 video-item"
+                         data-titulo="@nombre.ToLower()"
+                         data-tags="@tagsTexto">
+                        <div class="video-card @(esSel ? "selected" : "")" data-id="@did">
+                            <div class="sel-badge"><i class="bi bi-check-lg"></i></div>
+                            <video playsinline muted loop preload="none">
+                                <source src="@Url.Content("~/" + ruta)" type="video/mp4">
+                            </video>
+                            <div class="video-card-body">
+                                @if (!string.IsNullOrWhiteSpace(modelo))
+                                {
+                                    <span class="badge bg-secondary mt-2 d-inline-block">Modelo: @modelo</span>
+                                }
+                                <h5 class="video-title mt-1">@nombre</h5>
+                            </div>
+                            <div class="categories mt-2">
+                                @foreach (var t in tagsDeEste)
+                                {
+                                    <span class="badge bg-secondary">@t</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <nav aria-label="Página">
+                <ul class="pagination justify-content-center" id="pagination-container"></ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="SeccionesHome" asp-controller="Admin"
+           class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary px-5">
+            <i class="bi bi-floppy me-1"></i>Guardar cambios
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── Selección ────────────────────────────────────────────
+    // IDs como strings (igual que dataset.id)
+    const selectedIds = new Set(@Html.Raw(idsJson));
+    const store    = document.getElementById('selectionStore');
+    const contador = document.getElementById('contadorSel');
+
+    function syncStore() {
+        store.innerHTML = '';
+        selectedIds.forEach(id => {
+            const inp = document.createElement('input');
+            inp.type  = 'hidden';
+            inp.name  = 'disenoIds';
+            inp.value = id;
+            store.appendChild(inp);
+        });
+        contador.textContent = selectedIds.size + ' seleccionados';
+    }
+
+    document.querySelectorAll('.video-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const id = card.dataset.id;          // siempre string
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+                card.classList.remove('selected');
+            } else {
+                selectedIds.add(id);
+                card.classList.add('selected');
+            }
+            syncStore();
+        });
+    });
+
+    document.getElementById('btnDeselAll').addEventListener('click', () => {
+        selectedIds.clear();
+        document.querySelectorAll('.video-card.selected')
+            .forEach(c => c.classList.remove('selected'));
+        syncStore();
+    });
+
+    syncStore(); // genera inputs iniciales
+
+    // ── Paginación ────────────────────────────────────────────
+    const videosPerPage = 12;
+    let currentPage = 1;
+    const ellipsis  = '...';
+
+    const allItems     = document.querySelectorAll('.video-item');
+    const pagContainer = document.getElementById('pagination-container');
+    const searchInput  = document.getElementById('searchInput');
+    let currentFiltered = [...allItems];
+
+    function getPaginationRange(total, cur, sib = 1) {
+        if (total <= sib * 2 + 5)
+            return Array.from({ length: total }, (_, i) => i + 1);
+        const l = Math.max(cur - sib, 1), r = Math.min(cur + sib, total);
+        const sl = l > 2, sr = r < total - 2;
+        if (!sl && sr)  return [...range(1, 3 + 2*sib), ellipsis, total];
+        if (sl && !sr)  return [1, ellipsis, ...range(total - 2 - 2*sib, total)];
+        return [1, ellipsis, ...range(l, r), ellipsis, total];
+    }
+    function range(a, b) {
+        const arr = [];
+        for (let i = a; i <= b; i++) arr.push(i);
+        return arr;
+    }
+
+    function displayVideos() {
+        const s = (currentPage - 1) * videosPerPage;
+        allItems.forEach(item => item.style.display = 'none');
+        for (let i = s; i < s + videosPerPage && i < currentFiltered.length; i++)
+            currentFiltered[i].style.display = 'block';
+    }
+
+    function setupPagination() {
+        const total = Math.ceil(currentFiltered.length / videosPerPage);
+        pagContainer.innerHTML = '';
+        if (total <= 1) return;
+
+        const mkLi = (label, page, disabled, active) => {
+            const li = document.createElement('li');
+            li.className = 'page-item' + (disabled ? ' disabled' : '') + (active ? ' active' : '');
+            li.innerHTML = disabled && label === ellipsis
+                ? `<span class="page-link">…</span>`
+                : `<a class="page-link" href="#" data-page="${page}">${label}</a>`;
+            return li;
+        };
+
+        pagContainer.appendChild(mkLi('Anterior', currentPage - 1, currentPage === 1, false));
+        getPaginationRange(total, currentPage).forEach(p => {
+            pagContainer.appendChild(mkLi(p, p, p === ellipsis, p === currentPage));
+        });
+        pagContainer.appendChild(mkLi('Siguiente', currentPage + 1, currentPage === total, false));
+    }
+
+    pagContainer.addEventListener('click', e => {
+        e.preventDefault();
+        const a = e.target.closest('a[data-page]');
+        if (!a) return;
+        const p = parseInt(a.dataset.page, 10);
+        const total = Math.ceil(currentFiltered.length / videosPerPage);
+        if (p >= 1 && p <= total) {
+            currentPage = p;
+            displayVideos();
+            setupPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    searchInput.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        currentFiltered = [...allItems].filter(item =>
+            !q || (item.dataset.titulo || '').includes(q) || (item.dataset.tags || '').includes(q)
+        );
+        currentPage = 1;
+        displayVideos();
+        setupPagination();
+    });
+
+    displayVideos();
+    setupPagination();
+
+    // ── Lazy loading de videos ────────────────────────────────
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            const v = e.target;
+            if (e.isIntersecting) {
+                if (v.readyState === 0) v.load();
+                v.play().catch(() => {});
+            } else {
+                v.pause();
+            }
+        });
+    }, { rootMargin: '200px 0px', threshold: 0.1 });
+
+    document.querySelectorAll('#video-gallery video').forEach(v => obs.observe(v));
+});
+</script>
+}
