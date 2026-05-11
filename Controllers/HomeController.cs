@@ -83,10 +83,9 @@ namespace Tazuki.Controllers
         public IActionResult Catalogo()
         {
             Cookies();
-            var (tazas, tags, disenoTags) = Home_SQL.Mostrar_Datos_Catalogo();
+            var (tazas, tags) = Home_SQL.Mostrar_Datos_Catalogo();
             ViewBag.Videos = tazas;
             ViewBag.Tags = tags;
-            ViewBag.DisenoTags = disenoTags;
             return View();
         }
         public IActionResult Producto(string id)

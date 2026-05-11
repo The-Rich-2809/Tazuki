@@ -1,9 +1,6 @@
 ﻿@using System.Data
 @{
-    if (ViewBag.Activo == "1")
-    {
-        Layout = "_LayoutUsuario";
-    }
+    Layout = "_LayoutUsuario";
 }
 @section Head {
     <link rel="icon" href="@Url.Content("~/img/tazukilogo.png")">
@@ -199,24 +196,12 @@
                 <div class="row g-4" id="gridProductos">
                     @if (ViewBag.Videos != null && ((DataTable)ViewBag.Videos).Rows.Count > 0)
                     {
-                        var videos = ((DataTable)ViewBag.Videos).Rows.Cast<DataRow>();
-                        var allTags = ((DataTable)ViewBag.Tags).Rows.Cast<DataRow>();
-                        var disenoTagsRelations = ((DataTable)ViewBag.DisenoTags).Rows.Cast<DataRow>();
-
-                        foreach (var row_video in videos.OrderBy(r => Guid.NewGuid()))
+                        foreach (DataRow row_video in ((DataTable)ViewBag.Videos).Rows)
                         {
-                            var videoId = Convert.ToInt32(row_video["id"]);
-                            
-                            // 1. Definimos la URL del producto en una variable para reusarla
                             var productUrl = Url.Action("Producto", "Home", new { Id = row_video[0] });
-
-                            var tagIdsForThisVideo = disenoTagsRelations
-                                .Where(r => Convert.ToInt32(r["diseno_id"]) == videoId)
-                                .Select(r => Convert.ToInt32(r["tag_id"]));
-                            var tagsForThisVideo = allTags
-                                .Where(t => tagIdsForThisVideo.Contains(Convert.ToInt32(t["id"])))
-                                .Select(t => t["nombre"].ToString());
-                            var dataTagsValue = string.Join(" ", tagsForThisVideo).ToLower();
+                            var tagsText = row_video["tags_text"]?.ToString() ?? "";
+                            var tagsArr  = tagsText.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                            var dataTagsValue = string.Join(" ", tagsArr).ToLower();
 
                             <div class="col-md-6 col-lg-4 producto" data-tags="@dataTagsValue" data-nombre="@row_video["nombre"].ToString().ToLower()">
                                 <div class="card h-100 shadow-sm border-0">
@@ -251,9 +236,9 @@
                                             <span class="badge rounded-pill badge-price fs-6">$@row_video["precio"]</span>
                                         </div>
                                         <div class="mb-3">
-                                            @foreach (var tagName in tagsForThisVideo)
+                                            @foreach (var tagName in tagsArr)
                                             {
-                                                <span class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1 tag-filter-btn" data-tag="@tagName.ToLower()">@tagName</span>
+                                                <span class="badge rounded-pill bg-light text-dark fw-normal me-1 mb-1 tag-filter-btn" data-tag="@tagName.Trim().ToLower()">@tagName.Trim()</span>
                                             }
                                         </div>
                                         <div class="mt-auto pt-1">

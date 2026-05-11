@@ -84,24 +84,30 @@ namespace Tazuki.Models
             return dt;
         }
 
-        public static (DataTable tazas, DataTable tags, DataTable disenoTags) Mostrar_Datos_Catalogo()
+        public static (DataTable tazas, DataTable tags) Mostrar_Datos_Catalogo()
         {
             DataTable dtTazas = new DataTable();
-            DataTable dtTags = new DataTable();
-            DataTable dtDisenoTags = new DataTable();
+            DataTable dtTags  = new DataTable();
 
             MySqlConnection conexionBD = Conexion.conexion();
             conexionBD.Open();
             try
             {
-                MySqlCommand cmd1 = new MySqlCommand("SELECT * FROM disenos WHERE publicado = 1", conexionBD);
+                // Una sola query trae diseños con sus tags ya concatenados → elimina el O(n²) en Razor
+                string sql = @"
+                    SELECT d.*,
+                           COALESCE(GROUP_CONCAT(t.nombre ORDER BY t.nombre SEPARATOR '|'), '') AS tags_text
+                    FROM disenos d
+                    LEFT JOIN diseno_tags dt ON d.id = dt.diseno_id
+                    LEFT JOIN tags t         ON dt.tag_id = t.id
+                    WHERE d.publicado = 1
+                    GROUP BY d.id
+                    ORDER BY RAND()";
+                MySqlCommand cmd1 = new MySqlCommand(sql, conexionBD);
                 dtTazas.Load(cmd1.ExecuteReader());
 
-                MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM tags", conexionBD);
+                MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM tags ORDER BY nombre ASC", conexionBD);
                 dtTags.Load(cmd2.ExecuteReader());
-
-                MySqlCommand cmd3 = new MySqlCommand("SELECT * FROM diseno_tags", conexionBD);
-                dtDisenoTags.Load(cmd3.ExecuteReader());
             }
             catch (MySqlException ex)
             {
@@ -111,7 +117,7 @@ namespace Tazuki.Models
             {
                 conexionBD.Close();
             }
-            return (dtTazas, dtTags, dtDisenoTags);
+            return (dtTazas, dtTags);
         }
         public static DataTable Mostrar_Users()
         {
