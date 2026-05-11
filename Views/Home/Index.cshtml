@@ -106,6 +106,20 @@
         border: 1px solid rgba(var(--brand-rgb),.25) !important;
         font-weight: 600;
         font-size: .75rem;
+        white-space: nowrap;
+    }
+
+    /* precio + botón en tarjetas pequeñas */
+    .idx-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .4rem;
+        margin-top: auto;
+    }
+    @media (max-width: 400px) {
+        .idx-card-footer .btn { padding-left: .5rem; padding-right: .5rem; font-size: .75rem; }
     }
 
     /* ── CTA Band ── */
@@ -152,7 +166,6 @@
                 </div>
                 <div class="d-flex gap-4 mt-4 small" style="color:var(--text-muted)">
                     <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Entrega 24–72 h</div>
-                    <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Facturamos</div>
                     <div><i class="bi bi-check-circle-fill me-1" style="color:var(--brand)"></i>Mayoreo</div>
                 </div>
             </div>
@@ -217,7 +230,7 @@
                                         }
                                     </div>
                                 }
-                                <div class="mt-auto d-flex align-items-center justify-content-between gap-2">
+                                <div class="idx-card-footer">
                                     <span class="badge rounded-pill badge-price">Desde $@dPrecio</span>
                                     <a href="@url" class="btn btn-primary btn-sm px-3">Comprar</a>
                                 </div>
@@ -294,7 +307,7 @@
                                             }
                                         </div>
                                     }
-                                    <div class="mt-auto d-flex align-items-center justify-content-between gap-2">
+                                    <div class="idx-card-footer">
                                         <span class="badge rounded-pill badge-price">Desde $@dPrecio</span>
                                         <a href="@productoUrl" class="btn btn-primary btn-sm px-3">Comprar</a>
                                     </div>
